@@ -1,6 +1,7 @@
 (ns arkham-horror.game)
 
-(defn make [config])
+(defn make [config]
+  config)
 
 (defn lost? [game]
-  true)
+  (or (game :lost) (empty? (game :players))))
