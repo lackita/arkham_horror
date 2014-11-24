@@ -2,11 +2,11 @@
   (:require [clojure.test :refer :all]
             [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.player :as player]
+            [arkham-horror.investigator :as investigator]
             [arkham-horror.doom-track :as doom-track]))
 
 (def azathoth-game (game/make {:ancient-one :azathoth
-                               :players [(player/make {})]}))
+                               :investigators [(investigator/make {})]}))
 
 (deftest ends-world-test
   (is (game/lost? (ancient-one/awaken azathoth-game)))

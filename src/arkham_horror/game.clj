@@ -5,4 +5,4 @@
          config))
 
 (defn lost? [game]
-  (or (game :lost) (empty? (game :players))))
+  (or (game :lost) (empty? (game :investigators))))

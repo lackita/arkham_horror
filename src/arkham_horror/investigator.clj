@@ -6,23 +6,21 @@
     :maximum-sanity
     :maximum-stamina))
 
-(defn devoured? [player]
+(defn devoured? [investigator]
   (->> [:maximum-sanity :maximum-stamina]
-       (map player)
+       (map investigator)
        (not-any? zero?)))
 
-(defn reduce-sanity-or-stamina [player]
-  (update-in player [(get-smaller-stat player)] dec))
+(defn reduce-sanity-or-stamina [investigator]
+  (update-in investigator [(get-smaller-stat investigator)] dec))
 
-(defn remove-devoured [players]
-  (filter devoured? players))
+(defn remove-devoured [investigators]
+  (filter devoured? investigators))
 
-(defn resolve-ancient-one-attack [players]
-  (->> players
+(defn resolve-ancient-one-attack [investigators]
+  (->> investigators
        (map reduce-sanity-or-stamina)
        remove-devoured))
-
-(defn attack [game])
 
 (defn make [config]
   config)

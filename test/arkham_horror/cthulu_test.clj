@@ -2,11 +2,11 @@
   (:require [clojure.test :refer :all]
             [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.player :as player]
+            [arkham-horror.investigator :as investigator]
             [arkham-horror.doom-track :as doom-track]))
 
-(defn make-player-with [max-sanity max-stamina]
-  (player/make {:maximum-sanity max-sanity
+(defn make-investigator-with [max-sanity max-stamina]
+  (investigator/make {:maximum-sanity max-sanity
                 :maximum-stamina max-stamina}))
 
 (defn make-awakened-game [config]
@@ -19,12 +19,12 @@
     (lost-after-attacks? (ancient-one/attack victim) (dec attacks))))
 
 (def base-game (game/make {:ancient-one :cthulu}))
-(def awakened-game (make-awakened-game {:players [(make-player-with 1 1)]}))
-(def death-bed-game (make-awakened-game {:players [(make-player-with 1 1)]}))
-(def has-two-stamina-game (make-awakened-game {:players [(make-player-with 1 2)]}))
-(def has-two-sanity-game (make-awakened-game {:players [(make-player-with 2 1)]}))
-(def has-a-tougher-player (make-awakened-game {:players [(make-player-with 1 1)
-                                                         (make-player-with 1 2)]}))
+(def awakened-game (make-awakened-game {:investigators [(make-investigator-with 1 1)]}))
+(def death-bed-game (make-awakened-game {:investigators [(make-investigator-with 1 1)]}))
+(def has-two-stamina-game (make-awakened-game {:investigators [(make-investigator-with 1 2)]}))
+(def has-two-sanity-game (make-awakened-game {:investigators [(make-investigator-with 2 1)]}))
+(def has-a-tougher-investigator (make-awakened-game {:investigators [(make-investigator-with 1 1)
+                                                         (make-investigator-with 1 2)]}))
 
 (deftest ends-world-test
   (is (not (lost-after-attacks? awakened-game 0)))
@@ -35,8 +35,8 @@
   (is (lost-after-attacks? has-two-stamina-game 2))
   (is (not (lost-after-attacks? has-two-stamina-game 1)))
   (is (lost-after-attacks? has-two-stamina-game 2))
-  (is (not (lost-after-attacks? has-a-tougher-player 1)))
-  (is (lost-after-attacks? has-a-tougher-player 2)))
+  (is (not (lost-after-attacks? has-a-tougher-investigator 1)))
+  (is (lost-after-attacks? has-a-tougher-investigator 2)))
 
 (deftest doom-track-test
   (is (= (doom-track/capacity base-game) 13))
