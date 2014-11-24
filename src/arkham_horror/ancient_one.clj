@@ -1,7 +1,5 @@
 (ns arkham-horror.ancient-one
-  (:require [arkham-horror.investigator :as investigator]
-            [arkham-horror.investigators :as investigators]
-            [arkham-horror.doom-track :as doom-track]))
+  (:require [arkham-horror.doom-track :as doom-track]))
 
 (def available #{:azathoth :cthulu})
 
@@ -14,7 +12,5 @@
 (defmethod awaken :default [game]
   (doom-track/fill game))
 
-(defn attack [game]
-  (-> game
-      investigators/resolve-ancient-one-attack
-      doom-track/advance))
+(defn combat-modifier [game]
+  -6)

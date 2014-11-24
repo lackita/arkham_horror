@@ -1,6 +1,7 @@
 (ns user
   (:require [arkham-horror.game :as game]
-            [arkham-horror.ancient-one :as ancient-one]))
+            [arkham-horror.ancient-one :as ancient-one]
+            [arkham-horror.combat :as combat]))
 
 (def active-game (agent nil))
 
@@ -13,5 +14,5 @@
 (defn onslaught []
   (if (game/lost? @active-game)
     (print (@active-game :ancient-one) "has ended the world")
-    (do (send active-game ancient-one/attack)
+    (do (send active-game combat/ancient-one-attack)
         (onslaught))))

@@ -3,7 +3,8 @@
             [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.doom-track :as doom-track]))
+            [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.combat :as combat]))
 
 (defn make-investigator-with [max-sanity max-stamina]
   (investigator/make {:maximum-sanity max-sanity
@@ -16,7 +17,7 @@
 (defn lost-after-attacks? [victim attacks]
   (if (zero? attacks)
     (game/lost? victim)
-    (lost-after-attacks? (ancient-one/attack victim) (dec attacks))))
+    (lost-after-attacks? (combat/ancient-one-attack victim) (dec attacks))))
 
 (def base-game (game/make {:ancient-one :cthulu}))
 (def awakened-game (make-awakened-game {:investigators [(make-investigator-with 1 1)]}))
@@ -60,6 +61,6 @@
          0))
   (is (= (-> awakened-game
              doom-track/retract
-             ancient-one/attack
+             combat/ancient-one-attack
              doom-track/current-level)
          13)))
