@@ -1,6 +1,11 @@
 (ns arkham-horror.ancient-one
   (:require [arkham-horror.player :as player]))
 
+(def available #{:azathoth :cthulu})
+
+(defn random []
+  (first (shuffle available)))
+
 (defmulti awaken :ancient-one)
 (defmethod awaken :azathoth [game]
   (assoc game :players []))
