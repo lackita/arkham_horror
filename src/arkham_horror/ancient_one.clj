@@ -1,5 +1,7 @@
 (ns arkham-horror.ancient-one
-  (:require [arkham-horror.player :as player]))
+  (:require [arkham-horror.player :as player]
+            [arkham-horror.players :as players]
+            [arkham-horror.doom-track :as doom-track]))
 
 (def available #{:azathoth :cthulu})
 
@@ -10,9 +12,9 @@
 (defmethod awaken :azathoth [game]
   (assoc game :players []))
 (defmethod awaken :default [game]
-  game)
+  (doom-track/fill game))
 
-(defn attack [{players :players
-               :as game}]
-  (assoc game
-    :players (player/resolve-ancient-one-attack players)))
+(defn attack [game]
+  (-> game
+      players/resolve-ancient-one-attack
+      doom-track/advance))
