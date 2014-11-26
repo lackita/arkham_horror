@@ -15,3 +15,8 @@
 (defn over? [game]
   (or (lost? game)
       (won? game)))
+
+(defn ending-message [game]
+  (cond (lost? game) (str (game :ancient-one) " has ended the world")
+        (won? game)  (str (game :ancient-one) " has been defeated")
+        :else        (str game " ended unexpectedly")))

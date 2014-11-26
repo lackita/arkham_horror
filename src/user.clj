@@ -11,6 +11,4 @@
 (defn onslaught []
   (send active-game setup/onslaught)
   (await active-game)
-  (cond (game/lost? @active-game) (print (@active-game :ancient-one) "has ended the world")
-        (game/won? @active-game)  (print (@active-game :ancient-one) "has been defeated")
-        :else                     (print @active-game "ended unexpectedly")))
+  (print (game/ending-message @active-game)))
