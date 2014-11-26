@@ -17,3 +17,19 @@
   (is (not (-> {:ancient-one :cthulu}
                game/make
                game/won?))))
+
+(deftest over-test
+  (is (-> {:ancient-one :azathoth}
+          game/make
+          ancient-one/awaken
+          game/over?))
+  (is (not (-> {:ancient-one :azathoth
+                :investigators [nil]}
+               game/make
+               game/over?)))
+  (is (-> {:ancient-one :cthulu
+           :investigators [nil]}
+          game/make
+          ancient-one/awaken
+          ancient-one/defeat
+          game/over?)))

@@ -3,11 +3,12 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]))
 
-(defn begin []
-  (ancient-one/awaken (game/make {:ancient-one (ancient-one/random)})))
+(defn begin
+  ([_] (begin))
+  ([] (ancient-one/awaken (game/make {:ancient-one (ancient-one/random)}))))
 
 (defn onslaught [active-game]
-  (if (game/lost? active-game)
+  (if (game/over? active-game)
     active-game
     (-> active-game
         combat/investigators-attack

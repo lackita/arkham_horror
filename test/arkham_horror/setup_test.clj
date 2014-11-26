@@ -9,4 +9,4 @@
   (is (ancient-one/valid? (setup/begin))))
 
 (deftest setup-test
-  (is (game/lost? (setup/onslaught (setup/begin)))))
+  (is (game/over? (setup/onslaught (setup/begin)))))

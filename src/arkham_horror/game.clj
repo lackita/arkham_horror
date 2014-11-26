@@ -11,3 +11,7 @@
 
 (defn won? [game]
   (ancient-one/defeated? game))
+
+(defn over? [game]
+  (or (lost? game)
+      (won? game)))
