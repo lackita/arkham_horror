@@ -17,7 +17,7 @@
   (-> game
       ancient-one/awaken
       combat/investigators-attack
-      doom-track/current-level))
+      doom-track/level))
 
 (deftest attack-test
   (is (= (attack-and-get-level (make-game-with [7] 6)) 12))

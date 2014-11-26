@@ -5,11 +5,11 @@
 (defmethod capacity :cthulu [game] 13)
 (defmethod capacity :azathoth [game] 14)
 
-(defn current-level [game]
+(defn level [game]
   (game :doom-track))
 
 (defn move [game direction bound]
-  (if (= (current-level game) bound)
+  (if (= (level game) bound)
     game
     (update-in game [:doom-track] direction)))
 

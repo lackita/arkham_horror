@@ -8,7 +8,7 @@
 
 (defn make-investigator-with [max-sanity max-stamina]
   (investigator/make {:maximum-sanity max-sanity
-                :maximum-stamina max-stamina}))
+                      :maximum-stamina max-stamina}))
 
 (defn make-awakened-game [config]
   (ancient-one/awaken (game/make (merge {:ancient-one :cthulu}
@@ -25,7 +25,7 @@
 (def has-two-stamina-game (make-awakened-game {:investigators [(make-investigator-with 1 2)]}))
 (def has-two-sanity-game (make-awakened-game {:investigators [(make-investigator-with 2 1)]}))
 (def has-a-tougher-investigator (make-awakened-game {:investigators [(make-investigator-with 1 1)
-                                                         (make-investigator-with 1 2)]}))
+                                                                     (make-investigator-with 1 2)]}))
 
 (deftest ends-world-test
   (is (not (lost-after-attacks? awakened-game 0)))
@@ -41,26 +41,26 @@
 
 (deftest doom-track-test
   (is (= (doom-track/capacity base-game) 13))
-  (is (= (doom-track/current-level base-game) 0))
-  (is (= (doom-track/current-level (doom-track/advance base-game)) 1))
-  (is (= (doom-track/current-level awakened-game) 13))
+  (is (= (doom-track/level base-game) 0))
+  (is (= (doom-track/level (doom-track/advance base-game)) 1))
+  (is (= (doom-track/level awakened-game) 13))
   (is (= (->> base-game
               (iterate doom-track/advance)
               (drop 14)
               first
-              doom-track/current-level)
+              doom-track/level)
          13))
   (is (= (-> base-game
              doom-track/advance
              doom-track/retract
-             doom-track/current-level)
+             doom-track/level)
          0))
   (is (= (-> base-game
              doom-track/retract
-             doom-track/current-level)
+             doom-track/level)
          0))
   (is (= (-> awakened-game
              doom-track/retract
              combat/ancient-one-attack
-             doom-track/current-level)
+             doom-track/level)
          13)))
