@@ -9,7 +9,7 @@
 
 (defmulti rouse :ancient-one)
 (defmethod rouse :azathoth [game]
-  (assoc game :investigators []))
+  (investigators/devour-all game))
 (defmethod rouse :default [game]
   (doom-track/fill game))
 
