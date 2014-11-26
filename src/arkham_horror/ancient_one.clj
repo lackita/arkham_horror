@@ -1,5 +1,6 @@
 (ns arkham-horror.ancient-one
-  (:require [arkham-horror.doom-track :as doom-track]))
+  (:require [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.investigators :as investigators]))
 
 (def available #{:azathoth :cthulu})
 
