@@ -15,6 +15,6 @@
   (if (game/lost? @active-game)
     (print (@active-game :ancient-one) "has ended the world")
     (do
-      (send active-game investigators/attack)
+      (send active-game combat/investigators-attack)
       (send active-game combat/ancient-one-attack)
       (onslaught))))

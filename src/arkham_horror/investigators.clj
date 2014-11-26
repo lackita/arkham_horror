@@ -12,10 +12,3 @@
   (assoc game :investigators (->> investigators
                                   (map investigator/reduce-sanity-or-stamina)
                                   remove-devoured)))
-
-(defn attack
-  ([game]
-     (attack game (apply + (map #(dice/combat-check game (:fight %))
-                                (game :investigators)))))
-  ([game successes]
-     (first (drop successes (iterate doom-track/retract game)))))

@@ -5,7 +5,8 @@
             [arkham-horror.investigator :as investigator]
             [arkham-horror.game :as game]
             [arkham-horror.dice :as dice]
-            [arkham-horror.doom-track :as doom-track]))
+            [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.combat :as combat]))
 
 (defn make-game-with [fights pips]
   (game/make {:ancient-one :cthulu
@@ -15,7 +16,7 @@
 (defn attack-and-get-level [game]
   (-> game
       ancient-one/awaken
-      investigators/attack
+      combat/investigators-attack
       doom-track/current-level))
 
 (deftest attack-test
