@@ -1,5 +1,6 @@
 (ns arkham-horror.ancient-one-test
   (:require [clojure.test :refer :all]
+            [arkham-horror.game :as game]
             [arkham-horror.ancient-one :refer :all]))
 
 (deftest random-test
@@ -10,3 +11,8 @@
                   ancient-ones
                   (recur (conj ancient-ones (random))  (dec remaining)))))
          available)))
+
+(deftest awakened?-test
+  (is (awakened? (awaken (game/make {:ancient-one :cthulu}))))
+  (is (not (awakened? (game/make {:ancient-one :cthulu}))))
+  (is (awakened? (awaken (game/make {:ancient-one :azathoth})))))

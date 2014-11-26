@@ -2,15 +2,14 @@
   (:require [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
-            [arkham-horror.investigators :as investigators]))
+            [arkham-horror.investigators :as investigators]
+            [arkham-horror.setup :as setup]))
 
 (def active-game (agent nil))
 
 (defn begin []
   (print "Welcome to Arkham Horror")
-  (send active-game
-        (fn [_]
-          (ancient-one/awaken (game/make {:ancient-one (ancient-one/random)})))))
+  (send active-game setup/begin))
 
 (defn onslaught []
   (if (game/lost? @active-game)

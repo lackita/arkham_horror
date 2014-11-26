@@ -6,11 +6,18 @@
 (defn random []
   (first (shuffle available)))
 
-(defmulti awaken :ancient-one)
-(defmethod awaken :azathoth [game]
+(defmulti rouse :ancient-one)
+(defmethod rouse :azathoth [game]
   (assoc game :investigators []))
-(defmethod awaken :default [game]
+(defmethod rouse :default [game]
   (doom-track/fill game))
+
+(defn awaken [game]
+  (assoc (rouse game)
+    :awakened true))
+
+(defn awakened? [game]
+  (game :awakened))
 
 (defn combat-modifier [game]
   -6)
