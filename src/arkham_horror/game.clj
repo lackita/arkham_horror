@@ -6,3 +6,6 @@
 
 (defn lost? [game]
   (or (game :lost) (empty? (game :investigators))))
+
+(defn won? [game]
+  true)

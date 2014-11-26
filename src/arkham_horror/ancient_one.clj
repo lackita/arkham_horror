@@ -25,3 +25,6 @@
 
 (defn combat-modifier [game]
   -6)
+
+(defn defeat [game]
+  (doom-track/empty game))

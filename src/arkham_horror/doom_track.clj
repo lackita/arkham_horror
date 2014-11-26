@@ -1,4 +1,5 @@
-(ns arkham-horror.doom-track)
+(ns arkham-horror.doom-track
+  (:refer-clojure :exclude [empty]))
 
 (defmulti capacity :ancient-one)
 (defmethod capacity :cthulu [game] 13)
@@ -20,3 +21,6 @@
 
 (defn fill [game]
   (assoc game :doom-track (capacity game)))
+
+(defn empty [game]
+  (assoc game :doom-track 0))
