@@ -4,6 +4,9 @@
 
 (def available #{:azathoth :cthulu})
 
+(defn valid? [game]
+  (available (game :ancient-one)))
+
 (defn random []
   (first (shuffle available)))
 

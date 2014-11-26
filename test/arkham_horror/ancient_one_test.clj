@@ -4,7 +4,7 @@
             [arkham-horror.ancient-one :refer :all]))
 
 (deftest random-test
-  (is (available (random)))
+  (is (valid? {:ancient-one (random)}))
   (is (= (set (loop [ancient-ones []
                      remaining 100]
                 (if (zero? remaining)
