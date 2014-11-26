@@ -14,13 +14,5 @@
 (defn reduce-sanity-or-stamina [investigator]
   (update-in investigator [(get-smaller-stat investigator)] dec))
 
-(defn remove-devoured [investigators]
-  (filter devoured? investigators))
-
-(defn resolve-ancient-one-attack [investigators]
-  (->> investigators
-       (map reduce-sanity-or-stamina)
-       remove-devoured))
-
 (defn make [config]
   config)

@@ -15,4 +15,5 @@
 (deftest awakened?-test
   (is (awakened? (awaken (game/make {:ancient-one :cthulu}))))
   (is (not (awakened? (game/make {:ancient-one :cthulu}))))
-  (is (awakened? (awaken (game/make {:ancient-one :azathoth})))))
+  (is (awakened? (awaken (game/make {:ancient-one :azathoth}))))
+  (is (not (awakened? (game/make {:ancient-one :azathoth})))))
