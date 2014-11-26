@@ -1,4 +1,6 @@
-(ns arkham-horror.game)
+(ns arkham-horror.game
+  (:require [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.ancient-one :as ancient-one]))
 
 (defn make [config]
   (merge {:doom-track 0}
@@ -8,4 +10,4 @@
   (or (game :lost) (empty? (game :investigators))))
 
 (defn won? [game]
-  true)
+  (ancient-one/defeated? game))

@@ -28,3 +28,7 @@
 
 (defn defeat [game]
   (doom-track/empty game))
+
+(defn defeated? [game]
+  (and (awakened? game)
+       (= (doom-track/level game) 0)))
