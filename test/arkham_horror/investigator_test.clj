@@ -2,9 +2,8 @@
   (:require [clojure.test :refer :all]
             [arkham-horror.investigator :as investigator]))
 
-(def base-investigator (investigator/make {:speed 1
-                                           :sneak 2
-                                           :fight 3}))
+(def base-investigator (investigator/make {:speed 1 :sneak 2
+                                           :fight 3 :will 4}))
 
 (deftest speed-test
   (is (= (investigator/speed base-investigator) 1))
@@ -23,3 +22,6 @@
   (is (= (investigator/fight
           (investigator/fight-will-slider base-investigator 1))
          4)))
+
+(deftest will-test
+  (is (= (investigator/will base-investigator) 4)))
