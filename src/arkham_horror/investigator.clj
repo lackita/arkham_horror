@@ -29,3 +29,6 @@
 (defn speed-sneak-slider [investigator delta]
   (merge-with + investigator {:speed delta
                               :sneak (- delta)}))
+
+(defn fight-will-slider [investigator delta]
+  (merge-with + investigator {:fight delta}))

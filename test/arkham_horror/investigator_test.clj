@@ -19,4 +19,7 @@
          1)))
 
 (deftest fight-test
-  (is (= (investigator/fight base-investigator) 3)))
+  (is (= (investigator/fight base-investigator) 3))
+  (is (= (investigator/fight
+          (investigator/fight-will-slider base-investigator 1))
+         4)))
