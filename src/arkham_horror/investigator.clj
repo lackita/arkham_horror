@@ -1,4 +1,5 @@
-(ns arkham-horror.investigator)
+(ns arkham-horror.investigator
+  (:require [arkham-horror.stat :as stat]))
 
 (defn get-smaller-stat [{sanity :maximum-sanity
                          stamina :maximum-stamina}]
@@ -16,3 +17,9 @@
 
 (defn make [config]
   config)
+
+(defn focus [investigator deltas]
+  (-> investigator
+      (stat/speed-sneak-slider (or (deltas :speed-sneak) 0))
+      (stat/fight-will-slider  (or (deltas :fight-will)  0))
+      (stat/lore-luck-slider   (or (deltas :lore-luck)   0))))
