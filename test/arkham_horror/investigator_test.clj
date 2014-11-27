@@ -1,43 +1,40 @@
 (ns arkham-horror.investigator-test
   (:require [clojure.test :refer :all]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.stat :as stat]))
 
-(def base-investigator (investigator/make {:speed 1 :sneak 2
-                                           :fight 3 :will  4
-                                           :lore  5 :luck  6}))
+(def base-investigator (investigator/make {:speed (stat/make 0 1 3)
+                                           :sneak (stat/make 0 2 3)
+                                           :fight (stat/make 2 3 5)
+                                           :will  (stat/make 2 4 5)
+                                           :lore  (stat/make 4 5 7)
+                                           :luck  (stat/make 4 6 7)}))
+
+(defn valid-slider? [stat value
+                     slider delta new-value]
+  (and (= (stat base-investigator) value)
+       (= (stat (slider base-investigator delta)) new-value)))
 
 (deftest speed-test
-  (is (= (investigator/speed base-investigator) 1))
-  (is (= (investigator/speed
-          (investigator/speed-sneak-slider base-investigator -1))
-         0)))
+  (is (valid-slider? stat/speed 1
+                     stat/speed-sneak-slider -2 0)))
 
 (deftest sneak-test
-  (is (= (investigator/sneak base-investigator) 2))
-  (is (= (investigator/sneak
-          (investigator/speed-sneak-slider base-investigator 1))
-         1)))
+  (is (valid-slider? stat/sneak 2
+                     stat/speed-sneak-slider -2 3)))
 
 (deftest fight-test
-  (is (= (investigator/fight base-investigator) 3))
-  (is (= (investigator/fight
-          (investigator/fight-will-slider base-investigator 1))
-         4)))
+  (is (valid-slider? stat/fight 3
+                     stat/fight-will-slider 1 4)))
 
 (deftest will-test
-  (is (= (investigator/will base-investigator) 4))
-  (is (= (investigator/will
-          (investigator/fight-will-slider base-investigator -1))
-         5)))
+  (is (valid-slider? stat/will 4
+                     stat/fight-will-slider -1 5)))
 
 (deftest lore-test
-  (is (= (investigator/lore base-investigator) 5))
-  (is (= (investigator/lore
-          (investigator/lore-luck-slider base-investigator 1))
-         6)))
+  (is (valid-slider? stat/lore 5
+                     stat/lore-luck-slider 1 6)))
 
 (deftest luck-test
-  (is (= (investigator/luck base-investigator) 6))
-  (is (= (investigator/luck
-          (investigator/lore-luck-slider base-investigator -1))
-         7)))
+  (is (valid-slider? stat/luck 6
+                     stat/lore-luck-slider -1 7)))

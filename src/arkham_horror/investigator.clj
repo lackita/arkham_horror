@@ -16,17 +16,3 @@
 
 (defn make [config]
   config)
-
-(def speed :speed)
-(def sneak :sneak)
-(def fight :fight)
-(def will  :will)
-(def lore  :lore)
-(def luck  :luck)
-
-(defn slider [ascending descending]
-  #(merge-with + %1 {ascending %2
-                     descending (- %2)}))
-(def speed-sneak-slider (slider :speed :sneak))
-(def fight-will-slider  (slider :fight :will))
-(def lore-luck-slider   (slider :lore :luck))
