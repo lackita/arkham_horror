@@ -29,6 +29,9 @@
 (defn will [investigator]
   (investigator :will))
 
+(defn lore [investigator]
+  (investigator :lore))
+
 (defn speed-sneak-slider [investigator delta]
   (merge-with + investigator {:speed delta
                               :sneak (- delta)}))

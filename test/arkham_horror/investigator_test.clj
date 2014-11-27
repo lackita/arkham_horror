@@ -3,7 +3,8 @@
             [arkham-horror.investigator :as investigator]))
 
 (def base-investigator (investigator/make {:speed 1 :sneak 2
-                                           :fight 3 :will 4}))
+                                           :fight 3 :will  4
+                                           :lore  5}))
 
 (deftest speed-test
   (is (= (investigator/speed base-investigator) 1))
@@ -28,3 +29,6 @@
   (is (= (investigator/will
           (investigator/fight-will-slider base-investigator -1))
          5)))
+
+(deftest lore-test
+  (is (= (investigator/lore base-investigator) 5)))
