@@ -17,32 +17,16 @@
 (defn make [config]
   config)
 
-(defn speed [investigator]
-  (investigator :speed))
+(def speed :speed)
+(def sneak :sneak)
+(def fight :fight)
+(def will  :will)
+(def lore  :lore)
+(def luck  :luck)
 
-(defn sneak [investigator]
-  (investigator :sneak))
-
-(defn fight [investigator]
-  (investigator :fight))
-
-(defn will [investigator]
-  (investigator :will))
-
-(defn lore [investigator]
-  (investigator :lore))
-
-(defn luck [investigator]
-  (investigator :luck))
-
-(defn speed-sneak-slider [investigator delta]
-  (merge-with + investigator {:speed delta
-                              :sneak (- delta)}))
-
-(defn fight-will-slider [investigator delta]
-  (merge-with + investigator {:fight delta
-                              :will (- delta)}))
-
-(defn lore-luck-slider [investigator delta]
-  (merge-with + investigator {:lore delta
-                              :luck (- delta)}))
+(defn slider [ascending descending]
+  #(merge-with + %1 {ascending %2
+                     descending (- %2)}))
+(def speed-sneak-slider (slider :speed :sneak))
+(def fight-will-slider  (slider :fight :will))
+(def lore-luck-slider   (slider :lore :luck))
