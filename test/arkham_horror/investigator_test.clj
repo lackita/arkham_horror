@@ -2,8 +2,17 @@
   (:require [clojure.test :refer :all]
             [arkham-horror.investigator :as investigator]))
 
-(def speed-1 (investigator/make {:speed 1}))
+(def base-investigator (investigator/make {:speed 1
+                                           :sneak 2}))
 
 (deftest speed-test
-  (is (= (investigator/speed speed-1) 1))
-  (is (= (investigator/speed (investigator/speed-sneak-slider speed-1 -1)) 0)))
+  (is (= (investigator/speed base-investigator) 1))
+  (is (= (investigator/speed
+          (investigator/speed-sneak-slider base-investigator -1))
+         0)))
+
+(deftest sneak-test
+  (is (= (investigator/sneak base-investigator) 2))
+  (is (= (investigator/sneak
+          (investigator/speed-sneak-slider base-investigator 1))
+         1)))

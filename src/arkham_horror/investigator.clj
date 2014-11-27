@@ -20,5 +20,9 @@
 (defn speed [investigator]
   (investigator :speed))
 
+(defn sneak [investigator]
+  (investigator :sneak))
+
 (defn speed-sneak-slider [investigator delta]
-  (merge-with + investigator {:speed delta}))
+  (merge-with + investigator {:speed delta
+                              :sneak (- delta)}))
