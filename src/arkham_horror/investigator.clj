@@ -44,4 +44,5 @@
                               :will (- delta)}))
 
 (defn lore-luck-slider [investigator delta]
-  (merge-with + investigator {:lore delta}))
+  (merge-with + investigator {:lore delta
+                              :luck (- delta)}))

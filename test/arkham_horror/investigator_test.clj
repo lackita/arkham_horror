@@ -37,4 +37,7 @@
          6)))
 
 (deftest luck-test
-  (is (= (investigator/luck base-investigator) 6)))
+  (is (= (investigator/luck base-investigator) 6))
+  (is (= (investigator/luck
+          (investigator/lore-luck-slider base-investigator -1))
+         7)))
