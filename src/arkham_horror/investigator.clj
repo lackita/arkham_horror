@@ -23,6 +23,9 @@
 (defn sneak [investigator]
   (investigator :sneak))
 
+(defn fight [investigator]
+  (investigator :fight))
+
 (defn speed-sneak-slider [investigator delta]
   (merge-with + investigator {:speed delta
                               :sneak (- delta)}))
