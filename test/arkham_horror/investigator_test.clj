@@ -8,7 +8,8 @@
                                            :fight (stat/make 2 3 5)
                                            :will  (stat/make 2 4 5)
                                            :lore  (stat/make 4 5 7)
-                                           :luck  (stat/make 4 6 7)}))
+                                           :luck  (stat/make 4 6 7)
+                                           :focus 2}))
 
 (defn valid-slider? [stat value
                      slider delta new-value]
@@ -35,4 +36,6 @@
   (is (= (stat/fight (investigator/focus base-investigator {:fight-will  1})) 4))
   (is (= (stat/will  (investigator/focus base-investigator {:fight-will  2})) 2))
   (is (= (stat/lore  (investigator/focus base-investigator {:lore-luck   1})) 6))
-  (is (= (stat/luck  (investigator/focus base-investigator {:lore-luck   2})) 4)))
+  (is (= (stat/luck  (investigator/focus base-investigator {:lore-luck   2})) 4))
+  (is (thrown? AssertionError (investigator/focus base-investigator
+                                                  {:speed-sneak 3}))))

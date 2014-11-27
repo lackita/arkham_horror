@@ -19,6 +19,8 @@
   config)
 
 (defn focus [investigator deltas]
+  {:pre [(<= (apply + (vals deltas))
+             (investigator :focus))]}
   (-> investigator
       (stat/speed-sneak-slider (or (deltas :speed-sneak) 0))
       (stat/fight-will-slider  (or (deltas :fight-will)  0))
