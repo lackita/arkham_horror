@@ -24,4 +24,7 @@
          4)))
 
 (deftest will-test
-  (is (= (investigator/will base-investigator) 4)))
+  (is (= (investigator/will base-investigator) 4))
+  (is (= (investigator/will
+          (investigator/fight-will-slider base-investigator -1))
+         5)))

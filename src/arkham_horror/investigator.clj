@@ -34,4 +34,5 @@
                               :sneak (- delta)}))
 
 (defn fight-will-slider [investigator delta]
-  (merge-with + investigator {:fight delta}))
+  (merge-with + investigator {:fight delta
+                              :will (- delta)}))
