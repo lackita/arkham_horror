@@ -16,3 +16,9 @@
 
 (defn make [config]
   config)
+
+(defn speed [investigator]
+  (investigator :speed))
+
+(defn speed-sneak-slider [investigator delta]
+  (merge-with + investigator {:speed delta}))
