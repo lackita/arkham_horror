@@ -3,12 +3,9 @@
             [arkham-horror.investigator :as investigator]
             [arkham-horror.stat :as stat]))
 
-(def base-investigator (investigator/make {:speed (stat/make 0 1 3)
-                                           :sneak (stat/make 0 2 3)
-                                           :fight (stat/make 2 3 5)
-                                           :will  (stat/make 2 4 5)
-                                           :lore  (stat/make 4 5 7)
-                                           :luck  (stat/make 4 6 7)
+(def base-investigator (investigator/make {:speed 1 :sneak 2
+                                           :fight 3 :will  4
+                                           :lore  5 :luck  6
                                            :focus 2}))
 
 (defn valid-slider? [stat value
@@ -39,3 +36,17 @@
   (is (= (stat/luck  (investigator/focus base-investigator {:lore-luck   2})) 4))
   (is (thrown? AssertionError (investigator/focus base-investigator
                                                   {:speed-sneak 3}))))
+
+(deftest monterey-jack-test
+  (is (= (stat/speed (investigator/make :monterey-jack {:speed 2 :fight 3 :lore 1})) 2))
+  (is (= (stat/speed (investigator/make :monterey-jack {:speed 3 :fight 3 :lore 1})) 3))
+  (is (= (stat/sneak (investigator/make :monterey-jack {:speed 2 :fight 3 :lore 1})) 2))
+  (is (= (stat/sneak (investigator/make :monterey-jack {:speed 1 :fight 3 :lore 1})) 3))
+  (is (= (stat/fight (investigator/make :monterey-jack {:speed 1 :fight 3 :lore 1})) 3))
+  (is (= (stat/fight (investigator/make :monterey-jack {:speed 1 :fight 2 :lore 1})) 2))
+  (is (= (stat/will  (investigator/make :monterey-jack {:speed 1 :fight 3 :lore 1})) 2))
+  (is (= (stat/will  (investigator/make :monterey-jack {:speed 1 :fight 2 :lore 1})) 3))
+  (is (= (stat/lore  (investigator/make :monterey-jack {:speed 1 :fight 2 :lore 1})) 1))
+  (is (= (stat/lore  (investigator/make :monterey-jack {:speed 1 :fight 2 :lore 2})) 2))
+  (is (= (stat/luck  (investigator/make :monterey-jack {:speed 1 :fight 2 :lore 1})) 5))
+  (is (= (stat/luck  (investigator/make :monterey-jack {:speed 1 :fight 2 :lore 2})) 4)))
