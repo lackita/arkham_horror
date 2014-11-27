@@ -5,8 +5,8 @@
             [arkham-horror.game :as game]))
 
 (deftest begin-test
-  (is (ancient-one/awakened? (setup/begin)))
-  (is (ancient-one/valid? (setup/begin))))
+  (is (ancient-one/awakened? (setup/begin :cthulu [])))
+  (is (ancient-one/valid? (setup/begin :azathoth []))))
 
 (deftest setup-test
-  (is (game/over? (setup/onslaught (setup/begin)))))
+  (is (game/over? (setup/onslaught (setup/begin :cthulu [])))))

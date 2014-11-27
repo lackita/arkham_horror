@@ -4,9 +4,9 @@
 
 (def active-game (agent nil))
 
-(defn begin []
+(defn begin [ancient-one investigators]
   (print "Welcome to Arkham Horror")
-  (send active-game setup/begin))
+  (send active-game (fn [_] (setup/begin ancient-one investigators))))
 
 (defn onslaught []
   (send active-game setup/onslaught)
