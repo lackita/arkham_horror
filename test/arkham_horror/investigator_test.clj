@@ -4,7 +4,7 @@
 
 (def base-investigator (investigator/make {:speed 1 :sneak 2
                                            :fight 3 :will  4
-                                           :lore  5}))
+                                           :lore  5 :luck  6}))
 
 (deftest speed-test
   (is (= (investigator/speed base-investigator) 1))
@@ -34,4 +34,7 @@
   (is (= (investigator/lore base-investigator) 5))
   (is (= (investigator/lore
           (investigator/lore-luck-slider base-investigator 1))
-         2)))
+         6)))
+
+(deftest luck-test
+  (is (= (investigator/luck base-investigator) 6)))

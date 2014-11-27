@@ -32,6 +32,9 @@
 (defn lore [investigator]
   (investigator :lore))
 
+(defn luck [investigator]
+  (investigator :luck))
+
 (defn speed-sneak-slider [investigator delta]
   (merge-with + investigator {:speed delta
                               :sneak (- delta)}))
