@@ -39,3 +39,6 @@
 (defn fight-will-slider [investigator delta]
   (merge-with + investigator {:fight delta
                               :will (- delta)}))
+
+(defn lore-luck-slider [investigator delta]
+  (merge-with + investigator {:lore delta}))

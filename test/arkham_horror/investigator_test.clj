@@ -31,4 +31,7 @@
          5)))
 
 (deftest lore-test
-  (is (= (investigator/lore base-investigator) 5)))
+  (is (= (investigator/lore base-investigator) 5))
+  (is (= (investigator/lore
+          (investigator/lore-luck-slider base-investigator 1))
+         2)))
