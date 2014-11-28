@@ -15,6 +15,14 @@
 (defn reduce-sanity-or-stamina [investigator]
   (update-in investigator [(get-smaller-stat investigator)] dec))
 
+(defn focus [investigator deltas]
+  {:pre [(<= (apply + (vals deltas))
+             (investigator :focus))]}
+  (-> investigator
+      (stat/speed-sneak-slider (or (deltas :speed-sneak) 0))
+      (stat/fight-will-slider  (or (deltas :fight-will)  0))
+      (stat/lore-luck-slider   (or (deltas :lore-luck)   0))))
+
 (defn make
   ([investigator config]
      (make (merge config {:sneak (- 4 (config :speed))
@@ -27,13 +35,5 @@
              :lore  (stat/make 4 (config :lore)  7)
              :luck  (stat/make 4 (config :luck)  7)
              :focus (config :focus)
-             :maximum-sanity (or (config :maximum-sanity) 0)
-             :maximum-stamina (or (config :maximum-stamina) 0)}))
-
-(defn focus [investigator deltas]
-  {:pre [(<= (apply + (vals deltas))
-             (investigator :focus))]}
-  (-> investigator
-      (stat/speed-sneak-slider (or (deltas :speed-sneak) 0))
-      (stat/fight-will-slider  (or (deltas :fight-will)  0))
-      (stat/lore-luck-slider   (or (deltas :lore-luck)   0))))
+             :maximum-sanity (or (config :maximum-sanity) 3)
+             :maximum-stamina (or (config :maximum-stamina) 7)}))

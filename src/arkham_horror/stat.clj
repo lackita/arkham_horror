@@ -22,3 +22,9 @@
 (def speed-sneak-slider (slider :speed :sneak))
 (def fight-will-slider  (slider :fight :will))
 (def lore-luck-slider   (slider :lore :luck))
+
+(defn maximum-sanity [investigator]
+  (investigator :maximum-sanity))
+
+(defn maximum-stamina [investigator]
+  (investigator :maximum-stamina))
