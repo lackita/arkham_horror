@@ -8,7 +8,7 @@
 (defn resolve-ancient-one-attack [{investigators :investigators
                                    :as game}]
   (assoc game :investigators (->> investigators
-                                  (map investigator/reduce-sanity-or-stamina)
+                                  (map investigator/reduce-max-sanity-or-stamina)
                                   remove-devoured)))
 
 (defn devour-all [game]

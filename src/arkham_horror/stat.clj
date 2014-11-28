@@ -28,3 +28,9 @@
 
 (defn maximum-stamina [investigator]
   (investigator :maximum-stamina))
+
+(defn get-smaller [{sanity :maximum-sanity
+                    stamina :maximum-stamina}]
+  (if (> sanity stamina)
+    :maximum-sanity
+    :maximum-stamina))
