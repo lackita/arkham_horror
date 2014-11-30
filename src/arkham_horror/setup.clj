@@ -22,6 +22,9 @@
       combat/ancient-one-attack
       combat/investigators-attack))
 
+(defn focus [{investigators :investigators :as active-game} deltas]
+  (assoc active-game :investigators (map investigator/focus investigators deltas)))
+
 (defn game-status [active-game]
   (cond (game/won? active-game)
         "You win"
@@ -31,11 +34,8 @@
         (str "Attack\n"
              "Doom track: " (active-game :doom-track) "\n"
              "Stats: " (apply str
-                              (map #(str "("
-                                         (:maximum-stamina %)
-                                         " "
-                                         (:maximum-sanity %)
-                                         ")")
+                              (map #(str "(" (:maximum-stamina %)
+                                         " " (:maximum-sanity %) ")")
                                    (active-game :investigators))))
         (active-game :initialized)
         "Awaken ancient one"

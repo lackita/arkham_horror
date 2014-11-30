@@ -31,6 +31,11 @@
          (:investigators (combat/ancient-one-attack awakened-game))))
   (is (= (:doom-track (setup/attack rigged-game)) 0)))
 
+(deftest focus-test
+  (is (= (map stat/fight (:investigators (setup/focus awakened-game
+                                                      [{:fight-will 2}])))
+         [4])))
+
 (deftest game-status-test
   (is (= (setup/game-status active-game) "Initialize investigators"))
   (is (= (setup/game-status init-game) "Awaken ancient one"))

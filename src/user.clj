@@ -1,5 +1,4 @@
-(ns user
-  (:require [arkham-horror.setup :as setup]))
+(ns user (:require [arkham-horror.setup :as setup]))
 
 (def active-game (agent nil))
 
