@@ -1,4 +1,5 @@
-(ns user (:require [arkham-horror.setup :as setup]))
+(ns user
+  (:require [arkham-horror.setup :as setup]))
 
 (def active-game (agent nil))
 
@@ -13,3 +14,4 @@
 (def init (make-facade setup/init))
 (def awaken (make-facade setup/awaken))
 (def attack (make-facade setup/attack))
+(def focus (make-facade setup/focus))
