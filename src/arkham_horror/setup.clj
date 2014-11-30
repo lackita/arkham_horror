@@ -28,10 +28,3 @@
         (ancient-one/awakened? active-game) "Attack"
         (active-game :initialized) "Awaken ancient one"
         :else "Initialize investigators"))
-
-(defn onslaught [active-game]
-  (if (game/over? active-game)
-    active-game
-    (-> active-game
-        attack
-        onslaught)))

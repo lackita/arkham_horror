@@ -37,6 +37,3 @@
   (is (= (setup/game-status awakened-game) "Attack"))
   (is (= (setup/game-status (ancient-one/awaken (setup/begin :azathoth []))) "You lose"))
   (is (= (setup/game-status (setup/attack rigged-game)) "You win")))
-
-(deftest onslaught-test
-  (is (game/over? (setup/onslaught (setup/begin :cthulu [])))))

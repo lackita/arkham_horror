@@ -4,11 +4,13 @@
 
 (def active-game (agent nil))
 
-(defn begin [ancient-one investigators]
-  (print "Welcome to Arkham Horror")
-  (send active-game (fn [_] (setup/begin ancient-one investigators))))
+(defmacro make-facade [function]
+  (fn [& args]
+    (send active-game function args)
+    (await active-game)
+    (setup/game-status @active-game)))
 
-(defn onslaught []
-  (send active-game setup/onslaught)
-  (await active-game)
-  (print (game/ending-message @active-game)))
+(def begin (make-facade (fn [_] (setup/begin ancient-one investigators))))
+(def init (make-facade setup/init))
+(def awaken (make-facade setup/awaken))
+(def attack (make-facade setup/attack))
