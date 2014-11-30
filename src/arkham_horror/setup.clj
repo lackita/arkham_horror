@@ -23,8 +23,21 @@
       combat/investigators-attack))
 
 (defn game-status [active-game]
-  (cond (game/won? active-game) "You win"
-        (game/lost? active-game) "You lose"
-        (ancient-one/awakened? active-game) "Attack"
-        (active-game :initialized) "Awaken ancient one"
-        :else "Initialize investigators"))
+  (cond (game/won? active-game)
+        "You win"
+        (game/lost? active-game)
+        "You lose"
+        (ancient-one/awakened? active-game)
+        (str "Attack\n"
+             "Doom track: " (active-game :doom-track) "\n"
+             "Stats: " (apply str
+                              (map #(str "("
+                                         (:maximum-stamina %)
+                                         " "
+                                         (:maximum-sanity %)
+                                         ")")
+                                   (active-game :investigators))))
+        (active-game :initialized)
+        "Awaken ancient one"
+        :else
+        "Initialize investigators"))

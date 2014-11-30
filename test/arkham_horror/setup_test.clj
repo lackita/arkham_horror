@@ -34,6 +34,6 @@
 (deftest game-status-test
   (is (= (setup/game-status active-game) "Initialize investigators"))
   (is (= (setup/game-status init-game) "Awaken ancient one"))
-  (is (= (setup/game-status awakened-game) "Attack"))
+  (is (= (setup/game-status awakened-game) "Attack\nDoom track: 13\nStats: (7 3)"))
   (is (= (setup/game-status (ancient-one/awaken (setup/begin :azathoth []))) "You lose"))
   (is (= (setup/game-status (setup/attack rigged-game)) "You win")))
