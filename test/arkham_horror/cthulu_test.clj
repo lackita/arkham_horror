@@ -7,8 +7,9 @@
             [arkham-horror.combat :as combat]))
 
 (defn make-investigator-with [max-sanity max-stamina]
-  (investigator/make {:maximum-sanity max-sanity
-                      :maximum-stamina max-stamina}))
+  (merge (investigator/make "Monterey Jack")
+         {:maximum-sanity max-sanity
+          :maximum-stamina max-stamina}))
 
 (defn make-awakened-game [config]
   (ancient-one/awaken (game/make (merge {:ancient-one :cthulu}

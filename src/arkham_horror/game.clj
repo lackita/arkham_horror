@@ -7,10 +7,11 @@
          config))
 
 (defn lost? [game]
-  (or (game :lost) (empty? (game :investigators))))
+  (empty? (game :investigators)))
 
 (defn won? [game]
-  (ancient-one/defeated? game))
+  (and (not (lost? game))
+       (ancient-one/defeated? game)))
 
 (defn over? [game]
   (or (lost? game)

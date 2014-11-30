@@ -3,14 +3,40 @@
             [arkham-horror.setup :as setup]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.game :as game]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.combat :as combat]
+            [arkham-horror.dice :as dice]
+            [arkham-horror.stat :as stat]))
 
+(def active-game (setup/begin :cthulu ["Monterey Jack"]))
 (deftest begin-test
-  (is (ancient-one/awakened? (setup/begin :cthulu [])))
-  (is (ancient-one/valid? (setup/begin :azathoth [])))
-  (is (= (:investigators (setup/begin :cthulu [{:name "Monterey Jack"
-                                                :stats {:speed 2 :fight 2 :lore 2}}]))
-         [(investigator/make :monterey-jack {:speed 2 :fight 2 :lore  2})])))
+  (is (= (:investigators active-game) [(investigator/make "Monterey Jack")])))
 
-(deftest setup-test
+(def init-game (setup/init active-game [{:speed 2 :fight 2 :lore 2}]))
+(deftest init-test
+  (is (= (:investigators init-game)
+         [(investigator/init (investigator/make "Monterey Jack")
+                             {:speed 2 :fight 2 :lore 2})])))
+
+(def awakened-game (setup/awaken (setup/begin :cthulu ["Monterey Jack"])))
+(deftest awaken-test
+  (is (ancient-one/awakened? awakened-game)))
+
+(def rigged-game (merge awakened-game
+                        {:dice (dice/loaded 6)
+                         :investigators (map #(stat/rig-fight % 19)
+                                             (awakened-game :investigators))}))
+(deftest attack-test
+  (is (= (:investigators (setup/attack awakened-game))
+         (:investigators (combat/ancient-one-attack awakened-game))))
+  (is (= (:doom-track (setup/attack rigged-game)) 0)))
+
+(deftest game-status-test
+  (is (= (setup/game-status active-game) "Initialize investigators"))
+  (is (= (setup/game-status init-game) "Awaken ancient one"))
+  (is (= (setup/game-status awakened-game) "Attack"))
+  (is (= (setup/game-status (ancient-one/awaken (setup/begin :azathoth []))) "You lose"))
+  (is (= (setup/game-status (setup/attack rigged-game)) "You win")))
+
+(deftest onslaught-test
   (is (game/over? (setup/onslaught (setup/begin :cthulu [])))))

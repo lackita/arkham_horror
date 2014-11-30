@@ -12,6 +12,15 @@
 (def lore  (extract :lore))
 (def luck  (extract :luck))
 
+(defn infuse [s]
+  #(assoc-in %1 [s :value] %2))
+(def set-speed (infuse :speed))
+(def set-sneak (infuse :sneak))
+(def set-fight (infuse :fight))
+(def set-will  (infuse :will))
+(def set-lore  (infuse :lore))
+(def set-luck  (infuse :luck))
+
 (defn shift [stat delta]
   (update-in stat [:value] #(->> (+ % delta)
                                  (min (stat :max))
@@ -34,3 +43,6 @@
   (if (> sanity stamina)
     :maximum-sanity
     :maximum-stamina))
+
+(defn rig-fight [investigator value]
+  (assoc-in investigator [:fight :value] value))

@@ -17,17 +17,22 @@
       (stat/fight-will-slider  (or (deltas :fight-will)  0))
       (stat/lore-luck-slider   (or (deltas :lore-luck)   0))))
 
-(defn make
-  ([investigator config]
-     (make (merge config {:sneak (- 4 (config :speed))
-                          :will  (- 5 (config :fight))
-                          :luck  (- 6 (config :lore))})))
-  ([config] {:speed (stat/make 0 (config :speed) 3)
-             :sneak (stat/make 0 (config :sneak) 3)
-             :fight (stat/make 2 (config :fight) 5)
-             :will  (stat/make 2 (config :will)  5)
-             :lore  (stat/make 4 (config :lore)  7)
-             :luck  (stat/make 4 (config :luck)  7)
-             :focus (config :focus)
-             :maximum-sanity (or (config :maximum-sanity) 3)
-             :maximum-stamina (or (config :maximum-stamina) 7)}))
+(defn init [investigator config]
+  (-> investigator
+      (stat/set-speed (config :speed))
+      (stat/set-sneak (- 4 (config :speed)))
+      (stat/set-fight (config :fight))
+      (stat/set-will  (- 5 (config :fight)))
+      (stat/set-lore  (config :lore))
+      (stat/set-luck  (- 6 (config :lore)))))
+
+(defn make [name]
+  {:speed (stat/make 1 1 4)
+   :sneak (stat/make 0 0 3)
+   :fight (stat/make 2 2 5)
+   :will  (stat/make 0 0 3)
+   :lore  (stat/make 1 1 4)
+   :luck  (stat/make 2 2 5)
+   :focus 2
+   :maximum-sanity 3
+   :maximum-stamina 7})

@@ -11,7 +11,8 @@
 (defn make-game-with [fights pips]
   (game/make {:ancient-one :cthulu
               :dice (dice/loaded pips)
-              :investigators (map #(investigator/make {:fight %}) fights)}))
+              :investigators (map #(investigator/init (investigator/make {:fight %})
+                                                      {:speed 0 :fight % :lore 0}) fights)}))
 
 (defn attack-and-get-level [game]
   (-> game
