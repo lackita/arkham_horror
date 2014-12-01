@@ -30,6 +30,7 @@
   (is (valid-slider? stat/luck 4
                      stat/lore-luck-slider -1 5)))
 
+(def focused-investigator (investigator/focus monterey-jack {:lore-luck 2}))
 (deftest focus-test
   (is (= (stat/speed (investigator/focus monterey-jack {:speed-sneak 1})) 4))
   (is (= (stat/sneak (investigator/focus monterey-jack {:speed-sneak 2})) 0))
@@ -37,11 +38,13 @@
   (is (= (stat/will  (investigator/focus monterey-jack {:fight-will  2})) 1))
   (is (= (stat/lore  (investigator/focus monterey-jack {:lore-luck   1})) 3))
   (is (= (stat/luck  (investigator/focus monterey-jack {:lore-luck   2})) 2))
-  (is (thrown? AssertionError (-> monterey-jack
-                                  (investigator/focus {:lore-luck 2})
-                                  (investigator/focus {:lore-luck 2}))))
   (is (thrown? AssertionError (investigator/focus base-investigator
-                                                  {:speed-sneak 3}))))
+                                                  {:speed-sneak 3})))
+  (is (thrown? AssertionError (investigator/focus focused-investigator
+                                                  {:lore-luck 2})))
+  (is (= (stat/fight (investigator/focus (investigator/reset-focus focused-investigator)
+                                         {:fight-will 1}))
+         3)))
 
 (deftest monterey-jack-test
   (is (= (stat/speed (investigator/init monterey-jack {:speed 2 :fight 3 :lore 1})) 2))

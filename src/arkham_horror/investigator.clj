@@ -18,6 +18,9 @@
       (stat/lore-luck-slider   (or (deltas :lore-luck)   0))
       (update-in [:focus] #(apply - % (vals deltas)))))
 
+(defn reset-focus [investigator]
+  (assoc investigator :focus 2))
+
 (defn init [investigator config]
   (-> investigator
       (stat/set-speed (config :speed))
