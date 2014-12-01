@@ -23,5 +23,5 @@
 (deftest attack-test
   (is (= (attack-and-get-level (make-game-with [7] 6)) 12))
   (is (= (attack-and-get-level (make-game-with [8] 6)) 11))
-  (is (= (attack-and-get-level (make-game-with [7 7] 6)) 11))
+  (is (= (attack-and-get-level (make-game-with [7 7] 6)) 12))
   (is (= (attack-and-get-level (make-game-with [7] 1)) 13)))

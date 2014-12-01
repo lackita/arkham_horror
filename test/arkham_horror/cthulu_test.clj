@@ -67,11 +67,3 @@
              combat/ancient-one-attack
              doom-track/level)
          13)))
-
-(def multiple-investigators (ancient-one/awaken
-                             (game/make {:ancient-one :cthulu
-                                         :investigators (map #(stat/rig-fight (investigator/make %) 7)
-                                                             (repeat 2 "Monterey Jack"))
-                                         :dice (dice/loaded 6)})))
-(deftest multiple-investigators-test
-  (is (= (:doom-track (combat/investigators-attack multiple-investigators)) 11)))

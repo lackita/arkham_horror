@@ -15,4 +15,5 @@
      (investigators-attack game (apply + (map #(dice/combat-check game (stat/fight %))
                                               (game :investigators)))))
   ([game successes]
-     (first (drop successes (iterate doom-track/retract game)))))
+     (first (drop (quot successes (count (game :investigators)))
+                  (iterate doom-track/retract game)))))
