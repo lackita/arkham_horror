@@ -8,6 +8,6 @@
   (take times (repeatedly dice)))
 
 (defn combat-check [game fight]
-  (count (filter #(= 6 %) (roll (game :dice)
-                                (+ fight
-                                   (ancient-one/combat-modifier game))))))
+  (count (filter #(#{5 6} %) (roll (game :dice)
+                                   (+ fight
+                                      (ancient-one/combat-modifier game))))))
