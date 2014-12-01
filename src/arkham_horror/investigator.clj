@@ -41,6 +41,7 @@
    :lore  (stat/make 1 1 4)
    :luck  (stat/make 2 2 5)
    :focus 2
-   :items [{:name ".38 Revolver"} {:name "Bullwhip"}]
+   :items [{:name ".38 Revolver" :combat-modifier 3}
+           {:name "Bullwhip" :combat-modifier 1}]
    :maximum-sanity 3
    :maximum-stamina 7})

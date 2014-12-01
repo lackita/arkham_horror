@@ -11,13 +11,18 @@
       investigators/resolve-ancient-one-attack
       doom-track/advance))
 
+(defn combat-check-rolls [game fighter]
+  (apply +
+   (stat/fight fighter)
+   (ancient-one/combat-modifier game)
+   (map :combat-modifier (investigator/items fighter))))
+
 (defn investigators-attack
   ([game]
-     (investigators-attack game (apply + (map #(dice/combat-check game
-                                                                  (+ (stat/fight %)
-                                                                     (ancient-one/combat-modifier game)
-                                                                     4))
-                                              (game :investigators)))))
+     (->> (game :investigators)
+          (map #(dice/combat-check game (combat-check-rolls game %)))
+          (apply +)
+          (investigators-attack game)))
   ([game successes]
      (first (drop (quot successes (count (game :investigators)))
                   (iterate doom-track/retract game)))))
