@@ -4,7 +4,9 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.doom-track :as doom-track]
-            [arkham-horror.combat :as combat]))
+            [arkham-horror.combat :as combat]
+            [arkham-horror.stat :as stat]
+            [arkham-horror.dice :as dice]))
 
 (defn make-investigator-with [max-sanity max-stamina]
   (merge (investigator/make "Monterey Jack")
@@ -65,3 +67,11 @@
              combat/ancient-one-attack
              doom-track/level)
          13)))
+
+(def multiple-investigators (ancient-one/awaken
+                             (game/make {:ancient-one :cthulu
+                                         :investigators (map #(stat/rig-fight (investigator/make %) 7)
+                                                             (repeat 2 "Monterey Jack"))
+                                         :dice (dice/loaded 6)})))
+(deftest multiple-investigators-test
+  (is (= (:doom-track (combat/investigators-attack multiple-investigators)) 11)))
