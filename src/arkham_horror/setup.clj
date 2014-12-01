@@ -20,7 +20,8 @@
 (defn attack [active-game]
   (-> active-game
       combat/ancient-one-attack
-      combat/investigators-attack))
+      combat/investigators-attack
+      (update-in [:investigators] #(map investigator/reset-focus %))))
 
 (defn focus [{investigators :investigators :as active-game} deltas]
   (assoc active-game :investigators (map investigator/focus investigators deltas)))

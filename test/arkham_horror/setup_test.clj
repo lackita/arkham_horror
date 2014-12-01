@@ -26,15 +26,15 @@
                         {:dice (dice/loaded 6)
                          :investigators (map #(stat/rig-fight % 19)
                                              (awakened-game :investigators))}))
+(def focused-game (setup/focus awakened-game [{:fight-will 2}]))
 (deftest attack-test
   (is (= (:investigators (setup/attack awakened-game))
          (:investigators (combat/ancient-one-attack awakened-game))))
-  (is (= (:doom-track (setup/attack rigged-game)) 0)))
+  (is (= (:doom-track (setup/attack rigged-game)) 0))
+  (is (= (map :focus (:investigators (setup/attack focused-game))) [2])))
 
 (deftest focus-test
-  (is (= (map stat/fight (:investigators (setup/focus awakened-game
-                                                      [{:fight-will 2}])))
-         [4])))
+  (is (= (map stat/fight (:investigators focused-game)) [4])))
 
 (deftest game-status-test
   (is (= (setup/game-status active-game) "Initialize investigators"))
