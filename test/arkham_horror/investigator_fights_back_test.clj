@@ -11,7 +11,7 @@
 (defn make-game-with [fights pips]
   (game/make {:ancient-one :cthulu
               :dice (dice/loaded pips)
-              :investigators (map #(investigator/init (investigator/make {:fight %})
+              :investigators (map #(investigator/init (investigator/make "Monterey Jack")
                                                       {:speed 0 :fight % :lore 0}) fights)}))
 
 (defn attack-and-get-level [game]
@@ -21,7 +21,7 @@
       doom-track/level))
 
 (deftest attack-test
-  (is (= (attack-and-get-level (make-game-with [7] 6)) 12))
-  (is (= (attack-and-get-level (make-game-with [8] 6)) 11))
-  (is (= (attack-and-get-level (make-game-with [7 7] 6)) 12))
-  (is (= (attack-and-get-level (make-game-with [7] 1)) 13)))
+  (is (= (attack-and-get-level (make-game-with [3] 6)) 12))
+  (is (= (attack-and-get-level (make-game-with [4] 6)) 11))
+  (is (= (attack-and-get-level (make-game-with [3 3] 6)) 12))
+  (is (= (attack-and-get-level (make-game-with [4] 1)) 13)))

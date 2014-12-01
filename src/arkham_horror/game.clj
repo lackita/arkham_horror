@@ -1,10 +1,10 @@
 (ns arkham-horror.game
   (:require [arkham-horror.doom-track :as doom-track]
-            [arkham-horror.ancient-one :as ancient-one]))
+            [arkham-horror.ancient-one :as ancient-one]
+            [arkham-horror.dice :as dice]))
 
 (defn make [config]
-  (merge {:doom-track 0}
-         config))
+  (merge {:doom-track 0 :dice dice/random} config))
 
 (defn lost? [game]
   (empty? (game :investigators)))
@@ -16,8 +16,3 @@
 (defn over? [game]
   (or (lost? game)
       (won? game)))
-
-(defn ending-message [game]
-  (cond (lost? game) (str (game :ancient-one) " has ended the world")
-        (won? game)  (str (game :ancient-one) " has been defeated")
-        :else        (str game " ended unexpectedly")))

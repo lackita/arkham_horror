@@ -7,6 +7,6 @@
   (game/make {:ancient-one :cthulu
               :dice (dice/loaded pips)}))
 (deftest combat-check-test
-  (is (= (dice/combat-check (loaded-game 6) 7) 1))
-  (is (= (dice/combat-check (loaded-game 5) 7) 1))
-  (is (= (dice/combat-check (loaded-game 4) 7) 0)))
+  (is (= (dice/combat-check (loaded-game 6) 1) 1))
+  (is (= (dice/combat-check (loaded-game 5) 1) 1))
+  (is (= (dice/combat-check (loaded-game 4) 1) 0)))
