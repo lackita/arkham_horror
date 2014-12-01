@@ -21,6 +21,9 @@
 (defn reset-focus [investigator]
   (assoc investigator :focus 2))
 
+(defn items [investigator]
+  (investigator :items))
+
 (defn init [investigator config]
   (-> investigator
       (stat/set-speed (config :speed))
@@ -38,5 +41,6 @@
    :lore  (stat/make 1 1 4)
    :luck  (stat/make 2 2 5)
    :focus 2
+   :items [{:name ".38 Revolver"} {:name "Bullwhip"}]
    :maximum-sanity 3
    :maximum-stamina 7})

@@ -60,4 +60,5 @@
   (is (= (stat/luck  (investigator/init monterey-jack {:speed 1 :fight 2 :lore 1})) 5))
   (is (= (stat/luck  (investigator/init monterey-jack {:speed 1 :fight 2 :lore 2})) 4))
   (is (= (stat/maximum-sanity monterey-jack) 3))
-  (is (= (stat/maximum-stamina monterey-jack) 7)))
+  (is (= (stat/maximum-stamina monterey-jack) 7))
+  (is (= (set (map :name (investigator/items monterey-jack))) #{".38 Revolver" "Bullwhip"})))
