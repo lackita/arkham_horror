@@ -13,9 +13,9 @@
 
 (defn combat-check-rolls [game fighter]
   (apply +
-   (stat/fight fighter)
-   (ancient-one/combat-modifier game)
-   (map :combat-modifier (investigator/items fighter))))
+         (stat/fight fighter)
+         (ancient-one/combat-modifier game)
+         (map :combat-modifier (investigator/items fighter))))
 
 (defn investigators-attack
   ([game]
@@ -24,5 +24,7 @@
           (apply +)
           (investigators-attack game)))
   ([game successes]
-     (first (drop (quot successes (count (game :investigators)))
+     (first (drop (if (zero? (count (:investigators game)))
+                    0
+                    (quot successes (count (game :investigators))))
                   (iterate doom-track/retract game)))))
