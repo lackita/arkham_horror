@@ -15,7 +15,8 @@
   (-> investigator
       (stat/speed-sneak-slider (or (deltas :speed-sneak) 0))
       (stat/fight-will-slider  (or (deltas :fight-will)  0))
-      (stat/lore-luck-slider   (or (deltas :lore-luck)   0))))
+      (stat/lore-luck-slider   (or (deltas :lore-luck)   0))
+      (update-in [:focus] #(apply - % (vals deltas)))))
 
 (defn init [investigator config]
   (-> investigator

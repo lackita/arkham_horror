@@ -37,6 +37,9 @@
   (is (= (stat/will  (investigator/focus monterey-jack {:fight-will  2})) 1))
   (is (= (stat/lore  (investigator/focus monterey-jack {:lore-luck   1})) 3))
   (is (= (stat/luck  (investigator/focus monterey-jack {:lore-luck   2})) 2))
+  (is (thrown? AssertionError (-> monterey-jack
+                                  (investigator/focus {:lore-luck 2})
+                                  (investigator/focus {:lore-luck 2}))))
   (is (thrown? AssertionError (investigator/focus base-investigator
                                                   {:speed-sneak 3}))))
 
