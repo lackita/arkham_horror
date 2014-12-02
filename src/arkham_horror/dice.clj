@@ -6,8 +6,11 @@
 (defn loaded [pips]
   (fn [] pips))
 
+(defn accept-roll [game]
+  game)
+
 (defn roll [dice times]
   (take times (repeatedly dice)))
 
 (defn combat-check [game rolls]
-  (count (filter #(#{5 6} %) (roll (game :dice) rolls))))
+  (roll (game :dice) rolls))

@@ -2,7 +2,8 @@
   (:require [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.dice :as dice]))
 
 (defn begin [ancient-one investigators]
   (game/make {:ancient-one ancient-one
@@ -21,6 +22,7 @@
   (-> active-game
       combat/ancient-one-attack
       combat/investigators-attack
+      dice/accept-roll
       (update-in [:investigators] #(map investigator/reset-focus %))))
 
 (defn focus [{investigators :investigators :as active-game} deltas]

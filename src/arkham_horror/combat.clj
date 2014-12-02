@@ -20,7 +20,9 @@
 (defn investigators-attack
   ([game]
      (->> (game :investigators)
-          (map #(dice/combat-check game (combat-check-rolls game %)))
+          (map #(count (filter #{5 6}
+                               (dice/combat-check game
+                                                  (combat-check-rolls game %)))))
           (apply +)
           (investigators-attack game)))
   ([game successes]
