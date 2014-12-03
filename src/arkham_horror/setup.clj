@@ -22,20 +22,12 @@
   (assoc active-game :investigators (map investigator/focus investigators deltas)))
 
 (defn game-status [active-game]
-  (cond (game/won? active-game)
-        "You win"
-        (game/lost? active-game)
-        "You lose"
-        (combat/in-combat? active-game)
-        (str "Attack\n"
-             "Doom track: " (active-game :doom-track) "\n"
-             "Stats: " (apply str
-                              (map #(str "(" (:maximum-stamina %)
-                                         " " (:maximum-sanity %) ")")
-                                   (active-game :investigators))))
-        (ancient-one/awakened? active-game)
-        "Refresh investigators"
-        (active-game :initialized)
-        "Awaken ancient one"
-        :else
-        "Initialize investigators"))
+  (cond (game/won? active-game) "You win"
+        (game/lost? active-game) "You lose"
+        (and (combat/in-combat? active-game)
+             (not (combat/current-attacker active-game))) "Defend"
+        (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
+                                             (active-game :doom-track))
+        (ancient-one/awakened? active-game) "Refresh investigators"
+        (active-game :initialized) "Awaken ancient one"
+        :else "Initialize investigators"))

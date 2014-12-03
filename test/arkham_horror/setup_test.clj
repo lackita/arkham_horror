@@ -36,6 +36,7 @@
   (is (= (setup/game-status active-game) "Initialize investigators"))
   (is (= (setup/game-status init-game) "Awaken ancient one"))
   (is (= (setup/game-status awakened-game) "Refresh investigators"))
-  (is (= (setup/game-status attack-started-game) "Attack\nDoom track: 13\nStats: (7 3)"))
+  (is (= (setup/game-status attack-started-game) "Attack\nDoom track: 13"))
+  (is (= (setup/game-status (combat/investigator-attack attack-started-game)) "Defend"))
   (is (= (setup/game-status (ancient-one/awaken (setup/begin :azathoth []))) "You lose"))
   (is (= (setup/game-status (combat/investigator-attack rigged-game)) "You win")))

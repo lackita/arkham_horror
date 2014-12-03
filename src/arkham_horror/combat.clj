@@ -42,17 +42,14 @@
       (nth investigators position))))
 
 (defn investigator-attack [game]
-  (let [new-game (update-in (->> (current-attacker game)
-                                 (combat-check-rolls game)
-                                 (dice/combat-check game)
-                                 (filter #{5 6})
-                                 count
-                                 (apply-successes game))
-                            [:combat :current-attacker]
-                            inc)]
-    (if (current-attacker new-game)
-      new-game
-      (end-attack new-game))))
+  (update-in (->> (current-attacker game)
+                  (combat-check-rolls game)
+                  (dice/combat-check game)
+                  (filter #{5 6})
+                  count
+                  (apply-successes game))
+             [:combat :current-attacker]
+             inc))
 
 (defn investigators-attack [game]
   (loop [game (start-attack game)]
