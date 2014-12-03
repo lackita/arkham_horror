@@ -26,18 +26,24 @@
       (recur (doom-track/retract game)
              (- successes (count (game :investigators)))))))
 
-(defn investigator-attack [game investigator]
-  (->> investigator
-       (combat-check-rolls game)
-       (dice/combat-check game)
-       (filter #{5 6})
-       count
-       (apply-successes game)))
+(defn current-attacker [game]
+  (let [position (-> game :combat :current-attacker)
+        investigators (game :investigators)]
+    (when (< position (count investigators))
+      (nth investigators position))))
+
+(defn investigator-attack [game]
+  (update-in (->> (current-attacker game)
+                  (combat-check-rolls game)
+                  (dice/combat-check game)
+                  (filter #{5 6})
+                  count
+                  (apply-successes game))
+             [:combat :current-attacker]
+             inc))
 
 (defn investigators-attack [game]
-  (loop [game game
-         investigators (game :investigators)]
-    (if (empty? investigators)
-      game
-      (recur (investigator-attack game (first investigators))
-             (rest investigators)))))
+  (loop [game (assoc-in game [:combat :current-attacker] 0)]
+    (if (current-attacker game)
+      (recur (investigator-attack game))
+      game)))
