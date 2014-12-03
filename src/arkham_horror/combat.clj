@@ -17,16 +17,27 @@
          (ancient-one/combat-modifier game)
          (map :combat-modifier (investigator/items fighter))))
 
-(defn investigators-attack
-  ([game]
-     (->> (game :investigators)
-          (map #(count (filter #{5 6}
-                               (dice/combat-check game
-                                                  (combat-check-rolls game %)))))
-          (apply +)
-          (investigators-attack game)))
-  ([game successes]
-     (first (drop (if (zero? (count (:investigators game)))
-                    0
-                    (quot successes (count (game :investigators))))
-                  (iterate doom-track/retract game)))))
+(defn apply-successes [game successes]
+  (loop [game game
+         successes (+ successes (or (game :remaining-successes) 0))]
+    (if (or (zero? (count (game :investigators)))
+            (< successes (count (game :investigators))))
+      (assoc game :remaining-successes successes)
+      (recur (doom-track/retract game)
+             (- successes (count (game :investigators)))))))
+
+(defn investigator-attack [game investigator]
+  (->> investigator
+       (combat-check-rolls game)
+       (dice/combat-check game)
+       (filter #{5 6})
+       count
+       (apply-successes game)))
+
+(defn investigators-attack [game]
+  (loop [game game
+         investigators (game :investigators)]
+    (if (empty? investigators)
+      game
+      (recur (investigator-attack game (first investigators))
+             (rest investigators)))))
