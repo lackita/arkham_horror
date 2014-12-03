@@ -22,23 +22,20 @@
 (deftest awaken-test
   (is (ancient-one/awakened? awakened-game)))
 
-(def rigged-game (merge awakened-game
-                        {:dice (dice/loaded 6)
-                         :investigators (map #(stat/rig-fight % 19)
-                                             (awakened-game :investigators))}))
 (def focused-game (setup/focus awakened-game [{:fight-will 2}]))
-(deftest attack-test
-  (is (= (:investigators (setup/attack awakened-game))
-         (:investigators (combat/ancient-one-attack awakened-game))))
-  (is (= (:doom-track (setup/attack rigged-game)) 0))
-  (is (= (map :focus (:investigators (setup/attack focused-game))) [2])))
-
 (deftest focus-test
   (is (= (map stat/fight (:investigators focused-game)) [4])))
 
+(def attack-started-game (combat/start-attack awakened-game))
+(def rigged-game (combat/start-attack
+                  (merge awakened-game
+                         {:dice (dice/loaded 6)
+                          :investigators (map #(stat/rig-fight % 19)
+                                              (awakened-game :investigators))})))
 (deftest game-status-test
   (is (= (setup/game-status active-game) "Initialize investigators"))
   (is (= (setup/game-status init-game) "Awaken ancient one"))
-  (is (= (setup/game-status awakened-game) "Attack\nDoom track: 13\nStats: (7 3)"))
+  (is (= (setup/game-status awakened-game) "Refresh investigators"))
+  (is (= (setup/game-status attack-started-game) "Attack\nDoom track: 13\nStats: (7 3)"))
   (is (= (setup/game-status (ancient-one/awaken (setup/begin :azathoth []))) "You lose"))
-  (is (= (setup/game-status (setup/attack rigged-game)) "You win")))
+  (is (= (setup/game-status (combat/investigator-attack rigged-game)) "You win")))

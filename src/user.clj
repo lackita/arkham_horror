@@ -1,5 +1,6 @@
 (ns user
-  (:require [arkham-horror.setup :as setup]))
+  (:require [arkham-horror.setup :as setup]
+            [arkham-horror.combat :as combat]))
 
 (def active-game (agent nil))
 
@@ -13,5 +14,7 @@
                           (setup/begin ancient-one investigators))))
 (def init (make-facade setup/init))
 (def awaken (make-facade setup/awaken))
-(def attack (make-facade setup/attack))
 (def focus (make-facade setup/focus))
+(def start-attack (make-facade combat/start-attack))
+(def attack (make-facade combat/investigator-attack))
+(def defend (make-facade combat/ancient-one-attack))

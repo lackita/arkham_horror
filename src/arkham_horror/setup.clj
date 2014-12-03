@@ -18,13 +18,6 @@
 (defn awaken [active-game]
   (ancient-one/awaken active-game))
 
-(defn attack [active-game]
-  (-> active-game
-      combat/ancient-one-attack
-      combat/investigators-attack
-      dice/accept-roll
-      (update-in [:investigators] #(map investigator/reset-focus %))))
-
 (defn focus [{investigators :investigators :as active-game} deltas]
   (assoc active-game :investigators (map investigator/focus investigators deltas)))
 
@@ -33,13 +26,15 @@
         "You win"
         (game/lost? active-game)
         "You lose"
-        (ancient-one/awakened? active-game)
+        (combat/in-combat? active-game)
         (str "Attack\n"
              "Doom track: " (active-game :doom-track) "\n"
              "Stats: " (apply str
                               (map #(str "(" (:maximum-stamina %)
                                          " " (:maximum-sanity %) ")")
                                    (active-game :investigators))))
+        (ancient-one/awakened? active-game)
+        "Refresh investigators"
         (active-game :initialized)
         "Awaken ancient one"
         :else
