@@ -5,7 +5,8 @@
 
 (def awakened-game (setup/awaken (setup/begin :cthulu ["Monterey Jack"])))
 (def started-attack-game (combat/start-attack awakened-game))
-(def ended-attack-game (combat/investigator-attack started-attack-game))
+(def ended-attack-game (combat/accept-roll
+                        (combat/investigator-attack started-attack-game)))
 (deftest in-combat?-test
   (is (not (combat/in-combat? awakened-game)))
   (is (combat/in-combat? started-attack-game))

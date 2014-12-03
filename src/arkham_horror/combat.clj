@@ -41,6 +41,9 @@
     (when (and position (< position (count investigators)))
       (nth investigators position))))
 
+(defn accept-roll [game]
+  game)
+
 (defn investigator-attack [game]
   (update-in (->> (current-attacker game)
                   (combat-check-rolls game)
@@ -50,9 +53,3 @@
                   (apply-successes game))
              [:combat :current-attacker]
              inc))
-
-(defn investigators-attack [game]
-  (loop [game (start-attack game)]
-    (if (current-attacker game)
-      (recur (investigator-attack game))
-      (end-attack game))))

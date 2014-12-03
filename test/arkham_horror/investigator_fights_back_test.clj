@@ -14,10 +14,16 @@
               :investigators (map #(investigator/init (investigator/make "Monterey Jack")
                                                       {:speed 0 :fight % :lore 0}) fights)}))
 
+(defn everybody-attack [game]
+  (if (combat/current-attacker game)
+    (everybody-attack (combat/investigator-attack game))
+    game))
+
 (defn attack-and-get-level [game]
   (-> game
       ancient-one/awaken
-      combat/investigators-attack
+      combat/start-attack
+      everybody-attack
       doom-track/level))
 
 (deftest attack-test
