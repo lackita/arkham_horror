@@ -25,3 +25,18 @@
 
 (deftest pending-roll-test
   (is (= (combat/pending-roll (combat/investigator-attack rigged-game)) [6 6 6])))
+
+(defn roll-badly-but-lucky [game]
+  (assoc (combat/investigator-attack (assoc game :dice (dice/loaded 1)))
+    :dice (dice/loaded 6)))
+
+(def bad-roll-game (roll-badly-but-lucky started-attack-game))
+(deftest bullwhip-test
+  (is (= (sort (combat/pending-roll (combat/bullwhip bad-roll-game)))
+         [1 1 6]))
+  (is (= (sort (combat/pending-roll (combat/bullwhip
+                                     (roll-badly-but-lucky
+                                      (combat/start-attack
+                                       (combat/end-attack
+                                        (combat/bullwhip bad-roll-game)))))))
+         [1 1 6])))

@@ -60,3 +60,12 @@
   (assoc-in game [:combat :roll] (->> (current-attacker game)
                                       (combat-check-rolls game)
                                       (dice/combat-check game))))
+
+(defn bullwhip [game]
+  (if (-> game :combat :bullwhip)
+    game
+    (assoc-in (update-in game [:combat :roll]
+                         #(conj (rest (sort %))
+                                ((game :dice))))
+              [:combat :bullwhip]
+              true)))

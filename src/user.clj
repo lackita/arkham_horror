@@ -17,5 +17,6 @@
 (def focus (make-facade setup/focus))
 (def start-attack (make-facade combat/start-attack))
 (def attack (make-facade combat/investigator-attack))
+(def use-bullwhip (make-facade combat/bullwhip))
 (def accept-roll (make-facade combat/accept-roll))
 (def defend (make-facade (comp combat/end-attack combat/ancient-one-attack)))
