@@ -16,7 +16,7 @@
 
 (defn everybody-attack [game]
   (if (combat/current-attacker game)
-    (everybody-attack (combat/investigator-attack game))
+    (everybody-attack (combat/accept-roll (combat/investigator-attack game)))
     game))
 
 (defn attack-and-get-level [game]

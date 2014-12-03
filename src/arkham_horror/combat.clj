@@ -17,17 +17,10 @@
          (ancient-one/combat-modifier game)
          (map :combat-modifier (investigator/items fighter))))
 
-(defn apply-successes [game successes]
-  (loop [game game
-         successes (+ successes (or (game :remaining-successes) 0))]
-    (if (or (zero? (count (game :investigators)))
-            (< successes (count (game :investigators))))
-      (assoc game :remaining-successes successes)
-      (recur (doom-track/retract game)
-             (- successes (count (game :investigators)))))))
-
 (defn start-attack [game]
-  (assoc-in game [:combat :current-attacker] 0))
+  (assoc game
+    :combat {:current-attacker 0
+             :successes 0}))
 
 (defn end-attack [game]
   (dissoc game :combat))
@@ -41,15 +34,29 @@
     (when (and position (< position (count investigators)))
       (nth investigators position))))
 
+(defn count-successes [game]
+  (+ (count (filter #{5 6} (-> game :combat :roll)))
+     (or (-> game :combat :remainder) 0)))
+
+(defn apply-successes
+  ([game] (apply-successes game (count-successes game)))
+  ([game successes]
+     (if (or (zero? (count (game :investigators)))
+             (< successes (count (game :investigators))))
+       (assoc-in game [:combat :remainder] successes)
+       (apply-successes (doom-track/retract game)
+                        (- successes (count (game :investigators)))))))
+
 (defn accept-roll [game]
-  game)
+  (let [game (apply-successes game)
+        combat (game :combat)]
+    (assoc game
+      :combat (dissoc (update-in combat [:current-attacker] inc) :roll))))
+
+(defn pending-roll [game]
+  (-> game :combat :roll))
 
 (defn investigator-attack [game]
-  (update-in (->> (current-attacker game)
-                  (combat-check-rolls game)
-                  (dice/combat-check game)
-                  (filter #{5 6})
-                  count
-                  (apply-successes game))
-             [:combat :current-attacker]
-             inc))
+  (assoc-in game [:combat :roll] (->> (current-attacker game)
+                                      (combat-check-rolls game)
+                                      (dice/combat-check game))))
