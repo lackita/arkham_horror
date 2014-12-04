@@ -12,15 +12,10 @@
       investigators/resolve-ancient-one-attack
       doom-track/advance))
 
-(defn combat-check-rolls [game fighter]
-  (apply +
-         (stat/fight fighter)
-         (ancient-one/combat-modifier game)
-         (map :combat-modifier (investigator/items fighter))))
-
 (defn start-attack [game]
   (merge (phase/start game)
          {:combat {:successes 0
+                   :remainder 0
                    :bullwhip 0}}))
 
 (defn end-attack [game]
@@ -31,7 +26,7 @@
 
 (defn count-successes [game]
   (+ (count (filter #{5 6} (dice/pending-roll game)))
-     (or (-> game :combat :remainder) 0)))
+     (-> game :combat :remainder)))
 
 (defn apply-successes
   ([game] (apply-successes game (count-successes game)))
@@ -47,10 +42,14 @@
         combat (game :combat)]
     (dice/accept-roll (phase/advance game))))
 
+(defn combat-check-rolls [game fighter]
+  (apply +
+         (stat/fight fighter)
+         (ancient-one/combat-modifier game)
+         (map :combat-modifier (investigator/items fighter))))
+
 (defn investigator-attack [game]
-  (dice/save-roll game (->> (phase/investigator game)
-                            (combat-check-rolls game)
-                            (dice/combat-check game))))
+  (dice/combat-check game))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
