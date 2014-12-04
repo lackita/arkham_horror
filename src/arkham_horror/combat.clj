@@ -52,9 +52,11 @@
   (-> game :combat :roll))
 
 (defn investigator-attack [game]
-  (assoc-in game [:combat :roll] (->> (phase/investigator game)
-                                      (combat-check-rolls game)
-                                      (dice/combat-check game))))
+  (let [roll (->> (phase/investigator game)
+                  (combat-check-rolls game)
+                  (dice/combat-check game))]
+    (dice/save-roll (assoc-in game [:combat :roll] roll)
+                    roll)))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
