@@ -39,4 +39,13 @@
                                       (combat/start-attack
                                        (combat/end-attack
                                         (combat/bullwhip bad-roll-game)))))))
-         [1 1 6])))
+         [1 1 6]))
+  (is (= (sort (combat/pending-roll (combat/bullwhip (combat/bullwhip (update-in bad-roll-game
+                                                                                 [:investigators]
+                                                                                 #(map (fn [investigator]
+                                                                                         (update-in investigator
+                                                                                                    [:items]
+                                                                                                    (fn [items]
+                                                                                                      (conj items {:name "Bullwhip" :combat-modifier 1}))))
+                                                                                       %))))))
+         [1 6 6])))

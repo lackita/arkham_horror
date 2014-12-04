@@ -20,7 +20,8 @@
 (defn start-attack [game]
   (assoc game
     :combat {:current-attacker 0
-             :successes 0}))
+             :successes 0
+             :bullwhip 0}))
 
 (defn end-attack [game]
   (dissoc game :combat))
@@ -62,10 +63,14 @@
                                       (dice/combat-check game))))
 
 (defn bullwhip [game]
-  (if (-> game :combat :bullwhip)
-    game
-    (assoc-in (update-in game [:combat :roll]
-                         #(conj (rest (sort %))
-                                ((game :dice))))
-              [:combat :bullwhip]
-              true)))
+  (if (< (-> game :combat :bullwhip)
+         (count (->> game :investigators
+                     (mapcat :items)
+                     (filter #(= "Bullwhip"
+                                 (:name %))))))
+    (update-in (update-in game [:combat :roll]
+                          #(conj (rest (sort %))
+                                 ((game :dice))))
+               [:combat :bullwhip]
+               inc)
+    game))
