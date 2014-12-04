@@ -1,19 +1,15 @@
 (ns arkham-horror.ancient-one-test
   (:require [clojure.test :refer :all]
             [arkham-horror.game :as game]
-            [arkham-horror.ancient-one :refer :all]))
+            [arkham-horror.ancient-one :as ancient-one]))
 
 (deftest random-test
-  (is (valid? {:ancient-one (random)}))
-  (is (= (set (loop [ancient-ones []
-                     remaining 100]
-                (if (zero? remaining)
-                  ancient-ones
-                  (recur (conj ancient-ones (random))  (dec remaining)))))
-         available)))
+  (is (ancient-one/valid? {:ancient-one (ancient-one/random)}))
+  (is (= (set (take 100 (repeatedly ancient-one/random)))
+         ancient-one/available)))
 
 (deftest awakened?-test
-  (is (awakened? (awaken (game/make {:ancient-one :cthulu}))))
-  (is (not (awakened? (game/make {:ancient-one :cthulu}))))
-  (is (awakened? (awaken (game/make {:ancient-one :azathoth}))))
-  (is (not (awakened? (game/make {:ancient-one :azathoth})))))
+  (is (ancient-one/awakened? (ancient-one/awaken (game/make {:ancient-one :cthulu}))))
+  (is (not (ancient-one/awakened? (game/make {:ancient-one :cthulu}))))
+  (is (ancient-one/awakened? (ancient-one/awaken (game/make {:ancient-one :azathoth}))))
+  (is (not (ancient-one/awakened? (game/make {:ancient-one :azathoth})))))

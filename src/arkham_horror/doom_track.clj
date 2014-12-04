@@ -1,7 +1,7 @@
 (ns arkham-horror.doom-track
   (:refer-clojure :exclude [empty]))
 
-(defmulti capacity :ancient-one)
+(defmulti capacity #(-> % :ancient-one :name))
 (defmethod capacity :cthulu [game] 13)
 (defmethod capacity :azathoth [game] 14)
 

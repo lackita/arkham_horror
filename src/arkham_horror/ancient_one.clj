@@ -1,8 +1,18 @@
 (ns arkham-horror.ancient-one
+  (:refer-clojure :exclude [get set])
   (:require [arkham-horror.doom-track :as doom-track]
             [arkham-horror.investigators :as investigators]))
 
 (def available #{:azathoth :cthulu})
+
+(defn get [game]
+  (game :ancient-one))
+
+(defn set [game ancient-one]
+  (assoc game :ancient-one ancient-one))
+
+(defn update [g f]
+  (update-in g [:ancient-one] f))
 
 (defn make [name]
   {:name name})
@@ -13,7 +23,7 @@
 (defn random []
   (first (shuffle available)))
 
-(defmulti rouse :ancient-one)
+(defmulti rouse #(-> % :ancient-one :name))
 (defmethod rouse :azathoth [game]
   (investigators/devour-all game))
 (defmethod rouse :default [game]
