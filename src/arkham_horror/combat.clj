@@ -54,7 +54,7 @@
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
-         (count (->> game :investigators (mapcat :items)
+         (count (->> (phase/investigator game) :items
                      (filter #(= "Bullwhip" (:name %))))))
     (update-in (dice/reroll-lowest game) [:combat :bullwhip] inc)
     game))
