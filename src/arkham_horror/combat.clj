@@ -30,7 +30,7 @@
   (game :combat))
 
 (defn count-successes [game]
-  (+ (count (filter #{5 6} (-> game :combat :roll)))
+  (+ (count (filter #{5 6} (dice/pending-roll game)))
      (or (-> game :combat :remainder) 0)))
 
 (defn apply-successes
@@ -45,28 +45,16 @@
 (defn accept-roll [game]
   (let [game (apply-successes game)
         combat (game :combat)]
-    (assoc (phase/advance game)
-      :combat (dissoc combat :roll))))
-
-(defn pending-roll [game]
-  (-> game :combat :roll))
+    (dice/accept-roll (phase/advance game))))
 
 (defn investigator-attack [game]
-  (let [roll (->> (phase/investigator game)
-                  (combat-check-rolls game)
-                  (dice/combat-check game))]
-    (dice/save-roll (assoc-in game [:combat :roll] roll)
-                    roll)))
+  (dice/save-roll game (->> (phase/investigator game)
+                            (combat-check-rolls game)
+                            (dice/combat-check game))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
-         (count (->> game :investigators
-                     (mapcat :items)
-                     (filter #(= "Bullwhip"
-                                 (:name %))))))
-    (update-in (update-in game [:combat :roll]
-                          #(conj (rest (sort %))
-                                 (dice/roll (game :dice))))
-               [:combat :bullwhip]
-               inc)
+         (count (->> game :investigators (mapcat :items)
+                     (filter #(= "Bullwhip" (:name %))))))
+    (update-in (dice/reroll-lowest game) [:combat :bullwhip] inc)
     game))

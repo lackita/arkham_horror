@@ -25,23 +25,23 @@
          13)))
 
 (deftest pending-roll-test
-  (is (= (combat/pending-roll (combat/investigator-attack rigged-game)) [6 6 6])))
+  (is (= (dice/pending-roll (combat/investigator-attack rigged-game)) [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
-  (assoc (combat/investigator-attack (assoc game :dice (dice/make 1)))
-    :dice (dice/make 6)))
+  (assoc-in (combat/investigator-attack (assoc-in game [:dice :value] 1))
+            [:dice :value] 6))
 
 (def bad-roll-game (roll-badly-but-lucky started-attack-game))
 (deftest bullwhip-test
-  (is (= (sort (combat/pending-roll (combat/bullwhip bad-roll-game)))
+  (is (= (sort (dice/pending-roll (combat/bullwhip bad-roll-game)))
          [1 1 6]))
-  (is (= (sort (combat/pending-roll (combat/bullwhip
+  (is (= (sort (dice/pending-roll (combat/bullwhip
                                      (roll-badly-but-lucky
                                       (combat/start-attack
                                        (combat/end-attack
                                         (combat/bullwhip bad-roll-game)))))))
          [1 1 6]))
-  (is (= (sort (combat/pending-roll (combat/bullwhip (combat/bullwhip (update-in bad-roll-game
+  (is (= (sort (dice/pending-roll (combat/bullwhip (combat/bullwhip (update-in bad-roll-game
                                                                                  [:investigators]
                                                                                  #(map (fn [investigator]
                                                                                          (update-in investigator

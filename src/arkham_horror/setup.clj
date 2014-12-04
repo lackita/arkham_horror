@@ -25,13 +25,13 @@
 (defn game-status [active-game]
   (cond (game/won? active-game) "You win"
         (game/lost? active-game) "You lose"
-        (combat/pending-roll active-game) (->> (combat/pending-roll active-game)
-                                               (clojure.string/join " ")
-                                               (str "Roll: "))
+        (dice/pending-roll active-game) (->> (dice/pending-roll active-game)
+                                             (clojure.string/join " ")
+                                             (str "Roll: "))
         (and (combat/in-combat? active-game)
              (not (phase/investigator active-game))) "Defend"
-        (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
-                                             (active-game :doom-track))
-        (ancient-one/awakened? active-game) "Refresh investigators"
-        (active-game :initialized) "Awaken ancient one"
-        :else "Initialize investigators"))
+             (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
+                                                  (active-game :doom-track))
+             (ancient-one/awakened? active-game) "Refresh investigators"
+             (active-game :initialized) "Awaken ancient one"
+             :else "Initialize investigators"))
