@@ -18,7 +18,7 @@
   (is (not (combat/in-combat? (combat/end-attack ended-attack-game)))))
 
 (def rigged-game (assoc started-attack-game
-                   :dice (dice/loaded 6)))
+                   :dice (dice/make 6)))
 (deftest investigator-attack-test
   (is (phase/investigator (combat/investigator-attack started-attack-game)))
   (is (= (doom-track/level (combat/investigator-attack rigged-game))
@@ -28,8 +28,8 @@
   (is (= (combat/pending-roll (combat/investigator-attack rigged-game)) [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
-  (assoc (combat/investigator-attack (assoc game :dice (dice/loaded 1)))
-    :dice (dice/loaded 6)))
+  (assoc (combat/investigator-attack (assoc game :dice (dice/make 1)))
+    :dice (dice/make 6)))
 
 (def bad-roll-game (roll-badly-but-lucky started-attack-game))
 (deftest bullwhip-test

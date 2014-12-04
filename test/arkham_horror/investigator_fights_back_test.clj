@@ -11,7 +11,7 @@
 
 (defn make-game-with [fights pips]
   (game/make {:ancient-one :cthulu
-              :dice (dice/loaded pips)
+              :dice (dice/make pips)
               :investigators (map #(investigator/init (investigator/make "Monterey Jack")
                                                       {:speed 0 :fight % :lore 0}) fights)}))
 

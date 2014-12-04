@@ -1,16 +1,19 @@
 (ns arkham-horror.dice)
 
-(defn random []
-  (inc (int (rand 6))))
+(defn make [type]
+  {:type type})
 
-(defn loaded [pips]
-  (fn [] pips))
+(defmulti roll :type)
+(defmethod roll :random [_]
+  (inc (int (rand 6))))
+(defmethod roll :default [dice]
+  (dice :type))
 
 (defn accept-roll [game]
   game)
 
-(defn roll [dice times]
-  (take times (repeatedly dice)))
+(defn roll-many [dice times]
+  (take times (repeatedly #(roll dice))))
 
 (defn combat-check [game rolls]
-  (roll (game :dice) rolls))
+  (roll-many (game :dice) rolls))

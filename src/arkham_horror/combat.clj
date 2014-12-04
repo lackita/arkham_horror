@@ -64,7 +64,7 @@
                                  (:name %))))))
     (update-in (update-in game [:combat :roll]
                           #(conj (rest (sort %))
-                                 ((game :dice))))
+                                 (dice/roll (game :dice))))
                [:combat :bullwhip]
                inc)
     game))

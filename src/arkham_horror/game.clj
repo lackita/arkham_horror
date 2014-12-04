@@ -4,7 +4,7 @@
             [arkham-horror.dice :as dice]))
 
 (defn make [config]
-  (merge {:doom-track 0 :dice dice/random} config))
+  (merge {:doom-track 0 :dice (dice/make :random)} config))
 
 (defn lost? [game]
   (empty? (game :investigators)))

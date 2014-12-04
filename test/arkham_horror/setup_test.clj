@@ -29,7 +29,7 @@
 (def attack-started-game (combat/start-attack awakened-game))
 (def rigged-game (combat/start-attack
                   (merge awakened-game
-                         {:dice (dice/loaded 6)
+                         {:dice (dice/make 6)
                           :investigators (map #(stat/rig-fight % 19)
                                               (awakened-game :investigators))})))
 (deftest game-status-test
