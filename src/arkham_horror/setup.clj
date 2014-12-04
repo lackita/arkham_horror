@@ -1,5 +1,6 @@
 (ns arkham-horror.setup
   (:require [arkham-horror.game :as game]
+            [arkham-horror.phase :as phase]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.investigator :as investigator]
@@ -28,7 +29,7 @@
                                                (clojure.string/join " ")
                                                (str "Roll: "))
         (and (combat/in-combat? active-game)
-             (not (combat/current-attacker active-game))) "Defend"
+             (not (phase/investigator active-game))) "Defend"
         (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
                                              (active-game :doom-track))
         (ancient-one/awakened? active-game) "Refresh investigators"

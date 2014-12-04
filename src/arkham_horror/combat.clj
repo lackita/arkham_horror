@@ -4,7 +4,8 @@
             [arkham-horror.doom-track :as doom-track]
             [arkham-horror.stat :as stat]
             [arkham-horror.dice :as dice]
-            [arkham-horror.ancient-one :as ancient-one]))
+            [arkham-horror.ancient-one :as ancient-one]
+            [arkham-horror.phase :as phase]))
 
 (defn ancient-one-attack [game]
   (-> game
@@ -18,22 +19,15 @@
          (map :combat-modifier (investigator/items fighter))))
 
 (defn start-attack [game]
-  (assoc game
-    :combat {:current-attacker 0
-             :successes 0
-             :bullwhip 0}))
+  (merge (phase/start game)
+         {:combat {:successes 0
+                   :bullwhip 0}}))
 
 (defn end-attack [game]
-  (dissoc game :combat))
+  (dissoc (phase/end game) :combat))
 
 (defn in-combat? [game]
   (game :combat))
-
-(defn current-attacker [game]
-  (let [position (-> game :combat :current-attacker)
-        investigators (game :investigators)]
-    (when (and position (< position (count investigators)))
-      (nth investigators position))))
 
 (defn count-successes [game]
   (+ (count (filter #{5 6} (-> game :combat :roll)))
@@ -51,14 +45,14 @@
 (defn accept-roll [game]
   (let [game (apply-successes game)
         combat (game :combat)]
-    (assoc game
-      :combat (dissoc (update-in combat [:current-attacker] inc) :roll))))
+    (assoc (phase/advance game)
+      :combat (dissoc combat :roll))))
 
 (defn pending-roll [game]
   (-> game :combat :roll))
 
 (defn investigator-attack [game]
-  (assoc-in game [:combat :roll] (->> (current-attacker game)
+  (assoc-in game [:combat :roll] (->> (phase/investigator game)
                                       (combat-check-rolls game)
                                       (dice/combat-check game))))
 

@@ -1,5 +1,6 @@
 (ns arkham-horror.combat-test
   (:require [clojure.test :refer :all]
+            [arkham-horror.phase :as phase]
             [arkham-horror.setup :as setup]
             [arkham-horror.combat :as combat]
             [arkham-horror.doom-track :as doom-track]
@@ -19,7 +20,7 @@
 (def rigged-game (assoc started-attack-game
                    :dice (dice/loaded 6)))
 (deftest investigator-attack-test
-  (is (combat/current-attacker (combat/investigator-attack started-attack-game)))
+  (is (phase/investigator (combat/investigator-attack started-attack-game)))
   (is (= (doom-track/level (combat/investigator-attack rigged-game))
          13)))
 

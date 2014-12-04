@@ -4,6 +4,7 @@
             [arkham-horror.investigators :as investigators]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.game :as game]
+            [arkham-horror.phase :as phase]
             [arkham-horror.dice :as dice]
             [arkham-horror.doom-track :as doom-track]
             [arkham-horror.combat :as combat]))
@@ -15,7 +16,7 @@
                                                       {:speed 0 :fight % :lore 0}) fights)}))
 
 (defn everybody-attack [game]
-  (if (combat/current-attacker game)
+  (if (phase/investigator game)
     (everybody-attack (combat/accept-roll (combat/investigator-attack game)))
     game))
 
