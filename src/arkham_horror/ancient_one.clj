@@ -11,14 +11,14 @@
 (defn set [game ancient-one]
   (assoc game :ancient-one ancient-one))
 
-(defn update [g f]
-  (update-in g [:ancient-one] f))
+(defn update [game fn]
+  (update-in game [:ancient-one] fn))
 
 (defn make [name]
   {:name name})
 
-(defn valid? [game]
-  (available (game :ancient-one)))
+(defn valid? [ancient-one]
+  (available ancient-one))
 
 (defn random []
   (first (shuffle available)))
@@ -30,11 +30,11 @@
   (doom-track/fill game))
 
 (defn awaken [game]
-  (assoc (rouse game)
-    :awakened true))
+  (assoc-in (rouse game)
+    [:ancient-one :awakened] true))
 
-(defn awakened? [game]
-  (game :awakened))
+(defn awakened? [ancient-one]
+  (ancient-one :awakened))
 
 (defn combat-modifier [game]
   -6)
@@ -43,5 +43,5 @@
   (doom-track/empty game))
 
 (defn defeated? [game]
-  (and (awakened? game)
+  (and (awakened? (get game))
        (= (doom-track/level game) 0)))

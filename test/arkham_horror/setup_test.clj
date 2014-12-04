@@ -20,7 +20,7 @@
 
 (def awakened-game (setup/awaken (setup/begin :cthulu ["Monterey Jack"])))
 (deftest awaken-test
-  (is (ancient-one/awakened? awakened-game)))
+  (is (ancient-one/awakened? (ancient-one/get awakened-game))))
 
 (def focused-game (setup/focus awakened-game [{:fight-will 2}]))
 (deftest focus-test
