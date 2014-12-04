@@ -40,9 +40,8 @@
   (save-roll dice (take (max 0 (+ (skill investigator) modifier))
                         (repeatedly #(roll dice)))))
 
-(defn combat-check [game investigator]
-  (assoc game
-    :dice (skill-check (get game) investigator stat/fight
-                       (apply + (ancient-one/combat-modifier game)
-                              (map :combat-modifier
-                                   (investigator/items investigator))))))
+(defn combat-check [dice investigator enemy]
+  (skill-check dice investigator stat/fight
+               (apply + (ancient-one/combat-modifier enemy)
+                      (map :combat-modifier
+                           (investigator/items investigator)))))

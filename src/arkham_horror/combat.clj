@@ -49,7 +49,8 @@
          (map :combat-modifier (investigator/items fighter))))
 
 (defn investigator-attack [game]
-  (dice/set game (dice/get (dice/combat-check game (phase/investigator game)))))
+  (dice/update game #(dice/combat-check % (phase/investigator game)
+                                        (ancient-one/get game))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)

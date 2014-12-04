@@ -36,7 +36,7 @@
 (defn awakened? [ancient-one]
   (ancient-one :awakened))
 
-(defn combat-modifier [game]
+(defn combat-modifier [ancient-one]
   -6)
 
 (defn defeat [game]
