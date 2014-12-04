@@ -4,6 +4,9 @@
 
 (def available #{:azathoth :cthulu})
 
+(defn make [name]
+  {:name name})
+
 (defn valid? [game]
   (available (game :ancient-one)))
 
