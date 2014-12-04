@@ -25,9 +25,10 @@
 (defn game-status [active-game]
   (cond (game/won? active-game) "You win"
         (game/lost? active-game) "You lose"
-        (dice/pending-roll active-game) (->> (dice/pending-roll active-game)
-                                             (clojure.string/join " ")
-                                             (str "Roll: "))
+        (dice/pending-roll (dice/get active-game)) (->> (dice/get active-game)
+                                                        dice/pending-roll
+                                                        (clojure.string/join " ")
+                                                        (str "Roll: "))
         (and (combat/in-combat? active-game)
              (not (phase/investigator active-game))) "Defend"
              (combat/in-combat? active-game) (str "Attack\n" "Doom track: "

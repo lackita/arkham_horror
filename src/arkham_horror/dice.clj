@@ -1,37 +1,48 @@
 (ns arkham-horror.dice
+  (:refer-clojure :exclude [get set])
   (:require [arkham-horror.phase :as phase]
             [arkham-horror.stat :as stat]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator :as investigator]))
 
+(defn get [game]
+  (game :dice))
+
+(defn set [game dice]
+  (assoc game :dice dice))
+
+(defn update [g f]
+  (update-in g [:dice] f))
+
 (defn make [value]
   {:value value})
 
-(defmulti roll #(-> % :dice :value))
+(defmulti roll :value)
 (defmethod roll :random [_]
   (inc (int (rand 6))))
-(defmethod roll :default [game]
-  (-> game :dice :value))
+(defmethod roll :default [dice]
+  (dice :value))
 
-(defn pending-roll [game]
-  (-> game :dice :roll))
+(defn pending-roll [dice]
+  (dice :roll))
 
 (defn accept-roll [game]
   (update-in game [:dice] #(dissoc % :roll)))
 
-(defn save-roll [game roll]
-  (assoc-in game [:dice :roll] roll))
+(defn save-roll [dice roll]
+  (assoc dice :roll roll))
 
-(defn reroll-lowest [game]
-  (save-roll game (conj (rest (sort (pending-roll game)))
-                        (roll game))))
+(defn reroll-lowest [dice]
+  (save-roll dice (conj (rest (sort (pending-roll dice)))
+                        (roll dice))))
 
-(defn skill-check [game skill modifier]
-  (save-roll game (take (max 0 (+ (skill (phase/investigator game)) modifier))
-                        (repeatedly #(roll game)))))
+(defn skill-check [dice investigator skill modifier]
+  (save-roll dice (take (max 0 (+ (skill investigator) modifier))
+                        (repeatedly #(roll dice)))))
 
-(defn combat-check [game]
-  (skill-check game stat/fight
-               (apply + (ancient-one/combat-modifier game)
-                        (map :combat-modifier
-                             (investigator/items (phase/investigator game))))))
+(defn combat-check [game investigator]
+  (assoc game
+    :dice (skill-check (get game) investigator stat/fight
+                       (apply + (ancient-one/combat-modifier game)
+                              (map :combat-modifier
+                                   (investigator/items investigator))))))

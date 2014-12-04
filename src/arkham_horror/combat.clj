@@ -25,7 +25,7 @@
   (game :combat))
 
 (defn count-successes [game]
-  (+ (count (filter #{5 6} (dice/pending-roll game)))
+  (+ (count (filter #{5 6} (dice/pending-roll (dice/get game))))
      (-> game :combat :remainder)))
 
 (defn apply-successes
@@ -49,11 +49,11 @@
          (map :combat-modifier (investigator/items fighter))))
 
 (defn investigator-attack [game]
-  (dice/combat-check game))
+  (dice/set game (dice/get (dice/combat-check game (phase/investigator game)))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
          (count (->> (phase/investigator game) :items
                      (filter #(= "Bullwhip" (:name %))))))
-    (update-in (dice/reroll-lowest game) [:combat :bullwhip] inc)
+    (update-in (dice/update game dice/reroll-lowest) [:combat :bullwhip] inc)
     game))
