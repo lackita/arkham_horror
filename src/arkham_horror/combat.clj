@@ -33,7 +33,7 @@
      (if (or (zero? (count (game :investigators)))
              (< successes (count (game :investigators))))
        (assoc-in game [:combat :remainder] successes)
-       (apply-successes (doom-track/retract game)
+       (apply-successes (ancient-one/update game #(doom-track/update % doom-track/retract))
                         (- successes (count (game :investigators)))))))
 
 (defn accept-roll [game]

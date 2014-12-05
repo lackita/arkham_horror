@@ -27,9 +27,8 @@
   (update-in game [:ancient-one :doom-track]
              #(move % inc (capacity %))))
 
-(defn retract [game]
-  (update-in game [:ancient-one :doom-track]
-             #(move % dec 0)))
+(defn retract [doom-track]
+  (move doom-track dec 0))
 
 (defn fill [doom-track]
   (assoc doom-track :level (capacity doom-track)))

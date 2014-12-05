@@ -57,19 +57,19 @@
          13))
   (is (= (-> base-game
              doom-track/advance
-             doom-track/retract
              ancient-one/get
              doom-track/get
+             doom-track/retract
              doom-track/level)
          0))
   (is (= (-> base-game
-             doom-track/retract
              ancient-one/get
              doom-track/get
+             doom-track/retract
              doom-track/level)
          0))
   (is (= (-> awakened-game
-             doom-track/retract
+             (ancient-one/update #(doom-track/update % doom-track/retract))
              combat/ancient-one-attack
              ancient-one/get
              doom-track/get
