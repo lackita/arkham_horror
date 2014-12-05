@@ -45,9 +45,9 @@
 (defn combat-modifier [ancient-one]
   -6)
 
-(defn defeat [game]
-  (update-in game [:ancient-one] #(doom-track/update % doom-track/empty)))
+(defn defeat [ancient-one]
+  (doom-track/update ancient-one doom-track/empty))
 
-(defn defeated? [game]
-  (and (awakened? (get game))
-       (= (doom-track/level (doom-track/get (ancient-one/get game))) 0)))
+(defn defeated? [ancient-one]
+  (and (awakened? ancient-one)
+       (= (doom-track/level (doom-track/get ancient-one)) 0)))

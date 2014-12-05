@@ -13,7 +13,7 @@
 
 (defn won? [game]
   (and (not (lost? game))
-       (ancient-one/defeated? game)))
+       (ancient-one/defeated? (ancient-one/get game))))
 
 (defn over? [game]
   (or (lost? game)

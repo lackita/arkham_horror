@@ -43,31 +43,8 @@
   (is (lost-after-attacks? has-a-tougher-investigator 2)))
 
 (deftest doom-track-test
-  (is (= (doom-track/capacity (doom-track/get (ancient-one/get base-game))) 13))
-  (is (= (doom-track/level (doom-track/get (ancient-one/get base-game))) 0))
-  (is (= (doom-track/level (doom-track/get (ancient-one/get (doom-track/advance base-game)))) 1))
+  (is (= (doom-track/capacity (doom-track/get (ancient-one/make :cthulu))) 13))
   (is (= (doom-track/level (doom-track/get (ancient-one/get awakened-game))) 13))
-  (is (= (->> base-game
-              (iterate doom-track/advance)
-              (drop 14)
-              first
-              ancient-one/get
-              doom-track/get
-              doom-track/level)
-         13))
-  (is (= (-> base-game
-             doom-track/advance
-             ancient-one/get
-             doom-track/get
-             doom-track/retract
-             doom-track/level)
-         0))
-  (is (= (-> base-game
-             ancient-one/get
-             doom-track/get
-             doom-track/retract
-             doom-track/level)
-         0))
   (is (= (-> awakened-game
              (ancient-one/update #(doom-track/update % doom-track/retract))
              combat/ancient-one-attack

@@ -23,9 +23,8 @@
     doom-track
     (update-in doom-track [:level] direction)))
 
-(defn advance [game]
-  (update-in game [:ancient-one :doom-track]
-             #(move % inc (capacity %))))
+(defn advance [doom-track]
+  (move doom-track inc (capacity doom-track)))
 
 (defn retract [doom-track]
   (move doom-track dec 0))

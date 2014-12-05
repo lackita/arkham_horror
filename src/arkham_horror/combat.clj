@@ -7,9 +7,10 @@
             [arkham-horror.phase :as phase]))
 
 (defn ancient-one-attack [game]
-  (doom-track/advance (assoc game :investigators
+  (ancient-one/update (assoc game :investigators
                              (map investigator/reduce-max-sanity-or-stamina
-                                  (game :investigators)))))
+                                  (game :investigators)))
+                      #(doom-track/update % doom-track/advance)))
 
 (defn start-attack [game]
   (merge (phase/start game)
