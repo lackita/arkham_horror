@@ -8,9 +8,9 @@
             [arkham-horror.phase :as phase]))
 
 (defn ancient-one-attack [game]
-  (-> game
-      investigators/resolve-ancient-one-attack
-      doom-track/advance))
+  (doom-track/advance (assoc game :investigators
+                             (map investigator/reduce-max-sanity-or-stamina
+                                  (game :investigators)))))
 
 (defn start-attack [game]
   (merge (phase/start game)
@@ -38,9 +38,7 @@
                         (- successes (count (game :investigators)))))))
 
 (defn accept-roll [game]
-  (let [game (apply-successes game)
-        combat (game :combat)]
-    (dice/accept-roll (phase/advance game))))
+  (dice/update (phase/advance (apply-successes game)) dice/accept-roll))
 
 (defn combat-check-rolls [game fighter]
   (apply +

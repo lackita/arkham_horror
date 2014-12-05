@@ -26,8 +26,8 @@
 (defn pending-roll [dice]
   (dice :roll))
 
-(defn accept-roll [game]
-  (update-in game [:dice] #(dissoc % :roll)))
+(defn accept-roll [dice]
+  (dissoc dice :roll))
 
 (defn save-roll [dice roll]
   (assoc dice :roll roll))

@@ -62,3 +62,9 @@
   (is (= (stat/maximum-sanity monterey-jack) 3))
   (is (= (stat/maximum-stamina monterey-jack) 7))
   (is (= (set (map :name (investigator/items monterey-jack))) #{".38 Revolver" "Bullwhip"})))
+
+(deftest devour-test
+  (is (not (investigator/devoured? (investigator/make "Monterey Jack"))))
+  (is (investigator/devoured? (merge (investigator/make "Monterey Jack")
+                                     {:maximum-sanity 0 :maximum-stamina 1})))
+  (is (investigator/devoured? (investigator/devour (investigator/make "Monterey Jack")))))

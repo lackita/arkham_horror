@@ -1,11 +1,6 @@
 (ns arkham-horror.investigator
   (:require [arkham-horror.stat :as stat]))
 
-(defn devoured? [investigator]
-  (->> [:maximum-sanity :maximum-stamina]
-       (map investigator)
-       (not-any? zero?)))
-
 (defn reduce-max-sanity-or-stamina [investigator]
   (update-in investigator [(stat/get-smaller investigator)] dec))
 
@@ -45,3 +40,12 @@
            {:name "Bullwhip" :combat-modifier 1}]
    :maximum-sanity 3
    :maximum-stamina 7})
+
+(defn devoured? [investigator]
+  (or (->> [:maximum-sanity :maximum-stamina]
+           (map investigator)
+           (some zero?))
+      (investigator :devoured)))
+
+(defn devour [investigator]
+  (assoc investigator :devoured true))

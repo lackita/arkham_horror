@@ -1,7 +1,8 @@
 (ns arkham-horror.ancient-one
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.doom-track :as doom-track]
-            [arkham-horror.investigators :as investigators]))
+            [arkham-horror.investigators :as investigators]
+            [arkham-horror.investigator :as investigator]))
 
 (def available #{:azathoth :cthulu})
 
@@ -25,7 +26,7 @@
 
 (defmulti rouse #(-> % :ancient-one :name))
 (defmethod rouse :azathoth [game]
-  (investigators/devour-all game))
+  (assoc game :investigators (map investigator/devour (game :investigators))))
 (defmethod rouse :default [game]
   (doom-track/fill game))
 
