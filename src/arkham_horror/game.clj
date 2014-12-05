@@ -4,9 +4,9 @@
             [arkham-horror.investigator :as investigator]))
 
 (defn make [config]
-  (ancient-one/set (dice/set (merge {:doom-track 0} config)
-                             (dice/make (or (config :dice) :random)))
-                   (ancient-one/make (config :ancient-one))))
+  (-> config
+      (dice/set (dice/make (config :dice)))
+      (ancient-one/set (ancient-one/make (config :ancient-one)))))
 
 (defn lost? [{investigators :investigators}]
   (every? investigator/devoured? investigators))

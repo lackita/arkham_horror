@@ -24,9 +24,13 @@
   (assoc-in (rouse game)
             [:ancient-one :awakened] true))
 
-(defn make [name]
+(defmulti make identity)
+(defmethod make :cthulu [name]
   {:name name
-   :doom-track (doom-track/make 0)})
+   :doom-track (doom-track/make 0 13)})
+(defmethod make :azathoth [name]
+  {:name name
+   :doom-track (doom-track/make 0 14)})
 
 (defn valid? [ancient-one]
   (available ancient-one))

@@ -25,7 +25,7 @@
 
 (defn count-successes [game]
   (+ (count (filter #{5 6} (dice/pending-roll (dice/get game))))
-     (-> game :combat :remainder)))
+     (or (-> game :combat :remainder) 0)))
 
 (defn apply-successes
   ([game] (apply-successes game (count-successes game)))

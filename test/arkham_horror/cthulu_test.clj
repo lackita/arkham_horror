@@ -43,7 +43,7 @@
   (is (lost-after-attacks? has-a-tougher-investigator 2)))
 
 (deftest doom-track-test
-  (is (= (doom-track/capacity base-game) 13))
+  (is (= (doom-track/capacity (doom-track/get (ancient-one/get base-game))) 13))
   (is (= (doom-track/level base-game) 0))
   (is (= (doom-track/level (doom-track/advance base-game)) 1))
   (is (= (doom-track/level awakened-game) 13))

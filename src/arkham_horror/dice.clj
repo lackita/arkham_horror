@@ -15,7 +15,7 @@
   (update-in g [:dice] f))
 
 (defn make [value]
-  {:value value})
+  {:value (or value :random)})
 
 (defmulti roll :value)
 (defmethod roll :random [_]
