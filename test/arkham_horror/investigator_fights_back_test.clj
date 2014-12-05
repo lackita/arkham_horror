@@ -1,7 +1,6 @@
 (ns arkham-horror.investigator-fights-back-test
   (:require [clojure.test :refer :all]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.investigators :as investigators]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.game :as game]
             [arkham-horror.phase :as phase]

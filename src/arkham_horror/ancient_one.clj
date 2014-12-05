@@ -1,7 +1,6 @@
 (ns arkham-horror.ancient-one
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.doom-track :as doom-track]
-            [arkham-horror.investigators :as investigators]
             [arkham-horror.investigator :as investigator]))
 
 (def available #{:azathoth :cthulu})

@@ -1,6 +1,5 @@
 (ns arkham-horror.combat
   (:require [arkham-horror.investigator :as investigator]
-            [arkham-horror.investigators :as investigators]
             [arkham-horror.doom-track :as doom-track]
             [arkham-horror.stat :as stat]
             [arkham-horror.dice :as dice]
