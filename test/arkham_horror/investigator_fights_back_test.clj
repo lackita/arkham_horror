@@ -5,7 +5,7 @@
             [arkham-horror.game :as game]
             [arkham-horror.phase :as phase]
             [arkham-horror.dice :as dice]
-            [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.combat :as combat]))
 
 (defn make-game-with [fights pips]

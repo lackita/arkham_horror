@@ -1,6 +1,6 @@
 (ns arkham-horror.ancient-one
   (:refer-clojure :exclude [get set])
-  (:require [arkham-horror.doom-track :as doom-track]
+  (:require [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]))
 
 (def available #{:azathoth :cthulu})
@@ -14,15 +14,6 @@
 (defn update [game fn]
   (update-in game [:ancient-one] fn))
 
-(defn make [name]
-  {:name name})
-
-(defn valid? [ancient-one]
-  (available ancient-one))
-
-(defn random []
-  (first (shuffle available)))
-
 (defmulti rouse #(-> % :ancient-one :name))
 (defmethod rouse :azathoth [game]
   (assoc game :investigators (map investigator/devour (game :investigators))))
@@ -31,7 +22,17 @@
 
 (defn awaken [game]
   (assoc-in (rouse game)
-    [:ancient-one :awakened] true))
+            [:ancient-one :awakened] true))
+
+(defn make [name]
+  {:name name
+   :doom-track (doom-track/make 0)})
+
+(defn valid? [ancient-one]
+  (available ancient-one))
+
+(defn random []
+  (first (shuffle available)))
 
 (defn awakened? [ancient-one]
   (ancient-one :awakened))
@@ -40,7 +41,7 @@
   -6)
 
 (defn defeat [game]
-  (doom-track/empty game))
+  (update-in game [:ancient-one] #(doom-track/update % doom-track/empty)))
 
 (defn defeated? [game]
   (and (awakened? (get game))

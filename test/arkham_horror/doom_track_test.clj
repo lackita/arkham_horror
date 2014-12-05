@@ -1,12 +1,14 @@
 (ns arkham-horror.doom-track-test
   (:require [clojure.test :refer :all]
-            [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.ancient-one :as ancient-one]
+            [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.setup :as setup]))
 
 (deftest empty-test
-  (is (= (doom-track/level (doom-track/empty (setup/begin :cthulu []))) 0))
-  (is (= (-> (setup/begin :cthulu [])
-             doom-track/advance
-             doom-track/empty
-             doom-track/level)
+  (is (= (doom-track/level (ancient-one/update (setup/begin :cthulu [])
+                                               #(doom-track/update % doom-track/empty)))
+         0))
+  (is (= (doom-track/level (ancient-one/update (-> (setup/begin :cthulu [])
+                                                   doom-track/advance)
+                                               #(doom-track/update % doom-track/empty)))
          0)))

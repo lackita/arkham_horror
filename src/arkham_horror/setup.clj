@@ -4,7 +4,8 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.dice :as dice]))
+            [arkham-horror.dice :as dice]
+            [arkham-horror.ancient-one.doom-track :as doom-track]))
 
 (defn begin [ancient-one investigators]
   (game/make {:ancient-one ancient-one
@@ -32,7 +33,7 @@
         (and (combat/in-combat? active-game)
              (not (phase/investigator active-game))) "Defend"
              (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
-                                                  (active-game :doom-track))
+                                                  (doom-track/level active-game))
              (ancient-one/awakened? (ancient-one/get active-game)) "Refresh investigators"
              (active-game :initialized) "Awaken ancient one"
              :else "Initialize investigators"))

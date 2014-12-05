@@ -1,6 +1,5 @@
 (ns arkham-horror.game
-  (:require [arkham-horror.doom-track :as doom-track]
-            [arkham-horror.ancient-one :as ancient-one]
+  (:require [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.dice :as dice]
             [arkham-horror.investigator :as investigator]))
 

@@ -3,7 +3,7 @@
             [arkham-horror.phase :as phase]
             [arkham-horror.setup :as setup]
             [arkham-horror.combat :as combat]
-            [arkham-horror.doom-track :as doom-track]
+            [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.dice :as dice]))
 
 (def awakened-game (setup/awaken (setup/init (setup/begin :cthulu ["Monterey Jack"])
