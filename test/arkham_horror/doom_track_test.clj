@@ -5,10 +5,5 @@
             [arkham-horror.setup :as setup]))
 
 (deftest empty-test
-  (is (= (doom-track/level (ancient-one/update (setup/begin :cthulu [])
-                                               #(doom-track/update % doom-track/empty)))
-         0))
-  (is (= (doom-track/level (ancient-one/update (-> (setup/begin :cthulu [])
-                                                   doom-track/advance)
-                                               #(doom-track/update % doom-track/empty)))
-         0)))
+  (is (= (doom-track/level (doom-track/empty (doom-track/make 0 13))) 0))
+  (is (= (doom-track/level (doom-track/empty (doom-track/make 1 13))) 0)))

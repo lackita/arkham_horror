@@ -44,26 +44,34 @@
 
 (deftest doom-track-test
   (is (= (doom-track/capacity (doom-track/get (ancient-one/get base-game))) 13))
-  (is (= (doom-track/level base-game) 0))
-  (is (= (doom-track/level (doom-track/advance base-game)) 1))
-  (is (= (doom-track/level awakened-game) 13))
+  (is (= (doom-track/level (doom-track/get (ancient-one/get base-game))) 0))
+  (is (= (doom-track/level (doom-track/get (ancient-one/get (doom-track/advance base-game)))) 1))
+  (is (= (doom-track/level (doom-track/get (ancient-one/get awakened-game))) 13))
   (is (= (->> base-game
               (iterate doom-track/advance)
               (drop 14)
               first
+              ancient-one/get
+              doom-track/get
               doom-track/level)
          13))
   (is (= (-> base-game
              doom-track/advance
              doom-track/retract
+             ancient-one/get
+             doom-track/get
              doom-track/level)
          0))
   (is (= (-> base-game
              doom-track/retract
+             ancient-one/get
+             doom-track/get
              doom-track/level)
          0))
   (is (= (-> awakened-game
              doom-track/retract
              combat/ancient-one-attack
+             ancient-one/get
+             doom-track/get
              doom-track/level)
          13)))

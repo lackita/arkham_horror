@@ -33,7 +33,7 @@
         (and (combat/in-combat? active-game)
              (not (phase/investigator active-game))) "Defend"
              (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
-                                                  (doom-track/level active-game))
+                                                  (doom-track/level (doom-track/get (ancient-one/get active-game))))
              (ancient-one/awakened? (ancient-one/get active-game)) "Refresh investigators"
              (active-game :initialized) "Awaken ancient one"
              :else "Initialize investigators"))

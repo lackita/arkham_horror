@@ -3,6 +3,7 @@
             [arkham-horror.phase :as phase]
             [arkham-horror.setup :as setup]
             [arkham-horror.combat :as combat]
+            [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.dice :as dice]))
 
@@ -21,7 +22,7 @@
                    :dice (dice/make 6)))
 (deftest investigator-attack-test
   (is (phase/investigator (combat/investigator-attack started-attack-game)))
-  (is (= (doom-track/level (combat/investigator-attack rigged-game))
+  (is (= (doom-track/level (doom-track/get (ancient-one/get (combat/investigator-attack rigged-game))))
          13)))
 
 (deftest pending-roll-test

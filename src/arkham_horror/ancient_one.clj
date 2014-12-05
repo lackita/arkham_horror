@@ -1,6 +1,7 @@
 (ns arkham-horror.ancient-one
   (:refer-clojure :exclude [get set])
-  (:require [arkham-horror.ancient-one.doom-track :as doom-track]
+  (:require [arkham-horror.ancient-one :as ancient-one]
+            [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]))
 
 (def available #{:azathoth :cthulu})
@@ -18,7 +19,7 @@
 (defmethod rouse :azathoth [game]
   (assoc game :investigators (map investigator/devour (game :investigators))))
 (defmethod rouse :default [game]
-  (doom-track/fill game))
+  (update game #(doom-track/update % doom-track/fill)))
 
 (defn awaken [game]
   (assoc-in (rouse game)
@@ -49,4 +50,4 @@
 
 (defn defeated? [game]
   (and (awakened? (get game))
-       (= (doom-track/level game) 0)))
+       (= (doom-track/level (doom-track/get (ancient-one/get game))) 0)))
