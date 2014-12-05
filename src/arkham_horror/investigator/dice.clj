@@ -1,9 +1,8 @@
-(ns arkham-horror.dice
+(ns arkham-horror.investigator.dice
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.phase :as phase]
             [arkham-horror.stat :as stat]
-            [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.ancient-one :as ancient-one]))
 
 (defn get [game]
   (game :dice))
@@ -40,8 +39,5 @@
   (save-roll dice (take (max 0 (+ (skill investigator) modifier))
                         (repeatedly #(roll dice)))))
 
-(defn combat-check [dice investigator enemy]
-  (skill-check dice investigator stat/fight
-               (apply + (ancient-one/combat-modifier enemy)
-                      (map :combat-modifier
-                           (investigator/items investigator)))))
+(defn combat-check [dice investigator modifier]
+  (skill-check dice investigator stat/fight modifier))

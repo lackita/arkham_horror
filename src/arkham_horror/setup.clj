@@ -4,13 +4,12 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.dice :as dice]
+            [arkham-horror.investigator.dice :as dice]
             [arkham-horror.ancient-one.doom-track :as doom-track]))
 
 (defn begin [ancient-one investigators]
   (game/make {:ancient-one ancient-one
-              :investigators (map #(investigator/make %)
-                                  investigators)}))
+              :investigators investigators}))
 
 (defn init [{investigators :investigators :as game} config]
   (merge game

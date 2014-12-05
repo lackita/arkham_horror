@@ -6,9 +6,9 @@
             [arkham-horror.investigator :as investigator]))
 
 (def cthulu-game (game/make {:ancient-one :cthulu
-                             :investigators [(investigator/make "Monterey Jack")]}))
+                             :investigators ["Monterey Jack"]}))
 (def azathoth-game (game/make {:ancient-one :azathoth
-                               :investigators [(investigator/make "Monterey Jack")]}))
+                               :investigators ["Monterey Jack"]}))
 (def awakened-game (ancient-one/awaken cthulu-game))
 (def won-game (ancient-one/update awakened-game ancient-one/defeat))
 (def lost-game (ancient-one/awaken azathoth-game))

@@ -2,7 +2,7 @@
   (:require [arkham-horror.investigator :as investigator]
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.stat :as stat]
-            [arkham-horror.dice :as dice]
+            [arkham-horror.investigator.dice :as dice]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.phase :as phase]))
 
@@ -47,8 +47,10 @@
          (map :combat-modifier (investigator/items fighter))))
 
 (defn investigator-attack [game]
-  (dice/update game #(dice/combat-check % (phase/investigator game)
-                                        (ancient-one/get game))))
+  (dice/update game #(dice/combat-check
+                      % (phase/investigator game)
+                      (apply + (ancient-one/combat-modifier (ancient-one/get game))
+                             (map :combat-modifier (investigator/items (phase/investigator game)))))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)

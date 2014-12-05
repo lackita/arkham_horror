@@ -6,16 +6,22 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.combat :as combat]
             [arkham-horror.stat :as stat]
-            [arkham-horror.dice :as dice]))
+            [arkham-horror.investigator.dice :as dice]))
 
 (defn make-investigator-with [max-sanity max-stamina]
   (merge (investigator/make "Monterey Jack")
          {:maximum-sanity max-sanity
           :maximum-stamina max-stamina}))
 
-(defn make-awakened-game [config]
-  (ancient-one/awaken (game/make (merge {:ancient-one :cthulu}
-                                        config))))
+(defn alter-investigator [game max-sanity max-stamina]
+  (update-in game [:investigators]
+             (fn [investigators]
+               (map #(merge % {:maximum-sanity max-sanity
+                               :maximum-stamina max-stamina})
+                    investigators))))
+
+(def awakened-game (ancient-one/awaken (game/make {:ancient-one :cthulu
+                                                   :investigators ["Monterey Jack"]})))
 
 (defn lost-after-attacks? [victim attacks]
   (if (zero? attacks)
@@ -23,12 +29,11 @@
     (lost-after-attacks? (combat/ancient-one-attack victim) (dec attacks))))
 
 (def base-game (game/make {:ancient-one :cthulu}))
-(def awakened-game (make-awakened-game {:investigators [(make-investigator-with 1 1)]}))
-(def death-bed-game (make-awakened-game {:investigators [(make-investigator-with 1 1)]}))
-(def has-two-stamina-game (make-awakened-game {:investigators [(make-investigator-with 1 2)]}))
-(def has-two-sanity-game (make-awakened-game {:investigators [(make-investigator-with 2 1)]}))
-(def has-a-tougher-investigator (make-awakened-game {:investigators [(make-investigator-with 1 1)
-                                                                     (make-investigator-with 1 2)]}))
+(def awakened-game (alter-investigator awakened-game 1 1))
+(def death-bed-game (alter-investigator awakened-game 1 1))
+(def has-two-stamina-game (alter-investigator awakened-game 1 2))
+(def has-two-sanity-game (alter-investigator awakened-game 2 1))
+(def has-a-tougher-investigator (alter-investigator awakened-game 1 2))
 
 (deftest ends-world-test
   (is (not (lost-after-attacks? awakened-game 0)))

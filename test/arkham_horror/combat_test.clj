@@ -5,7 +5,7 @@
             [arkham-horror.combat :as combat]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.ancient-one.doom-track :as doom-track]
-            [arkham-horror.dice :as dice]))
+            [arkham-horror.investigator.dice :as dice]))
 
 (def awakened-game (setup/awaken (setup/init (setup/begin :cthulu ["Monterey Jack"])
                                              [{:speed 2 :fight 5 :lore 2}])))

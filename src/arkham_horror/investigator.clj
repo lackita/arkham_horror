@@ -1,5 +1,6 @@
 (ns arkham-horror.investigator
-  (:require [arkham-horror.stat :as stat]))
+  (:require [arkham-horror.stat :as stat]
+            [arkham-horror.investigator.dice :as dice]))
 
 (defn reduce-max-sanity-or-stamina [investigator]
   (update-in investigator [(stat/get-smaller investigator)] dec))
@@ -28,18 +29,24 @@
       (stat/set-lore  (config :lore))
       (stat/set-luck  (- 6 (config :lore)))))
 
-(defn make [name]
-  {:speed (stat/make 1 1 4)
-   :sneak (stat/make 0 0 3)
-   :fight (stat/make 2 2 5)
-   :will  (stat/make 0 0 3)
-   :lore  (stat/make 1 1 4)
-   :luck  (stat/make 2 2 5)
-   :focus 2
-   :items [{:name ".38 Revolver" :combat-modifier 3}
-           {:name "Bullwhip" :combat-modifier 1}]
-   :maximum-sanity 3
-   :maximum-stamina 7})
+(defn make
+  ([name] (make name :random))
+  ([name pips]
+     {:speed (stat/make 1 1 4)
+      :sneak (stat/make 0 0 3)
+      :fight (stat/make 2 2 5)
+      :will  (stat/make 0 0 3)
+      :lore  (stat/make 1 1 4)
+      :luck  (stat/make 2 2 5)
+      :focus 2
+      :items [{:name ".38 Revolver" :combat-modifier 3}
+              {:name "Bullwhip" :combat-modifier 1}]
+      :maximum-sanity 3
+      :maximum-stamina 7
+      :dice (dice/make pips)}))
+
+(defn set-all [game investigators]
+  (assoc game :investigators (map make investigators)))
 
 (defn devoured? [investigator]
   (or (->> [:maximum-sanity :maximum-stamina]

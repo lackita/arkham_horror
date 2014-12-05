@@ -5,7 +5,7 @@
             [arkham-horror.game :as game]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.combat :as combat]
-            [arkham-horror.dice :as dice]
+            [arkham-horror.investigator.dice :as dice]
             [arkham-horror.stat :as stat]))
 
 (def active-game (setup/begin :cthulu ["Monterey Jack"]))

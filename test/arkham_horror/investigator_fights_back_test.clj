@@ -3,16 +3,17 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.game :as game]
+            [arkham-horror.setup :as setup]
             [arkham-horror.phase :as phase]
-            [arkham-horror.dice :as dice]
+            [arkham-horror.investigator.dice :as dice]
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.combat :as combat]))
 
 (defn make-game-with [fights pips]
-  (game/make {:ancient-one :cthulu
-              :dice pips
-              :investigators (map #(investigator/init (investigator/make "Monterey Jack")
-                                                      {:speed 0 :fight % :lore 0}) fights)}))
+  (setup/init (game/make {:ancient-one :cthulu
+                          :dice pips
+                          :investigators [(repeat "Monterey Jack" (count fights))]})
+              (map (fn [fight] {:speed 0 :fight fight :lore 0}) fights)))
 
 (defn everybody-attack [game]
   (if (phase/investigator game)
