@@ -3,7 +3,6 @@
   (:require [arkham-horror.phase :as phase]
             [arkham-horror.stat :as stat]))
 
-; TODO move to investigator
 (defn get [game]
   (-> game :phase :current-investigator :dice))
 
