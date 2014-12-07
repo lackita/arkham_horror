@@ -29,8 +29,12 @@
   (is (= (dice/pending-roll (dice/get (phase/investigator (combat/investigator-attack rigged-game)))) [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
-  (dice/update (combat/investigator-attack (dice/update game #(merge % {:value 1})))
-               #(merge % {:value 6})))
+  (update-in (combat/investigator-attack (update-in game
+                                                    [:phase :current-investigator]
+                                                    (fn [investigator]
+                                                      (dice/update investigator #(merge % {:value 1})))))
+             [:phase :current-investigator]
+             (fn [investigator] (dice/update investigator #(merge % {:value 6})))))
 
 (def bad-roll-game (roll-badly-but-lucky started-attack-game))
 (deftest bullwhip-test

@@ -35,11 +35,14 @@
      (if (or (nil? (phase/investigator game))
              (< successes (count (phase/all-investigators game))))
        (assoc-in game [:combat :remainder] successes)
-       (apply-successes (ancient-one/update game #(doom-track/update % doom-track/retract))
+       (apply-successes (ancient-one/update game (fn [investigator]
+                                                   (doom-track/update investigator
+                                                                      doom-track/retract)))
                         (- successes (count (phase/all-investigators game)))))))
 
 (defn accept-roll [game]
-  (phase/advance (dice/update (apply-successes game) dice/accept-roll)))
+  (phase/advance (update-in (apply-successes game) [:phase :current-investigator]
+                            (fn [investigator] (dice/update investigator dice/accept-roll)))))
 
 (defn combat-check-rolls [game fighter]
   (apply + (stat/fight fighter)
@@ -48,15 +51,22 @@
 
 (defn investigator-attack [game]
   {:pre [(:dice (phase/investigator game))]}
-  (dice/update game #(dice/combat-check %
-                       (phase/investigator game)
-                       (apply + (ancient-one/combat-modifier (ancient-one/get game))
-                                (map :combat-modifier
-                                     (investigator/items (phase/investigator game)))))))
+  (update-in game [:phase :current-investigator]
+             (fn [investigator]
+               (dice/update investigator
+                            #(dice/combat-check
+                              %
+                              (phase/investigator game)
+                              (apply + (ancient-one/combat-modifier (ancient-one/get game))
+                                     (map :combat-modifier
+                                          (investigator/items (phase/investigator game)))))))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
          (count (->> (phase/investigator game) :items
                      (filter #(= "Bullwhip" (:name %))))))
-    (update-in (dice/update game dice/reroll-lowest) [:combat :bullwhip] inc)
+    (update-in (update-in game [:phase :current-investigator]
+                          (fn [investigator]
+                            (dice/update investigator dice/reroll-lowest)))
+               [:combat :bullwhip] inc)
     game))
