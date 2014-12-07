@@ -25,7 +25,7 @@
          13)))
 
 (deftest pending-roll-test
-  (is (= (dice/pending-roll (dice/get (combat/investigator-attack rigged-game))) [6 6 6])))
+  (is (= (dice/pending-roll (dice/get (phase/investigator (combat/investigator-attack rigged-game)))) [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
   (dice/update (combat/investigator-attack (dice/update game #(merge % {:value 1})))
@@ -33,23 +33,25 @@
 
 (def bad-roll-game (roll-badly-but-lucky started-attack-game))
 (deftest bullwhip-test
-  (is (= (sort (dice/pending-roll (dice/get (combat/bullwhip bad-roll-game))))
+  (is (= (sort (dice/pending-roll (dice/get (phase/investigator (combat/bullwhip bad-roll-game)))))
          [1 1 6]))
   (is (= (sort (dice/pending-roll (dice/get
-                                   (combat/bullwhip
-                                    (roll-badly-but-lucky
-                                     (combat/start-attack
-                                      (combat/end-attack
-                                       (combat/bullwhip bad-roll-game))))))))
+                                   (phase/investigator
+                                    (combat/bullwhip
+                                     (roll-badly-but-lucky
+                                      (combat/start-attack
+                                       (combat/end-attack
+                                        (combat/bullwhip bad-roll-game)))))))))
          [1 1 6]))
   (is (= (sort (dice/pending-roll
                 (dice/get
-                 (combat/bullwhip
+                 (phase/investigator
                   (combat/bullwhip
-                   (update-in bad-roll-game
-                              [:phase :current-investigator]
-                              #(update-in % [:items]
-                                          (fn [items]
-                                            (conj items {:name "Bullwhip"
-                                                         :combat-modifier 1})))))))))
+                   (combat/bullwhip
+                    (update-in bad-roll-game
+                               [:phase :current-investigator]
+                               #(update-in % [:items]
+                                           (fn [items]
+                                             (conj items {:name "Bullwhip"
+                                                          :combat-modifier 1}))))))))))
          [1 6 6])))

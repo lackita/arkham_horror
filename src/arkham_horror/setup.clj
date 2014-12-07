@@ -27,9 +27,10 @@
         "You win"
         (game/lost? active-game)
         "You lose"
-        (and (dice/get active-game)
-             (dice/pending-roll (dice/get active-game)))
-        (->> (dice/get active-game)
+        (and (phase/investigator active-game)
+             (dice/get (phase/investigator active-game))
+             (dice/pending-roll (dice/get (phase/investigator active-game))))
+        (->> (dice/get (phase/investigator active-game))
              dice/pending-roll
              (map :value)
              (clojure.string/join " ")

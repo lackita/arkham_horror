@@ -3,8 +3,8 @@
   (:require [arkham-horror.phase :as phase]
             [arkham-horror.stat :as stat]))
 
-(defn get [game]
-  (-> game :phase :current-investigator :dice))
+(defn get [investigator]
+  (investigator :dice))
 
 (defn set [game dice]
   (assoc-in (assoc game :dice dice) [:phase :current-investigator :dice] dice))
@@ -21,6 +21,7 @@
 (defmethod roll :default [dice]
   (dice :value))
 
+;; TODO: This is returning maps with :value right now
 (defn pending-roll [dice]
   (dice :roll))
 
