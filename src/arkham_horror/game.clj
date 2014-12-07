@@ -1,16 +1,19 @@
 (ns arkham-horror.game
   (:require [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator.dice :as dice]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.phase :as phase]))
 
 (defn make [config]
   (-> config
-      (dice/set (dice/make (config :dice)))
-      (ancient-one/set (ancient-one/make (config :ancient-one)))
-      (investigator/set-all (config :investigators))))
+      (ancient-one/set (ancient-one/make (or (config :ancient-one)
+                                             (ancient-one/random))))
+      (investigator/set-all (config :investigators) (config :dice))))
 
-(defn lost? [{investigators :investigators}]
-  (every? investigator/devoured? investigators))
+(defn lost? [game]
+  (every? investigator/devoured? (if (phase/active? game)
+                                   (phase/all-investigators game)
+                                   (game :investigators))))
 
 (defn won? [game]
   (and (not (lost? game))

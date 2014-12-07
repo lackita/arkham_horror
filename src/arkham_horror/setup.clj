@@ -23,16 +23,26 @@
   (assoc active-game :investigators (map investigator/focus investigators deltas)))
 
 (defn game-status [active-game]
-  (cond (game/won? active-game) "You win"
-        (game/lost? active-game) "You lose"
-        (dice/pending-roll (dice/get active-game)) (->> (dice/get active-game)
-                                                        dice/pending-roll
-                                                        (clojure.string/join " ")
-                                                        (str "Roll: "))
+  (cond (game/won? active-game)
+        "You win"
+        (game/lost? active-game)
+        "You lose"
+        (and (dice/get active-game)
+             (dice/pending-roll (dice/get active-game)))
+        (->> (dice/get active-game)
+             dice/pending-roll
+             (map :value)
+             (clojure.string/join " ")
+             (str "Roll: "))
         (and (combat/in-combat? active-game)
-             (not (phase/investigator active-game))) "Defend"
-             (combat/in-combat? active-game) (str "Attack\n" "Doom track: "
-                                                  (doom-track/level (doom-track/get (ancient-one/get active-game))))
-             (ancient-one/awakened? (ancient-one/get active-game)) "Refresh investigators"
-             (active-game :initialized) "Awaken ancient one"
-             :else "Initialize investigators"))
+             (not (phase/investigator active-game)))
+        "Defend"
+        (combat/in-combat? active-game)
+        (str "Attack\n" "Doom track: "
+             (doom-track/level (doom-track/get (ancient-one/get active-game))))
+        (ancient-one/awakened? (ancient-one/get active-game))
+        "Refresh investigators"
+        (active-game :initialized)
+        "Awaken ancient one"
+        :else
+        "Initialize investigators"))

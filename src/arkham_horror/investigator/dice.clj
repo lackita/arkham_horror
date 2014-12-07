@@ -1,17 +1,17 @@
 (ns arkham-horror.investigator.dice
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.phase :as phase]
-            [arkham-horror.stat :as stat]
-            [arkham-horror.ancient-one :as ancient-one]))
+            [arkham-horror.stat :as stat]))
 
+; TODO move to investigator
 (defn get [game]
-  (game :dice))
+  (-> game :phase :current-investigator :dice))
 
 (defn set [game dice]
-  (assoc game :dice dice))
+  (assoc-in (assoc game :dice dice) [:phase :current-investigator :dice] dice))
 
 (defn update [g f]
-  (update-in g [:dice] f))
+  (update-in g [:phase :current-investigator :dice] f))
 
 (defn make [value]
   {:value (or value :random)})

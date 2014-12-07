@@ -45,8 +45,8 @@
       :maximum-stamina 7
       :dice (dice/make pips)}))
 
-(defn set-all [game investigators]
-  (assoc game :investigators (map make investigators)))
+(defn set-all [game investigators dice]
+  (assoc game :investigators (map #(make % (or dice :random)) investigators)))
 
 (defn devoured? [investigator]
   (or (->> [:maximum-sanity :maximum-stamina]

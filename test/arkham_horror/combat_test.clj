@@ -18,8 +18,7 @@
   (is (combat/in-combat? ended-attack-game))
   (is (not (combat/in-combat? (combat/end-attack ended-attack-game)))))
 
-(def rigged-game (assoc started-attack-game
-                   :dice (dice/make 6)))
+(def rigged-game (dice/set started-attack-game (dice/make 6)))
 (deftest investigator-attack-test
   (is (phase/investigator (combat/investigator-attack started-attack-game)))
   (is (= (doom-track/level (doom-track/get (ancient-one/get (combat/investigator-attack rigged-game))))
@@ -29,8 +28,8 @@
   (is (= (dice/pending-roll (dice/get (combat/investigator-attack rigged-game))) [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
-  (assoc-in (combat/investigator-attack (assoc-in game [:dice :value] 1))
-            [:dice :value] 6))
+  (dice/update (combat/investigator-attack (dice/update game #(merge % {:value 1})))
+               #(merge % {:value 6})))
 
 (def bad-roll-game (roll-badly-but-lucky started-attack-game))
 (deftest bullwhip-test
@@ -43,12 +42,14 @@
                                       (combat/end-attack
                                        (combat/bullwhip bad-roll-game))))))))
          [1 1 6]))
-  (is (= (sort (dice/pending-roll (dice/get (combat/bullwhip (combat/bullwhip (update-in bad-roll-game
-                                                                                         [:investigators]
-                                                                                         #(map (fn [investigator]
-                                                                                                 (update-in investigator
-                                                                                                            [:items]
-                                                                                                            (fn [items]
-                                                                                                              (conj items {:name "Bullwhip" :combat-modifier 1}))))
-                                                                                               %)))))))
+  (is (= (sort (dice/pending-roll
+                (dice/get
+                 (combat/bullwhip
+                  (combat/bullwhip
+                   (update-in bad-roll-game
+                              [:phase :current-investigator]
+                              #(update-in % [:items]
+                                          (fn [items]
+                                            (conj items {:name "Bullwhip"
+                                                         :combat-modifier 1})))))))))
          [1 6 6])))

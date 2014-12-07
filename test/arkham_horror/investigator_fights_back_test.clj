@@ -25,6 +25,7 @@
       ancient-one/awaken
       combat/start-attack
       everybody-attack
+      combat/end-attack
       ancient-one/get
       doom-track/get
       doom-track/level))

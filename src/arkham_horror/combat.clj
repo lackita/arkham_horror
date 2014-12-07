@@ -31,26 +31,27 @@
 (defn apply-successes
   ([game] (apply-successes game (count-successes game)))
   ([game successes]
-     (if (or (zero? (count (game :investigators)))
-             (< successes (count (game :investigators))))
+     (if (or (nil? (phase/investigator game))
+             (< successes (count (phase/all-investigators game))))
        (assoc-in game [:combat :remainder] successes)
        (apply-successes (ancient-one/update game #(doom-track/update % doom-track/retract))
-                        (- successes (count (game :investigators)))))))
+                        (- successes (count (phase/all-investigators game)))))))
 
 (defn accept-roll [game]
-  (dice/update (phase/advance (apply-successes game)) dice/accept-roll))
+  (phase/advance (dice/update (apply-successes game) dice/accept-roll)))
 
 (defn combat-check-rolls [game fighter]
-  (apply +
-         (stat/fight fighter)
+  (apply + (stat/fight fighter)
          (ancient-one/combat-modifier game)
          (map :combat-modifier (investigator/items fighter))))
 
 (defn investigator-attack [game]
-  (dice/update game #(dice/combat-check
-                      % (phase/investigator game)
-                      (apply + (ancient-one/combat-modifier (ancient-one/get game))
-                             (map :combat-modifier (investigator/items (phase/investigator game)))))))
+  {:pre [(:dice (phase/investigator game))]}
+  (dice/update game #(dice/combat-check %
+                       (phase/investigator game)
+                       (apply + (ancient-one/combat-modifier (ancient-one/get game))
+                                (map :combat-modifier
+                                     (investigator/items (phase/investigator game)))))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
