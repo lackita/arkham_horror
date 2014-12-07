@@ -6,8 +6,8 @@
 (defn get [investigator]
   (investigator :dice))
 
-(defn set [game dice]
-  (assoc-in (assoc game :dice dice) [:phase :current-investigator :dice] dice))
+(defn set [investigator dice]
+  (assoc investigator :dice dice))
 
 (defn update [g f]
   (update-in g [:phase :current-investigator :dice] f))

@@ -18,7 +18,8 @@
   (is (combat/in-combat? ended-attack-game))
   (is (not (combat/in-combat? (combat/end-attack ended-attack-game)))))
 
-(def rigged-game (dice/set started-attack-game (dice/make 6)))
+(def rigged-game (update-in started-attack-game [:phase :current-investigator]
+                            #(dice/set % (dice/make 6))))
 (deftest investigator-attack-test
   (is (phase/investigator (combat/investigator-attack started-attack-game)))
   (is (= (doom-track/level (doom-track/get (ancient-one/get (combat/investigator-attack rigged-game))))
