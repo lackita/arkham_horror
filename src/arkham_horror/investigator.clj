@@ -1,6 +1,10 @@
 (ns arkham-horror.investigator
+  (:refer-clojure :exclude [get])
   (:require [arkham-horror.stat :as stat]
             [arkham-horror.investigator.dice :as dice]))
+
+(defn get [phase]
+  (phase :current-investigator))
 
 (defn reduce-max-sanity-or-stamina [investigator]
   (update-in investigator [(stat/get-smaller investigator)] dec))
@@ -45,8 +49,11 @@
       :maximum-stamina 7
       :dice (dice/make pips)}))
 
+(defn make-all [investigators dice]
+  (map #(make % (or dice :random)) investigators))
+
 (defn set-all [game investigators dice]
-  (assoc game :investigators (map #(make % (or dice :random)) investigators)))
+  (assoc game :investigators (make-all investigators dice)))
 
 (defn devoured? [investigator]
   (or (->> [:maximum-sanity :maximum-stamina]

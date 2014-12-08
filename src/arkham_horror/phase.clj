@@ -34,6 +34,3 @@
                 remaining :remaining-investigators
                 :as phase}]
   (merge phase (make (conj processed current) (first remaining) (rest remaining))))
-
-(defn current-investigator [phase]
-  (phase :current-investigator))

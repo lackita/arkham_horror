@@ -28,16 +28,16 @@
         (game/lost? active-game)
         "You lose"
         (and (phase/get active-game)
-             (phase/current-investigator (phase/get active-game))
-             (dice/get (phase/current-investigator (phase/get active-game)))
-             (dice/pending-roll (dice/get (phase/current-investigator (phase/get active-game)))))
-        (->> (dice/get (phase/current-investigator (phase/get active-game)))
+             (investigator/get (phase/get active-game))
+             (dice/get (investigator/get (phase/get active-game)))
+             (dice/pending-roll (dice/get (investigator/get (phase/get active-game)))))
+        (->> (dice/get (investigator/get (phase/get active-game)))
              dice/pending-roll
              (map :value)
              (clojure.string/join " ")
              (str "Roll: "))
         (and (combat/in-combat? active-game)
-             (not (phase/current-investigator (phase/get active-game))))
+             (not (investigator/get (phase/get active-game))))
         "Defend"
         (combat/in-combat? active-game)
         (str "Attack\n" "Doom track: "

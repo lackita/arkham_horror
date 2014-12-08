@@ -16,7 +16,7 @@
               (map (fn [fight] {:speed 0 :fight fight :lore 0}) fights)))
 
 (defn everybody-attack [game]
-  (if (phase/current-investigator (phase/get game))
+  (if (investigator/get (phase/get game))
     (everybody-attack (combat/accept-roll (combat/investigator-attack game)))
     game))
 

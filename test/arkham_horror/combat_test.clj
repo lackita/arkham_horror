@@ -5,6 +5,7 @@
             [arkham-horror.combat :as combat]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.ancient-one.doom-track :as doom-track]
+            [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.dice :as dice]))
 
 (def awakened-game (setup/awaken (setup/init (setup/begin :cthulu ["Monterey Jack"])
@@ -22,12 +23,12 @@
                                                      (update-in phase [:current-investigator]
                                                                 #(dice/set % (dice/make 6))))))
 (deftest investigator-attack-test
-  (is (phase/current-investigator (phase/get (combat/investigator-attack started-attack-game))))
+  (is (investigator/get (phase/get (combat/investigator-attack started-attack-game))))
   (is (= (doom-track/level (doom-track/get (ancient-one/get (combat/investigator-attack rigged-game))))
          13)))
 
 (deftest pending-roll-test
-  (is (= (dice/pending-roll (dice/get (phase/current-investigator (phase/get (combat/investigator-attack rigged-game))))) [6 6 6])))
+  (is (= (dice/pending-roll (dice/get (investigator/get (phase/get (combat/investigator-attack rigged-game))))) [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
   (phase/update (combat/investigator-attack (phase/update game (fn [phase] (update-in phase
@@ -41,10 +42,10 @@
 
 (def bad-roll-game (roll-badly-but-lucky started-attack-game))
 (deftest bullwhip-test
-  (is (= (sort (dice/pending-roll (dice/get (phase/current-investigator (phase/get (combat/bullwhip bad-roll-game))))))
+  (is (= (sort (dice/pending-roll (dice/get (investigator/get (phase/get (combat/bullwhip bad-roll-game))))))
          [1 1 6]))
   (is (= (sort (dice/pending-roll (dice/get
-                                   (phase/current-investigator
+                                   (investigator/get
                                     (phase/get
                                      (combat/bullwhip
                                       (roll-badly-but-lucky
@@ -54,7 +55,7 @@
          [1 1 6]))
   (is (= (sort (dice/pending-roll
                 (dice/get
-                 (phase/current-investigator
+                 (investigator/get
                   (phase/get
                    (combat/bullwhip
                     (combat/bullwhip
