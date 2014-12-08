@@ -3,6 +3,7 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.stat :as stat]
             [arkham-horror.investigator.dice :as dice]
+            [arkham-horror.investigator.items :as items]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.phase :as phase]))
 
@@ -50,7 +51,7 @@
 (defn combat-check-rolls [game fighter]
   (apply + (stat/fight fighter)
          (ancient-one/combat-modifier game)
-         (map :combat-modifier (investigator/items fighter))))
+         (map :combat-modifier (items/get fighter))))
 
 (defn investigator-attack [game]
   {:pre [(:dice (investigator/get (phase/get game)))]}
@@ -63,16 +64,16 @@
                                                    (investigator/get (phase/get game))
                                                    (apply + (ancient-one/combat-modifier (ancient-one/get game))
                                                           (map :combat-modifier
-                                                               (investigator/items (investigator/get (phase/get game))))))))))))
+                                                               (items/get (investigator/get (phase/get game))))))))))))
 
 (defn bullwhip [game]
-  (if (> (count (investigator/unexhausted-items-named (investigator/get (phase/get game))
-                                                      "Bullwhip"))
+  (if (> (count (items/unexhausted-named (items/get (investigator/get (phase/get game)))
+                                         "Bullwhip"))
          0)
     (phase/update game (fn [phase]
                          (investigator/update
                           phase
                           (fn [investigator]
                             (update-in (dice/update investigator dice/reroll-lowest) [:items]
-                                       (fn [items] (investigator/exhaust-first-named items "Bullwhip")))))))
+                                       (fn [items] (items/exhaust-first-named items "Bullwhip")))))))
     game))

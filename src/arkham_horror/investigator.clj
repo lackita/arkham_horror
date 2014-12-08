@@ -1,7 +1,8 @@
 (ns arkham-horror.investigator
   (:refer-clojure :exclude [get])
   (:require [arkham-horror.stat :as stat]
-            [arkham-horror.investigator.dice :as dice]))
+            [arkham-horror.investigator.dice :as dice]
+            [arkham-horror.investigator.items :as items]))
 
 (defn get [phase]
   (phase :current-investigator))
@@ -65,16 +66,4 @@
   (assoc investigator :devoured true))
 
 (defn refresh [investigator]
-  (update-in investigator [:items]
-             (fn [items] (map #(assoc % :exhausted false) items))))
-
-(defn items [investigator]
-  (investigator :items))
-
-(defn unexhausted-items-named [investigator name]
-  (filter #(and (= name (:name %)) (not (:exhausted %))) (items investigator)))
-
-(defn exhaust-first-named [[item & items] name]
-  (cond (and (= (item :name) name) (not (:exhausted item))) (cons (assoc item :exhausted true) items)
-        (empty? items) (throw (Throwable. "No items named " name))
-        :else (cons item (exhaust-first-named items name))))
+  (items/update investigator items/refresh))

@@ -1,6 +1,7 @@
 (ns arkham-horror.investigator-test
   (:require [clojure.test :refer :all]
             [arkham-horror.investigator :as investigator]
+            [arkham-horror.investigator.items :as items]
             [arkham-horror.stat :as stat]))
 
 (def base-investigator (investigator/make {:speed 1 :sneak 2
@@ -61,7 +62,7 @@
   (is (= (stat/luck  (investigator/init monterey-jack {:speed 1 :fight 2 :lore 2})) 4))
   (is (= (stat/maximum-sanity monterey-jack) 3))
   (is (= (stat/maximum-stamina monterey-jack) 7))
-  (is (= (set (map :name (investigator/items monterey-jack))) #{".38 Revolver" "Bullwhip"})))
+  (is (= (set (map :name (items/get monterey-jack))) #{".38 Revolver" "Bullwhip"})))
 
 (deftest devour-test
   (is (not (investigator/devoured? (investigator/make "Monterey Jack"))))
