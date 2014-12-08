@@ -12,7 +12,7 @@
 
 (defn lost? [game]
   (every? investigator/devoured? (if (phase/active? game)
-                                   (phase/all-investigators game)
+                                   (phase/all-investigators (phase/get game))
                                    (game :investigators))))
 
 (defn won? [game]

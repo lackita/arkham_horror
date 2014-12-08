@@ -11,15 +11,15 @@
 (deftest end-test
   (is (= (:investigators (phase/end single-investigator))
          [(investigator/make "Monterey Jack")]))
-  (is (= (:investigators (phase/end (phase/advance single-investigator)))
+  (is (= (:investigators (phase/end (phase/update single-investigator phase/advance)))
          [(investigator/make "Monterey Jack")]))
   (is (= (:investigators (phase/end two-investigators))
          (map investigator/make (repeat 2 "Monterey Jack"))))
-  (is (= (:investigators (phase/end (phase/advance two-investigators)))
-         (map investigator/make (repeat 2 "Monterey Jack"))))
-  )
+  (is (= (:investigators (phase/end (phase/update two-investigators phase/advance)))
+         (map investigator/make (repeat 2 "Monterey Jack")))))
 
 (deftest advance-test
-  (is (nil? (-> (phase/advance single-investigator) :phase :current-investigator)))
-  (is (= (-> (phase/advance single-investigator) :phase :processed-investigators)
+  (is (nil? (-> (phase/update single-investigator phase/advance)
+                phase/get :current-investigator)))
+  (is (= (-> (phase/update single-investigator phase/advance) phase/get :processed-investigators)
          [(investigator/make "Monterey Jack")])))
