@@ -50,8 +50,10 @@
                                      (combat/bullwhip
                                       (roll-badly-but-lucky
                                        (combat/start-attack
-                                        (combat/end-attack
-                                         (combat/bullwhip bad-roll-game))))))))))
+                                        (update-in (combat/end-attack
+                                                    (combat/bullwhip bad-roll-game))
+                                                   [:investigators]
+                                                   #(map investigator/refresh %))))))))))
          [1 1 6]))
   (is (= (sort (dice/pending-roll
                 (dice/get

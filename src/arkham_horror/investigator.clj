@@ -6,6 +6,9 @@
 (defn get [phase]
   (phase :current-investigator))
 
+(defn update [phase function]
+  (update-in phase [:current-investigator] function))
+
 (defn reduce-max-sanity-or-stamina [investigator]
   (update-in investigator [(stat/get-smaller investigator)] dec))
 
@@ -20,9 +23,6 @@
 
 (defn reset-focus [investigator]
   (assoc investigator :focus 2))
-
-(defn items [investigator]
-  (investigator :items))
 
 (defn init [investigator config]
   (-> investigator
@@ -63,3 +63,18 @@
 
 (defn devour [investigator]
   (assoc investigator :devoured true))
+
+(defn refresh [investigator]
+  (update-in investigator [:items]
+             (fn [items] (map #(assoc % :exhausted false) items))))
+
+(defn items [investigator]
+  (investigator :items))
+
+(defn unexhausted-items-named [investigator name]
+  (filter #(and (= name (:name %)) (not (:exhausted %))) (items investigator)))
+
+(defn exhaust-first-named [[item & items] name]
+  (cond (and (= (item :name) name) (not (:exhausted item))) (cons (assoc item :exhausted true) items)
+        (empty? items) (throw (Throwable. "No items named " name))
+        :else (cons item (exhaust-first-named items name))))

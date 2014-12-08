@@ -15,8 +15,7 @@
 (defn start-attack [game]
   (merge (phase/start game)
          {:combat {:successes 0
-                   :remainder 0
-                   :bullwhip 0}}))
+                   :remainder 0}}))
 
 (defn end-attack [game]
   (dissoc (phase/end game) :combat))
@@ -67,11 +66,13 @@
                                                                (investigator/items (investigator/get (phase/get game))))))))))))
 
 (defn bullwhip [game]
-  (if (< (-> game :combat :bullwhip)
-         (count (->> (investigator/get (phase/get game)) :items
-                     (filter #(= "Bullwhip" (:name %))))))
-    (update-in (phase/update game #(update-in % [:current-investigator]
-                                              (fn [investigator]
-                                                (dice/update investigator dice/reroll-lowest))))
-               [:combat :bullwhip] inc)
+  (if (> (count (investigator/unexhausted-items-named (investigator/get (phase/get game))
+                                                      "Bullwhip"))
+         0)
+    (phase/update game (fn [phase]
+                         (investigator/update
+                          phase
+                          (fn [investigator]
+                            (update-in (dice/update investigator dice/reroll-lowest) [:items]
+                                       (fn [items] (investigator/exhaust-first-named items "Bullwhip")))))))
     game))
