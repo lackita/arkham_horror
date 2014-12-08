@@ -10,10 +10,11 @@
 (defn set [game phase]
   (assoc game :phase phase))
 
-(defn make [investigators]
-  {:processed-investigators []
-   :current-investigator (first investigators)
-   :remaining-investigators (rest investigators)})
+(defn make
+  ([processed current remaining] {:processed-investigators processed
+                                  :current-investigator current
+                                  :remaining-investigators remaining})
+  ([investigators] (make [] (first investigators) (rest investigators))))
 
 (defn start [{investigators :investigators :as game}]
   {:pre [(not (nil? investigators))]}
@@ -32,9 +33,7 @@
                 current :current-investigator
                 remaining :remaining-investigators
                 :as phase}]
-  (merge phase {:processed-investigators (conj processed current)
-                :current-investigator (first remaining)
-                :remaining-investigators (rest remaining)}))
+  (merge phase (make (conj processed current) (first remaining) (rest remaining))))
 
 (defn investigator [game]
   (-> game :phase :current-investigator))
