@@ -21,7 +21,6 @@
 (defmethod roll :default [dice]
   (dice :value))
 
-;; TODO: This is returning maps with :value right now
 (defn pending-roll [dice]
   (dice :roll))
 
