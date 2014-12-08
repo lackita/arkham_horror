@@ -33,7 +33,6 @@
              (dice/pending-roll (dice/get (investigator/get (phase/get active-game)))))
         (->> (dice/get (investigator/get (phase/get active-game)))
              dice/pending-roll
-             (map :value)
              (clojure.string/join " ")
              (str "Roll: "))
         (and (combat/in-combat? active-game)

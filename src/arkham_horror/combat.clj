@@ -74,6 +74,6 @@
                          (investigator/update
                           phase
                           (fn [investigator]
-                            (update-in (dice/update investigator dice/reroll-lowest) [:items]
-                                       (fn [items] (items/exhaust-first-named items "Bullwhip")))))))
+                            (items/update (dice/update investigator dice/reroll-lowest)
+                                          #(items/exhaust-first-named % "Bullwhip"))))))
     game))

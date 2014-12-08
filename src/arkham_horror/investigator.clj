@@ -67,3 +67,7 @@
 
 (defn refresh [investigator]
   (items/update investigator items/refresh))
+
+(defn exhaust-item [{investigator :investigator item :item}]
+  {:investigator (dice/update investigator dice/reroll-lowest)
+   :item (assoc item :exhausted true)})

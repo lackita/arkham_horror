@@ -32,7 +32,7 @@
                    (setup/init
                     (game/make {:ancient-one :cthulu
                                 :investigators ["Monterey Jack"]
-                                :dice (dice/make 6)})
+                                :dice 6})
                     [{:speed 0 :fight 19 :lore 0}]))))
 (deftest game-status-test
   (is (= (setup/game-status active-game) "Initialize investigators"))

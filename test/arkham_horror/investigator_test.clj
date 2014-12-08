@@ -69,3 +69,6 @@
   (is (investigator/devoured? (merge (investigator/make "Monterey Jack")
                                      {:maximum-sanity 0 :maximum-stamina 1})))
   (is (investigator/devoured? (investigator/devour (investigator/make "Monterey Jack")))))
+
+(deftest exhaust-item-test
+  )
