@@ -35,8 +35,5 @@
                 :as phase}]
   (merge phase (make (conj processed current) (first remaining) (rest remaining))))
 
-(defn investigator [game]
-  (-> game :phase :current-investigator))
-
-(defn active? [game]
-  (game :phase))
+(defn current-investigator [phase]
+  (phase :current-investigator))

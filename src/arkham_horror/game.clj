@@ -11,7 +11,7 @@
       (investigator/set-all (config :investigators) (config :dice))))
 
 (defn lost? [game]
-  (every? investigator/devoured? (if (phase/active? game)
+  (every? investigator/devoured? (if (phase/get game)
                                    (phase/all-investigators (phase/get game))
                                    (game :investigators))))
 

@@ -26,13 +26,13 @@
 
 (defn count-successes [game]
   (+ (count (filter #{5 6} (dice/pending-roll (dice/get
-                                               (phase/investigator game)))))
+                                               (phase/current-investigator (phase/get game))))))
      (or (-> game :combat :remainder) 0)))
 
 (defn apply-successes
   ([game] (apply-successes game (count-successes game)))
   ([game successes]
-     (if (or (nil? (phase/investigator game))
+     (if (or (nil? (phase/current-investigator (phase/get game)))
              (< successes (count (phase/all-investigators (phase/get game)))))
        (assoc-in game [:combat :remainder] successes)
        (apply-successes (ancient-one/update game (fn [investigator]
@@ -54,21 +54,21 @@
          (map :combat-modifier (investigator/items fighter))))
 
 (defn investigator-attack [game]
-  {:pre [(:dice (phase/investigator game))]}
+  {:pre [(:dice (phase/current-investigator (phase/get game)))]}
   (phase/update game (fn [phase]
                        (update-in phase [:current-investigator]
                                   (fn [investigator]
                                     (dice/update investigator
                                                  #(dice/combat-check
                                                    %
-                                                   (phase/investigator game)
+                                                   (phase/current-investigator (phase/get game))
                                                    (apply + (ancient-one/combat-modifier (ancient-one/get game))
                                                           (map :combat-modifier
-                                                               (investigator/items (phase/investigator game)))))))))))
+                                                               (investigator/items (phase/current-investigator (phase/get game))))))))))))
 
 (defn bullwhip [game]
   (if (< (-> game :combat :bullwhip)
-         (count (->> (phase/investigator game) :items
+         (count (->> (phase/current-investigator (phase/get game)) :items
                      (filter #(= "Bullwhip" (:name %))))))
     (update-in (phase/update game #(update-in % [:current-investigator]
                                               (fn [investigator]
