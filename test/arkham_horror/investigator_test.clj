@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.items :as items]
+            [arkham-horror.investigator.dice :as dice]
             [arkham-horror.stat :as stat]))
 
 (def base-investigator (investigator/make {:speed 1 :sneak 2
@@ -70,5 +71,10 @@
                                      {:maximum-sanity 0 :maximum-stamina 1})))
   (is (investigator/devoured? (investigator/devour (investigator/make "Monterey Jack")))))
 
+(def luck-changing-investigator (dice/update (investigator/make "Monterey Jack" 6)
+                                             #(dice/save-roll % [1 1 1])))
 (deftest exhaust-item-test
-  )
+  (is (:exhausted (nth (items/get (investigator/exhaust-item luck-changing-investigator 1)) 1)))
+  (is (= (sort (dice/pending-roll (dice/get (investigator/exhaust-item luck-changing-investigator
+                                                                       1))))
+         [1 1 6])))

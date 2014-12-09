@@ -68,6 +68,8 @@
 (defn refresh [investigator]
   (items/update investigator items/refresh))
 
-(defn exhaust-item [{investigator :investigator item :item}]
-  {:investigator (dice/update investigator dice/reroll-lowest)
-   :item (assoc item :exhausted true)})
+(defn exhaust-item [investigator n]
+  (-> investigator
+      (items/update #(let [[before [current & after]] (split-at n %)]
+                       (concat before [(assoc current :exhausted true)] after)))
+      (dice/update dice/reroll-lowest)))
