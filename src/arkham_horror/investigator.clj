@@ -69,6 +69,7 @@
   (items/update investigator items/refresh))
 
 (defn exhaust-item [investigator n]
+  {:pre [(not (:exhausted (nth (items/get investigator) n)))]}
   (-> investigator
       (items/update #(let [[before [current & after]] (split-at n %)]
                        (concat before [(assoc current :exhausted true)] after)))

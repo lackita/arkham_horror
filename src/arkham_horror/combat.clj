@@ -65,15 +65,3 @@
                                                    (apply + (ancient-one/combat-modifier (ancient-one/get game))
                                                           (map :combat-modifier
                                                                (items/get (investigator/get (phase/get game))))))))))))
-
-(defn bullwhip [game]
-  (if (> (count (items/unexhausted-named (items/get (investigator/get (phase/get game)))
-                                         "Bullwhip"))
-         0)
-    (phase/update game (fn [phase]
-                         (investigator/update
-                          phase
-                          (fn [investigator]
-                            (items/update (dice/update investigator dice/reroll-lowest)
-                                          #(items/exhaust-first-named % "Bullwhip"))))))
-    game))

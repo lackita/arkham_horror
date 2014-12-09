@@ -77,4 +77,23 @@
   (is (:exhausted (nth (items/get (investigator/exhaust-item luck-changing-investigator 1)) 1)))
   (is (= (sort (dice/pending-roll (dice/get (investigator/exhaust-item luck-changing-investigator
                                                                        1))))
-         [1 1 6])))
+         [1 1 6]))
+  (is (thrown? AssertionError (-> luck-changing-investigator
+                                  (investigator/exhaust-item 1)
+                                  (investigator/exhaust-item 1))))
+  (is (= (-> luck-changing-investigator
+             (investigator/exhaust-item 1)
+             investigator/refresh
+             (investigator/exhaust-item 1)
+             dice/get
+             dice/pending-roll
+             sort)
+         [1 6 6]))
+  (is (= (-> luck-changing-investigator
+             (items/update #(conj (vec %) {:name "Bullwhip" :combat-modifier 1}))
+             (investigator/exhaust-item 1)
+             (investigator/exhaust-item 2)
+             dice/get
+             dice/pending-roll
+             sort)
+         [1 6 6])))
