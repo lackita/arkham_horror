@@ -7,7 +7,8 @@
             [arkham-horror.phase :as phase]
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.ancient-one.doom-track :as doom-track]
-            [arkham-horror.combat :as combat]))
+            [arkham-horror.combat :as combat]
+            [arkham-horror.structure :as structure]))
 
 (defn make-game-with [fights pips]
   (setup/init (game/make {:ancient-one :cthulu
@@ -16,7 +17,7 @@
               (map (fn [fight] {:speed 0 :fight fight :lore 0}) fights)))
 
 (defn everybody-attack [game]
-  (if (investigator/get (phase/get game))
+  (if (structure/get-path game [phase investigator])
     (everybody-attack (combat/accept-roll (combat/investigator-attack game)))
     game))
 
@@ -26,8 +27,7 @@
       combat/start-attack
       everybody-attack
       combat/end-attack
-      ancient-one/get
-      doom-track/get
+      (structure/get-path [ancient-one doom-track])
       doom-track/level))
 
 (deftest attack-test

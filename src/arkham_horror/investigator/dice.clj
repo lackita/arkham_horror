@@ -22,7 +22,7 @@
   (dice :value))
 
 (defn pending-roll [dice]
-  (dice :roll))
+  (:roll dice))
 
 (defn accept-roll [dice]
   (dissoc dice :roll))

@@ -3,7 +3,8 @@
             [arkham-horror.game :as game]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.ancient-one.doom-track :as doom-track]))
+            [arkham-horror.ancient-one.doom-track :as doom-track]
+            [arkham-horror.structure :as structure]))
 
 (def azathoth-game (game/make {:ancient-one :azathoth
                                :investigators ["Monterey Jack"]}))
@@ -13,4 +14,4 @@
   (is (not (game/lost? azathoth-game))))
 
 (deftest doom-track-test
-  (is (= (doom-track/capacity (doom-track/get (ancient-one/get azathoth-game))) 14)))
+  (is (= (doom-track/capacity (structure/get-path azathoth-game [ancient-one doom-track])) 14)))

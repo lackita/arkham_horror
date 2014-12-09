@@ -5,7 +5,8 @@
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.investigator.items :as items]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.phase :as phase]))
+            [arkham-horror.phase :as phase]
+            [arkham-horror.structure :as structure]))
 
 (defn ancient-one-attack [game]
   (ancient-one/update (assoc game :investigators
@@ -25,14 +26,14 @@
   (game :combat))
 
 (defn count-successes [game]
-  (+ (count (filter #{5 6} (dice/pending-roll (dice/get
-                                               (investigator/get (phase/get game))))))
+  (+ (count (filter #{5 6} (dice/pending-roll
+                            (structure/get-path game [phase investigator dice]))))
      (or (-> game :combat :remainder) 0)))
 
 (defn apply-successes
   ([game] (apply-successes game (count-successes game)))
   ([game successes]
-     (if (or (nil? (investigator/get (phase/get game)))
+     (if (or (nil? (structure/get-path game [phase investigator]))
              (< successes (count (phase/all-investigators (phase/get game)))))
        (assoc-in game [:combat :remainder] successes)
        (apply-successes (ancient-one/update game (fn [investigator]
@@ -54,14 +55,14 @@
          (map :combat-modifier (items/get fighter))))
 
 (defn investigator-attack [game]
-  {:pre [(:dice (investigator/get (phase/get game)))]}
+  {:pre [(:dice (structure/get-path game [phase investigator]))]}
   (phase/update game (fn [phase]
                        (update-in phase [:current-investigator]
                                   (fn [investigator]
                                     (dice/update investigator
                                                  #(dice/combat-check
                                                    %
-                                                   (investigator/get (phase/get game))
+                                                   (structure/get-path game [phase investigator])
                                                    (apply + (ancient-one/combat-modifier (ancient-one/get game))
                                                           (map :combat-modifier
-                                                               (items/get (investigator/get (phase/get game))))))))))))
+                                                               (structure/get-path game [phase investigator items]))))))))))

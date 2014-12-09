@@ -6,7 +6,8 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.combat :as combat]
             [arkham-horror.stat :as stat]
-            [arkham-horror.investigator.dice :as dice]))
+            [arkham-horror.investigator.dice :as dice]
+            [arkham-horror.structure :as structure]))
 
 (defn make-investigator-with [max-sanity max-stamina]
   (merge (investigator/make "Monterey Jack")
@@ -49,11 +50,10 @@
 
 (deftest doom-track-test
   (is (= (doom-track/capacity (doom-track/get (ancient-one/make :cthulu))) 13))
-  (is (= (doom-track/level (doom-track/get (ancient-one/get awakened-game))) 13))
+  (is (= (doom-track/level (structure/get-path awakened-game [ancient-one doom-track])) 13))
   (is (= (-> awakened-game
              (ancient-one/update #(doom-track/update % doom-track/retract))
              combat/ancient-one-attack
-             ancient-one/get
-             doom-track/get
+             (structure/get-path [ancient-one doom-track])
              doom-track/level)
          13)))

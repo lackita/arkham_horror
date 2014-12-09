@@ -5,7 +5,8 @@
             [arkham-horror.combat :as combat]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.dice :as dice]
-            [arkham-horror.ancient-one.doom-track :as doom-track]))
+            [arkham-horror.ancient-one.doom-track :as doom-track]
+            [arkham-horror.structure :as structure]))
 
 (defn begin [ancient-one investigators]
   (game/make {:ancient-one ancient-one
@@ -24,26 +25,23 @@
 
 (defn game-status [active-game]
   (cond (game/won? active-game)
-        "You win"
+          "You win"
         (game/lost? active-game)
-        "You lose"
-        (and (phase/get active-game)
-             (investigator/get (phase/get active-game))
-             (dice/get (investigator/get (phase/get active-game)))
-             (dice/pending-roll (dice/get (investigator/get (phase/get active-game)))))
-        (->> (dice/get (investigator/get (phase/get active-game)))
-             dice/pending-roll
-             (clojure.string/join " ")
-             (str "Roll: "))
+          "You lose"
+        (dice/pending-roll (structure/get-path active-game [phase investigator dice]))
+          (->> (structure/get-path active-game [phase investigator dice])
+               dice/pending-roll
+               (clojure.string/join " ")
+               (str "Roll: "))
         (and (combat/in-combat? active-game)
-             (not (investigator/get (phase/get active-game))))
-        "Defend"
+             (not (structure/get-path active-game [phase investigator])))
+          "Defend"
         (combat/in-combat? active-game)
-        (str "Attack\n" "Doom track: "
-             (doom-track/level (doom-track/get (ancient-one/get active-game))))
+          (str "Attack\n" "Doom track: "
+               (doom-track/level (structure/get-path active-game [ancient-one doom-track])))
         (ancient-one/awakened? (ancient-one/get active-game))
-        "Refresh investigators"
+          "Refresh investigators"
         (active-game :initialized)
-        "Awaken ancient one"
+          "Awaken ancient one"
         :else
-        "Initialize investigators"))
+          "Initialize investigators"))

@@ -6,7 +6,8 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.investigator.dice :as dice]))
+            [arkham-horror.investigator.dice :as dice]
+            [arkham-horror.structure :as structure]))
 
 (def awakened-game (setup/awaken (setup/init (setup/begin :cthulu ["Monterey Jack"])
                                              [{:speed 2 :fight 5 :lore 2}])))
@@ -23,12 +24,15 @@
                                                      (update-in phase [:current-investigator]
                                                                 #(dice/set % (dice/make 6))))))
 (deftest investigator-attack-test
-  (is (investigator/get (phase/get (combat/investigator-attack started-attack-game))))
-  (is (= (doom-track/level (doom-track/get (ancient-one/get (combat/investigator-attack rigged-game))))
+  (is (structure/get-path (combat/investigator-attack started-attack-game) [phase investigator]))
+  (is (= (doom-track/level (structure/get-path (combat/investigator-attack rigged-game)
+                                               [ancient-one doom-track]))
          13)))
 
 (deftest pending-roll-test
-  (is (= (dice/pending-roll (dice/get (investigator/get (phase/get (combat/investigator-attack rigged-game))))) [6 6 6])))
+  (is (= (dice/pending-roll (structure/get-path (combat/investigator-attack rigged-game)
+                                                [phase investigator dice]))
+         [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
   (phase/update (combat/investigator-attack (phase/update game (fn [phase] (update-in phase
