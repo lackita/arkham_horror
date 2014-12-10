@@ -18,10 +18,10 @@
 (def init (make-facade setup/init))
 (def awaken (make-facade setup/awaken))
 (def focus (make-facade setup/focus))
-(def start-attack (make-facade combat/start-attack))
+(def start-attack (make-facade combat/start))
 (def attack (make-facade combat/investigator-attack))
 (def exhaust-item (make-facade (fn [_ & [game n]]
                                  (structure/update-path game [phase investigator]
                                                         #(investigator/exhaust-item % n)))))
 (def accept-roll (make-facade combat/accept-roll))
-(def defend (make-facade (comp combat/end-attack combat/ancient-one-attack)))
+(def defend (make-facade (comp combat/end combat/ancient-one-attack)))

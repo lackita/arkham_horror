@@ -33,10 +33,10 @@
                dice/pending-roll
                (clojure.string/join " ")
                (str "Roll: "))
-        (and (combat/in-combat? active-game)
+        (and (combat/get active-game)
              (not (structure/get-path active-game [phase investigator])))
           "Defend"
-        (combat/in-combat? active-game)
+        (combat/get active-game)
           (str "Attack\n" "Doom track: "
                (doom-track/level (structure/get-path active-game [ancient-one doom-track])))
         (ancient-one/awakened? (ancient-one/get active-game))

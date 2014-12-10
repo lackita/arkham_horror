@@ -10,6 +10,31 @@
 (defn update [phase function]
   (update-in phase [:current-investigator] function))
 
+(defn make
+  ([name] (make name :random))
+  ([name pips]
+     {:speed (stat/make 1 1 4)
+      :sneak (stat/make 0 0 3)
+      :fight (stat/make 2 2 5)
+      :will  (stat/make 0 0 3)
+      :lore  (stat/make 1 1 4)
+      :luck  (stat/make 2 2 5)
+      :focus 2
+      :items [{:name ".38 Revolver" :combat-modifier 3}
+              {:name "Bullwhip" :combat-modifier 1}]
+      :maximum-sanity 3
+      :maximum-stamina 7
+      :dice (dice/make pips)}))
+
+(defn make-all [investigators dice]
+  (map #(make % (or dice :random)) investigators))
+
+(defn set-all [game investigators dice]
+  (assoc game :investigators (make-all investigators dice)))
+
+(defn update-all [game function]
+  (update-in game [:investigators] #(map function %)))
+
 (defn reduce-max-sanity-or-stamina [investigator]
   (update-in investigator [(stat/get-smaller investigator)] dec))
 
@@ -33,28 +58,6 @@
       (stat/set-will  (- 5 (config :fight)))
       (stat/set-lore  (config :lore))
       (stat/set-luck  (- 6 (config :lore)))))
-
-(defn make
-  ([name] (make name :random))
-  ([name pips]
-     {:speed (stat/make 1 1 4)
-      :sneak (stat/make 0 0 3)
-      :fight (stat/make 2 2 5)
-      :will  (stat/make 0 0 3)
-      :lore  (stat/make 1 1 4)
-      :luck  (stat/make 2 2 5)
-      :focus 2
-      :items [{:name ".38 Revolver" :combat-modifier 3}
-              {:name "Bullwhip" :combat-modifier 1}]
-      :maximum-sanity 3
-      :maximum-stamina 7
-      :dice (dice/make pips)}))
-
-(defn make-all [investigators dice]
-  (map #(make % (or dice :random)) investigators))
-
-(defn set-all [game investigators dice]
-  (assoc game :investigators (make-all investigators dice)))
 
 (defn devoured? [investigator]
   (or (->> [:maximum-sanity :maximum-stamina]

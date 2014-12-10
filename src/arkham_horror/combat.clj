@@ -1,4 +1,5 @@
 (ns arkham-horror.combat
+  (:refer-clojure :exclude [get])
   (:require [arkham-horror.investigator :as investigator]
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.stat :as stat]
@@ -8,53 +9,61 @@
             [arkham-horror.phase :as phase]
             [arkham-horror.structure :as structure]))
 
+(defn update [game function]
+  (update-in game [:combat] function))
+
+(defn get [game]
+  (game :combat))
+
+(defn make []
+  {:successes 0
+   :remainder 0})
+
+(defn start [game]
+  (assoc (phase/start game) :combat (make)))
+
+(defn end [game]
+  (dissoc (phase/end game) :combat))
+
 (defn ancient-one-attack [game]
-  (structure/update-path (assoc game :investigators
-                                (map investigator/reduce-max-sanity-or-stamina
-                                     (game :investigators)))
+  (structure/update-path (investigator/update-all game investigator/reduce-max-sanity-or-stamina)
                          [ancient-one doom-track]
                          doom-track/advance))
 
-(defn start-attack [game]
-  (merge (phase/start game)
-         {:combat {:successes 0
-                   :remainder 0}}))
-
-(defn end-attack [game]
-  (dissoc (phase/end game) :combat))
-
-(defn in-combat? [game]
-  (game :combat))
+(defn successes [game]
+  (->> (structure/get-path game [phase investigator dice])
+       dice/pending-roll
+       (filter #{5 6})
+       count))
 
 (defn count-successes [game]
-  (+ (count (filter #{5 6} (dice/pending-roll
-                            (structure/get-path game [phase investigator dice]))))
-     (or (-> game :combat :remainder) 0)))
+  (+ (successes game)
+     (or (:remainder (get game)) 0)))
 
-(defn apply-successes
-  ([game] (apply-successes game (count-successes game)))
-  ([game successes]
-     (if (or (nil? (structure/get-path game [phase investigator]))
-             (< successes (count (phase/all-investigators (phase/get game)))))
-       (assoc-in game [:combat :remainder] successes)
-       (apply-successes (structure/update-path game [ancient-one doom-track] doom-track/retract)
-                        (- successes (count (phase/all-investigators (phase/get game))))))))
+(defn count-investigators [game]
+  (count (phase/all-investigators (phase/get game))))
+
+(defn save-remainder [game remainder]
+  (update game #(assoc % :remainder remainder)))
+
+(defn apply-successes [game successes]
+  (if (or (phase/over? (phase/get game)) (< successes (count-investigators game)))
+    (save-remainder game successes)
+    (apply-successes (structure/update-path game [ancient-one doom-track] doom-track/retract)
+                     (- successes (count-investigators game)))))
 
 (defn accept-roll [game]
-  (phase/update (structure/update-path (apply-successes game)
-                                       [phase investigator dice]
-                                       dice/accept-roll)
-                phase/advance))
+  (-> (apply-successes game (count-successes game))
+      (structure/update-path [phase investigator dice] dice/accept-roll)
+      (phase/update phase/advance)))
 
-(defn combat-check-rolls [game fighter]
-  (apply + (stat/fight fighter)
-         (ancient-one/combat-modifier game)
-         (map :combat-modifier (items/get fighter))))
+(defn calculate-combat-modifier [ancient-one items]
+  (apply + (ancient-one/combat-modifier ancient-one)
+         (map :combat-modifier items)))
 
 (defn investigator-attack [game]
   {:pre [(:dice (structure/get-path game [phase investigator]))]}
   (structure/update-path game [phase investigator dice]
-                         #(dice/combat-check % investigator
-                           (apply + (ancient-one/combat-modifier (ancient-one/get game))
-                                  (map :combat-modifier
-                                       (structure/get-path game [phase investigator items]))))))
+                         #(->> (items/get investigator)
+                               (calculate-combat-modifier (ancient-one/get game))
+                               (dice/combat-check % investigator))))

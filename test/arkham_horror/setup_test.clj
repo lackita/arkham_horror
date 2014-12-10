@@ -26,8 +26,8 @@
 (deftest focus-test
   (is (= (map stat/fight (:investigators focused-game)) [4])))
 
-(def attack-started-game (combat/start-attack awakened-game))
-(def rigged-game (combat/start-attack
+(def attack-started-game (combat/start awakened-game))
+(def rigged-game (combat/start
                   (ancient-one/awaken
                    (setup/init
                     (game/make {:ancient-one :cthulu

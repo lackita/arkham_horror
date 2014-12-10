@@ -24,9 +24,9 @@
 (defn attack-and-get-level [game]
   (-> game
       ancient-one/awaken
-      combat/start-attack
+      combat/start
       everybody-attack
-      combat/end-attack
+      combat/end
       (structure/get-path [ancient-one doom-track])
       doom-track/level))
 
