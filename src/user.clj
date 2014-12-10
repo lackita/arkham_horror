@@ -2,7 +2,8 @@
   (:require [arkham-horror.setup :as setup]
             [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.structure :as structure]))
 
 (def active-game (agent nil))
 
@@ -20,11 +21,7 @@
 (def start-attack (make-facade combat/start-attack))
 (def attack (make-facade combat/investigator-attack))
 (def exhaust-item (make-facade (fn [_ & [game n]]
-                                 (phase/update
-                                  game
-                                  (fn [phase]
-                                    (investigator/update
-                                     phase
-                                     #(investigator/exhaust-item % n)))))))
+                                 (structure/update-path game [phase investigator]
+                                                        #(investigator/exhaust-item % n)))))
 (def accept-roll (make-facade combat/accept-roll))
 (def defend (make-facade (comp combat/end-attack combat/ancient-one-attack)))

@@ -20,9 +20,8 @@
   (is (combat/in-combat? ended-attack-game))
   (is (not (combat/in-combat? (combat/end-attack ended-attack-game)))))
 
-(def rigged-game (phase/update started-attack-game (fn [phase]
-                                                     (update-in phase [:current-investigator]
-                                                                #(dice/set % (dice/make 6))))))
+(def rigged-game (structure/update-path started-attack-game [phase investigator dice]
+                                        #(merge % {:value 6})))
 (deftest investigator-attack-test
   (is (structure/get-path (combat/investigator-attack started-attack-game) [phase investigator]))
   (is (= (doom-track/level (structure/get-path (combat/investigator-attack rigged-game)
@@ -35,11 +34,14 @@
          [6 6 6])))
 
 (defn roll-badly-but-lucky [game]
-  (phase/update (combat/investigator-attack (phase/update game (fn [phase] (update-in phase
-                                                                                      [:current-investigator]
-                                                                                      (fn [investigator]
-                                                                                        (dice/update investigator #(merge % {:value 1})))))))
-                (fn [phase]
-                  (update-in phase [:current-investigator]
-                             (fn [investigator]
-                               (dice/update investigator #(merge % {:value 6})))))))
+  (structure/update-path (combat/investigator-attack
+                          (phase/update
+                           game
+                           (fn [phase]
+                             (update-in
+                              phase
+                              [:current-investigator]
+                              (fn [investigator]
+                                (dice/update investigator #(merge % {:value 1})))))))
+                         [phase investigator dice]
+                         #(merge % {:value 6})))

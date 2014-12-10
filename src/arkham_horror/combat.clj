@@ -9,10 +9,11 @@
             [arkham-horror.structure :as structure]))
 
 (defn ancient-one-attack [game]
-  (ancient-one/update (assoc game :investigators
-                             (map investigator/reduce-max-sanity-or-stamina
-                                  (game :investigators)))
-                      #(doom-track/update % doom-track/advance)))
+  (structure/update-path (assoc game :investigators
+                                (map investigator/reduce-max-sanity-or-stamina
+                                     (game :investigators)))
+                         [ancient-one doom-track]
+                         doom-track/advance))
 
 (defn start-attack [game]
   (merge (phase/start game)
@@ -36,17 +37,13 @@
      (if (or (nil? (structure/get-path game [phase investigator]))
              (< successes (count (phase/all-investigators (phase/get game)))))
        (assoc-in game [:combat :remainder] successes)
-       (apply-successes (ancient-one/update game (fn [investigator]
-                                                   (doom-track/update investigator
-                                                                      doom-track/retract)))
+       (apply-successes (structure/update-path game [ancient-one doom-track] doom-track/retract)
                         (- successes (count (phase/all-investigators (phase/get game))))))))
 
 (defn accept-roll [game]
-  (phase/update (phase/update (apply-successes game)
-                              #(update-in % [:current-investigator]
-                                          (fn [investigator]
-                                            (dice/update investigator
-                                                         dice/accept-roll))))
+  (phase/update (structure/update-path (apply-successes game)
+                                       [phase investigator dice]
+                                       dice/accept-roll)
                 phase/advance))
 
 (defn combat-check-rolls [game fighter]
@@ -56,13 +53,8 @@
 
 (defn investigator-attack [game]
   {:pre [(:dice (structure/get-path game [phase investigator]))]}
-  (phase/update game (fn [phase]
-                       (update-in phase [:current-investigator]
-                                  (fn [investigator]
-                                    (dice/update investigator
-                                                 #(dice/combat-check
-                                                   %
-                                                   (structure/get-path game [phase investigator])
-                                                   (apply + (ancient-one/combat-modifier (ancient-one/get game))
-                                                          (map :combat-modifier
-                                                               (structure/get-path game [phase investigator items]))))))))))
+  (structure/update-path game [phase investigator dice]
+                         #(dice/combat-check % investigator
+                           (apply + (ancient-one/combat-modifier (ancient-one/get game))
+                                  (map :combat-modifier
+                                       (structure/get-path game [phase investigator items]))))))

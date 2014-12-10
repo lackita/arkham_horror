@@ -52,7 +52,7 @@
   (is (= (doom-track/capacity (doom-track/get (ancient-one/make :cthulu))) 13))
   (is (= (doom-track/level (structure/get-path awakened-game [ancient-one doom-track])) 13))
   (is (= (-> awakened-game
-             (ancient-one/update #(doom-track/update % doom-track/retract))
+             (structure/update-path [ancient-one doom-track] doom-track/retract)
              combat/ancient-one-attack
              (structure/get-path [ancient-one doom-track])
              doom-track/level)
