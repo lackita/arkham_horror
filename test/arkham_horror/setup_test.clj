@@ -8,7 +8,8 @@
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.stat :as stat]))
 
-(def active-game (setup/begin :cthulu ["Monterey Jack"]))
+(def active-game (game/make {:ancient-one :cthulu
+                             :investigators ["Monterey Jack"]}))
 (deftest begin-test
   (is (= (:investigators active-game) [(investigator/make "Monterey Jack")])))
 
@@ -18,32 +19,10 @@
          [(investigator/init (investigator/make "Monterey Jack")
                              {:speed 2 :fight 2 :lore 2})])))
 
-(def awakened-game (setup/awaken (setup/begin :cthulu ["Monterey Jack"])))
+(def awakened-game (setup/awaken active-game))
 (deftest awaken-test
   (is (ancient-one/awakened? (ancient-one/get awakened-game))))
 
 (def focused-game (setup/focus awakened-game [{:fight-will 2}]))
 (deftest focus-test
   (is (= (map stat/fight (:investigators focused-game)) [4])))
-
-(def attack-started-game (combat/start awakened-game))
-(def rigged-game (combat/start
-                  (ancient-one/awaken
-                   (setup/init
-                    (game/make {:ancient-one :cthulu
-                                :investigators ["Monterey Jack"]
-                                :dice 6})
-                    [{:speed 0 :fight 19 :lore 0}]))))
-(deftest game-status-test
-  (is (= (setup/game-status active-game) "Initialize investigators"))
-  (is (= (setup/game-status init-game) "Awaken ancient one"))
-  (is (= (setup/game-status awakened-game) "Refresh investigators"))
-  (is (= (setup/game-status attack-started-game) "Attack\nDoom track: 13"))
-  (is (= (setup/game-status (combat/investigator-attack rigged-game))
-         "Roll: 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6"))
-  (is (= (setup/game-status (combat/accept-roll
-                             (combat/investigator-attack attack-started-game))) "Defend"))
-  (is (= (setup/game-status (ancient-one/awaken (setup/begin :azathoth []))) "You lose"))
-  (is (= (setup/game-status (combat/accept-roll
-                             (combat/investigator-attack rigged-game))) "You win"))
-  )

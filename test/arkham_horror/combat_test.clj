@@ -1,5 +1,6 @@
 (ns arkham-horror.combat-test
   (:require [clojure.test :refer :all]
+            [arkham-horror.game :as game]
             [arkham-horror.phase :as phase]
             [arkham-horror.setup :as setup]
             [arkham-horror.combat :as combat]
@@ -9,7 +10,8 @@
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.structure :as structure]))
 
-(def started-attack-game (-> (setup/begin :cthulu ["Monterey Jack"])
+(def started-attack-game (-> (game/make {:ancient-one :cthulu
+                                         :investigators ["Monterey Jack"]})
                              (setup/init [{:speed 2 :fight 5 :lore 2}])
                              setup/awaken
                              combat/start))

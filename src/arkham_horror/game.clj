@@ -2,7 +2,12 @@
   (:require [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.phase :as phase]))
+            [arkham-horror.phase :as phase]
+            [arkham-horror.structure :as structure]
+            [arkham-horror.investigator.dice :as dice]
+            [arkham-horror.combat :as combat]
+            [arkham-horror.ancient-one :as ancient-one]
+            [arkham-horror.ancient-one.doom-track :as doom-track]))
 
 (defn make [config]
   (-> config
@@ -22,3 +27,26 @@
 (defn over? [game]
   (or (lost? game)
       (won? game)))
+
+(defn message [active-game]
+  (cond (won? active-game)
+        "You win"
+        (lost? active-game)
+        "You lose"
+        (dice/pending-roll (structure/get-path active-game [phase investigator dice]))
+        (->> (structure/get-path active-game [phase investigator dice])
+             dice/pending-roll
+             (clojure.string/join " ")
+             (str "Roll: "))
+        (and (combat/get active-game)
+             (not (structure/get-path active-game [phase investigator])))
+        "Defend"
+        (combat/get active-game)
+        (str "Attack\n" "Doom track: "
+             (doom-track/level (structure/get-path active-game [ancient-one doom-track])))
+        (ancient-one/awakened? (ancient-one/get active-game))
+        "Refresh investigators"
+        (active-game :initialized)
+        "Awaken ancient one"
+        :else
+        "Initialize investigators"))
