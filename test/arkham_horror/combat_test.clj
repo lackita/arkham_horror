@@ -13,7 +13,7 @@
 (def started-attack-game (-> (game/make {:ancient-one :cthulu
                                          :investigators ["Monterey Jack"]})
                              (setup/init [{:speed 2 :fight 5 :lore 2}])
-                             setup/awaken
+                             ancient-one/awaken
                              combat/start))
 (def rigged-game (structure/update-path started-attack-game [phase investigator dice]
                                         #(merge % {:value 6})))

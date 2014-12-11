@@ -13,9 +13,6 @@
          {:investigators (map investigator/init investigators config)
           :initialized true}))
 
-(defn awaken [active-game]
-  (ancient-one/awaken active-game))
-
 (defn focus [{investigators :investigators :as active-game} deltas]
   (assoc active-game :investigators (map investigator/focus investigators deltas)))
 
