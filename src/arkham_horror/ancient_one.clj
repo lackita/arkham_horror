@@ -24,13 +24,11 @@
   (assoc-in (rouse game)
             [:ancient-one :awakened] true))
 
-(defmulti make identity)
-(defmethod make "Cthulu" [name]
+(def capacities {"Cthulu" 13
+                 "Azathoth" 14})
+(defn make [name]
   {:name name
-   :doom-track (doom-track/make 0 13)})
-(defmethod make "Azathoth" [name]
-  {:name name
-   :doom-track (doom-track/make 0 14)})
+   :doom-track (doom-track/make 0 (capacities name))})
 
 (defn valid? [ancient-one]
   (available ancient-one))
