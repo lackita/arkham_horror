@@ -6,7 +6,7 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.structure :as structure]))
 
-(def azathoth-game (game/make {:ancient-one :azathoth
+(def azathoth-game (game/make {:ancient-one "Azathoth"
                                :investigators ["Monterey Jack"]}))
 
 (deftest ends-world-test

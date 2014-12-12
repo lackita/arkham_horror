@@ -3,7 +3,7 @@
   (:require [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]))
 
-(def available #{:azathoth "Cthulu"})
+(def available #{"Azathoth" "Cthulu"})
 
 (defn get [game]
   (game :ancient-one))
@@ -15,7 +15,7 @@
   (update-in game [:ancient-one] fn))
 
 (defmulti rouse #(-> % :ancient-one :name))
-(defmethod rouse :azathoth [game]
+(defmethod rouse "Azathoth" [game]
   (assoc game :investigators (map investigator/devour (game :investigators))))
 (defmethod rouse :default [game]
   (update game #(doom-track/update % doom-track/fill)))
@@ -28,7 +28,7 @@
 (defmethod make "Cthulu" [name]
   {:name name
    :doom-track (doom-track/make 0 13)})
-(defmethod make :azathoth [name]
+(defmethod make "Azathoth" [name]
   {:name name
    :doom-track (doom-track/make 0 14)})
 

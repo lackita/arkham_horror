@@ -9,7 +9,7 @@
 
 (def cthulu-game (game/make {:ancient-one "Cthulu"
                              :investigators ["Monterey Jack"]}))
-(def azathoth-game (game/make {:ancient-one :azathoth
+(def azathoth-game (game/make {:ancient-one "Azathoth"
                                :investigators ["Monterey Jack"]}))
 (def init-game (setup/init cthulu-game [{:speed 2 :fight 2 :lore 2}]))
 (def awakened-game (ancient-one/awaken cthulu-game))
