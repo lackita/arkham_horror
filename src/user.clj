@@ -17,8 +17,7 @@
 
 (def begin (make-facade #(phase/start (game/make %2))))
 (def advance-phase (make-facade #(phase/update %1 phase/advance)))
-(def init-investigator (make-facade (fn [game stats]
-                                      (phase/update game #(phase/init % stats)))))
+(def init-investigator (make-facade game/init-investigator))
 (def awaken (make-facade ancient-one/awaken))
 (def focus (make-facade setup/focus))
 (def start-attack (make-facade combat/start))
