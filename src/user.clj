@@ -4,6 +4,7 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
+            [arkham-horror.phase.init :as init]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.structure :as structure]))
 
