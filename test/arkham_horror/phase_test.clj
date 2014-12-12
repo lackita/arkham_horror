@@ -25,7 +25,8 @@
          [(investigator/make "Monterey Jack")])))
 
 (deftest init-test
-  (is (= (investigator/get (phase/init (phase/make [(investigator/make "Monterey Jack")])
-                                       {:speed 2 :fight 3 :lore 4}))
+  (is (= (investigator/get (phase/init-investigator
+                            (phase/make [(investigator/make "Monterey Jack")])
+                            {:speed 2 :fight 3 :lore 4}))
          (investigator/init (investigator/make "Monterey Jack")
                             {:speed 2 :fight 3 :lore 4}))))

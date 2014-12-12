@@ -39,5 +39,5 @@
 (defn over? [phase]
   (nil? (phase :current-investigator)))
 
-(defn init [phase stats]
+(defn init-investigator [phase stats]
   (investigator/update phase #(investigator/init % stats)))

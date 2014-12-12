@@ -52,5 +52,5 @@
 (deftest init-investigator
   (is (= (phase/get (game/init-investigator (phase/start cthulu-game)
                                             {:speed 2 :fight 3 :lore 4}))
-         (phase/init (phase/make [(investigator/make "Monterey Jack")])
-                     {:speed 2 :fight 3 :lore 4}))))
+         (phase/init-investigator (phase/make [(investigator/make "Monterey Jack")])
+                                  {:speed 2 :fight 3 :lore 4}))))
