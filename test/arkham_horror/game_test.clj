@@ -49,8 +49,12 @@
                         (combat/investigator-attack rigged-game))) "You win"))
   )
 
-(deftest init-investigator
+(deftest init-investigator-test
   (is (= (phase/get (game/init-investigator (phase/start cthulu-game)
                                             {:speed 2 :fight 3 :lore 4}))
          (phase/init-investigator (phase/make [(investigator/make "Monterey Jack")])
                                   {:speed 2 :fight 3 :lore 4}))))
+
+(deftest advance-phase-test
+  (is (= (phase/get (game/advance-phase (phase/start cthulu-game)))
+         (phase/advance (phase/get (phase/start cthulu-game))))))

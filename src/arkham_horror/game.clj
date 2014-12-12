@@ -31,6 +31,9 @@
 (defn init-investigator [game stats]
   (phase/update game #(phase/init-investigator % stats)))
 
+(defn advance-phase [game]
+  (phase/update game phase/advance))
+
 (defn message [active-game]
   (cond (won? active-game)
         "You win"
