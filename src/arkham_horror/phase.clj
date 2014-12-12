@@ -1,5 +1,6 @@
 (ns arkham-horror.phase
-  (:refer-clojure :exclude [get set]))
+  (:refer-clojure :exclude [get set])
+  (:require [arkham-horror.investigator :as investigator]))
 
 (defn get [game]
   (game :phase))
@@ -37,3 +38,6 @@
 
 (defn over? [phase]
   (nil? (phase :current-investigator)))
+
+(defn init [phase stats]
+  (investigator/update phase #(investigator/init % stats)))

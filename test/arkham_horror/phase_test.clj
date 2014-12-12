@@ -23,3 +23,9 @@
                 phase/get :current-investigator)))
   (is (= (-> (phase/update single-investigator phase/advance) phase/get :processed-investigators)
          [(investigator/make "Monterey Jack")])))
+
+(deftest init-test
+  (is (= (investigator/get (phase/init (phase/make [(investigator/make "Monterey Jack")])
+                                       {:speed 2 :fight 3 :lore 4}))
+         (investigator/init (investigator/make "Monterey Jack")
+                            {:speed 2 :fight 3 :lore 4}))))

@@ -1,7 +1,6 @@
 (ns arkham-horror.investigator.dice
   (:refer-clojure :exclude [get set])
-  (:require [arkham-horror.phase :as phase]
-            [arkham-horror.stat :as stat]))
+  (:require [arkham-horror.stat :as stat]))
 
 (defn get [investigator]
   (investigator :dice))

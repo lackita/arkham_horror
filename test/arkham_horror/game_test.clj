@@ -47,3 +47,6 @@
   (is (= (game/message (combat/accept-roll
                         (combat/investigator-attack rigged-game))) "You win"))
   )
+
+(deftest init-investigator
+  )

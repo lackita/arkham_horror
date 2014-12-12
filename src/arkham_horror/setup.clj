@@ -1,6 +1,5 @@
 (ns arkham-horror.setup
-  (:require [arkham-horror.game :as game]
-            [arkham-horror.phase :as phase]
+  (:require [arkham-horror.phase :as phase]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.investigator :as investigator]
