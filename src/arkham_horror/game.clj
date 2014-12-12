@@ -36,25 +36,25 @@
 (defn advance-phase [game]
   (phase/update game phase/advance))
 
-(defn message [active-game]
-  (cond (won? active-game)
+(defn message [game]
+  (cond (won? game)
         "You win"
-        (lost? active-game)
+        (lost? game)
         "You lose"
-        (dice/pending-roll (structure/get-path active-game [phase investigator dice]))
-        (->> (structure/get-path active-game [phase investigator dice])
+        (dice/pending-roll (structure/get-path game [phase investigator dice]))
+        (->> (structure/get-path game [phase investigator dice])
              dice/pending-roll
              (clojure.string/join " ")
              (str "Roll: "))
-        (and (combat/get active-game)
-             (not (structure/get-path active-game [phase investigator])))
+        (and (combat/get game)
+             (not (structure/get-path game [phase investigator])))
         "Defend"
-        (combat/get active-game)
+        (combat/get game)
         (str "Attack\n" "Doom track: "
-             (doom-track/level (structure/get-path active-game [ancient-one doom-track])))
-        (ancient-one/awakened? (ancient-one/get active-game))
+             (doom-track/level (structure/get-path game [ancient-one doom-track])))
+        (ancient-one/awakened? (ancient-one/get game))
         "Refresh investigators"
-        (active-game :initialized)
+        (game :initialized)
         "Awaken ancient one"
         :else
-        (message/get active-game)))
+        (message/get game)))
