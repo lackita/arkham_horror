@@ -36,7 +36,9 @@
   (is (game/over? won-game)))
 
 (deftest message-test
-  (is (= (game/message cthulu-game) "Initialize investigators"))
+  (is (= (game/message (game/make {:investigators ["Monterey Jack"]}))
+         "Welcome to Arkham Horror!"))
+  ;(is (= (game/message cthulu-game) "Initialize investigators"))
   (is (= (game/message init-game) "Awaken ancient one"))
   (is (= (game/message awakened-game) "Refresh investigators"))
   (is (= (game/message attack-started-game) "Attack\nDoom track: 13"))

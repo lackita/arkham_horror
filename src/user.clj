@@ -15,8 +15,10 @@
     (await active-game)
     (print (game/message @active-game))))
 
-(def begin (make-facade #(phase/start (game/make %2))))
-(def advance-phase (make-facade #(phase/update %1 phase/advance)))
+(def begin (make-facade #(game/make %2)))
+(def start-init (make-facade phase/start))
+(def end-init (make-facade phase/end))
+(def advance-phase (make-facade game/advance-phase))
 (def init-investigator (make-facade game/init-investigator))
 (def awaken (make-facade ancient-one/awaken))
 (def focus (make-facade setup/focus))
