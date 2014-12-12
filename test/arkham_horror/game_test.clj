@@ -5,7 +5,8 @@
             [arkham-horror.game :as game]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.stat :as stat]
-            [arkham-horror.combat :as combat]))
+            [arkham-horror.combat :as combat]
+            [arkham-horror.phase :as phase]))
 
 (def cthulu-game (game/make {:ancient-one "Cthulu"
                              :investigators ["Monterey Jack"]}))
@@ -49,4 +50,7 @@
   )
 
 (deftest init-investigator
-  )
+  (is (= (phase/get (game/init-investigator (phase/start cthulu-game)
+                                            {:speed 2 :fight 3 :lore 4}))
+         (phase/init (phase/make [(investigator/make "Monterey Jack")])
+                     {:speed 2 :fight 3 :lore 4}))))

@@ -28,6 +28,9 @@
   (or (lost? game)
       (won? game)))
 
+(defn init-investigator [game stats]
+  (phase/update game #(phase/init % stats)))
+
 (defn message [active-game]
   (cond (won? active-game)
         "You win"
