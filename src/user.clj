@@ -4,7 +4,6 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
-            [arkham-horror.phase.init :as init]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.structure :as structure]))
 
@@ -16,11 +15,10 @@
     (await active-game)
     (print (game/message @active-game))))
 
-(def begin (make-facade #(init/start (game/make %2))))
+(def begin (make-facade #(phase/start (game/make %2))))
 (def advance-phase (make-facade #(phase/update %1 phase/advance)))
 (def init-investigator (make-facade (fn [game stats]
-                                      (structure/update-path game [phase investigator]
-                                                             #(init/stats % stats)))))
+                                      (phase/update game #(phase/init % stats)))))
 (def awaken (make-facade ancient-one/awaken))
 (def focus (make-facade setup/focus))
 (def start-attack (make-facade combat/start))
