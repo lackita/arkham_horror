@@ -5,5 +5,5 @@
             [arkham-horror.phase.init :as init]))
 
 (deftest start
-  (is (phase/get (init/start (game/make {:ancient-one :cthulu
+  (is (phase/get (init/start (game/make {:ancient-one "Cthulu"
                                          :investigators ["Monterey Jack"]})))))

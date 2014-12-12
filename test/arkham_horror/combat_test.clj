@@ -10,7 +10,7 @@
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.structure :as structure]))
 
-(def started-attack-game (-> (game/make {:ancient-one :cthulu
+(def started-attack-game (-> (game/make {:ancient-one "Cthulu"
                                          :investigators ["Monterey Jack"]})
                              (setup/init [{:speed 2 :fight 5 :lore 2}])
                              ancient-one/awaken

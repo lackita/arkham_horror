@@ -8,7 +8,7 @@
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.stat :as stat]))
 
-(def active-game (game/make {:ancient-one :cthulu
+(def active-game (game/make {:ancient-one "Cthulu"
                              :investigators ["Monterey Jack"]}))
 (deftest begin-test
   (is (= (:investigators active-game) [(investigator/make "Monterey Jack")])))

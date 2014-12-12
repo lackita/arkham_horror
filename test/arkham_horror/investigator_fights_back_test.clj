@@ -11,7 +11,7 @@
             [arkham-horror.structure :as structure]))
 
 (defn make-game-with [fights pips]
-  (setup/init (game/make {:ancient-one :cthulu
+  (setup/init (game/make {:ancient-one "Cthulu"
                           :dice pips
                           :investigators [(repeat "Monterey Jack" (count fights))]})
               (map (fn [fight] {:speed 0 :fight fight :lore 0}) fights)))

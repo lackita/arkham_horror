@@ -7,7 +7,7 @@
             [arkham-horror.stat :as stat]
             [arkham-horror.combat :as combat]))
 
-(def cthulu-game (game/make {:ancient-one :cthulu
+(def cthulu-game (game/make {:ancient-one "Cthulu"
                              :investigators ["Monterey Jack"]}))
 (def azathoth-game (game/make {:ancient-one :azathoth
                                :investigators ["Monterey Jack"]}))
@@ -19,7 +19,7 @@
 (def rigged-game (combat/start
                   (ancient-one/awaken
                    (setup/init
-                    (game/make {:ancient-one :cthulu
+                    (game/make {:ancient-one "Cthulu"
                                 :investigators ["Monterey Jack"]
                                 :dice 6})
                     [{:speed 0 :fight 19 :lore 0}]))))

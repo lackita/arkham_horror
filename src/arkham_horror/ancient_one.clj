@@ -3,7 +3,7 @@
   (:require [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]))
 
-(def available #{:azathoth :cthulu})
+(def available #{:azathoth "Cthulu"})
 
 (defn get [game]
   (game :ancient-one))
@@ -25,7 +25,7 @@
             [:ancient-one :awakened] true))
 
 (defmulti make identity)
-(defmethod make :cthulu [name]
+(defmethod make "Cthulu" [name]
   {:name name
    :doom-track (doom-track/make 0 13)})
 (defmethod make :azathoth [name]

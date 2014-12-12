@@ -21,7 +21,7 @@
                                :maximum-stamina max-stamina})
                     investigators))))
 
-(def awakened-game (ancient-one/awaken (game/make {:ancient-one :cthulu
+(def awakened-game (ancient-one/awaken (game/make {:ancient-one "Cthulu"
                                                    :investigators ["Monterey Jack"]})))
 
 (defn lost-after-attacks? [victim attacks]
@@ -29,7 +29,7 @@
     (game/lost? victim)
     (lost-after-attacks? (combat/ancient-one-attack victim) (dec attacks))))
 
-(def base-game (game/make {:ancient-one :cthulu}))
+(def base-game (game/make {:ancient-one "Cthulu"}))
 (def awakened-game (alter-investigator awakened-game 1 1))
 (def death-bed-game (alter-investigator awakened-game 1 1))
 (def has-two-stamina-game (alter-investigator awakened-game 1 2))
@@ -49,7 +49,7 @@
   (is (lost-after-attacks? has-a-tougher-investigator 2)))
 
 (deftest doom-track-test
-  (is (= (doom-track/capacity (doom-track/get (ancient-one/make :cthulu))) 13))
+  (is (= (doom-track/capacity (doom-track/get (ancient-one/make "Cthulu"))) 13))
   (is (= (doom-track/level (structure/get-path awakened-game [ancient-one doom-track])) 13))
   (is (= (-> awakened-game
              (structure/update-path [ancient-one doom-track] doom-track/retract)
