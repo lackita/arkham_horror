@@ -37,17 +37,6 @@
   (phase/update game phase/advance))
 
 (defn message [game]
-  (cond (won? game)
-        "You win"
-        (lost? game)
-        "You lose"
-        (dice/pending-roll (structure/get-path game [phase investigator dice]))
-        (->> (structure/get-path game [phase investigator dice])
-             dice/pending-roll
-             (clojure.string/join " ")
-             (str "Roll: "))
-        (and (combat/get game)
-             (not (structure/get-path game [phase investigator])))
-        "Defend"
-        :else
-        (message/get game)))
+  (cond (won? game) "You win"
+        (lost? game) "You lose"
+        :else (message/get game)))

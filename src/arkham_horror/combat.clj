@@ -31,7 +31,7 @@
     (attach-ancient-one-status-message game)))
 
 (defn end [game]
-  (dissoc (phase/end game) :combat))
+  (message/set (dissoc (phase/end game) :combat) "Defend"))
 
 (defn ancient-one-attack [game]
   (structure/update-path (investigator/update-all game investigator/reduce-max-sanity-or-stamina)
@@ -72,7 +72,11 @@
 
 (defn investigator-attack [game]
   {:pre [(:dice (structure/get-path game [phase investigator]))]}
-  (structure/update-path game [phase investigator dice]
-                         #(->> (items/get investigator)
-                               (calculate-combat-modifier (ancient-one/get game))
-                               (dice/combat-check % investigator))))
+  (let [game (structure/update-path game [phase investigator dice]
+                                    #(->> (items/get investigator)
+                                          (calculate-combat-modifier (ancient-one/get game))
+                                          (dice/combat-check % investigator)))]
+    (message/set game (->> (structure/get-path game [phase investigator dice])
+                           dice/pending-roll
+                           (clojure.string/join " ")
+                           (str "Roll: ")))))

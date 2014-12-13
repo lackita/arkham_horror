@@ -4,8 +4,7 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
-            [arkham-horror.investigator :as investigator]
-            [arkham-horror.structure :as structure]))
+            [arkham-horror.message :as message]))
 
 (def active-game (agent nil))
 
@@ -17,7 +16,7 @@
 
 (def begin (make-facade #(game/make %2)))
 (def start-init (make-facade phase/start))
-(def end-init (make-facade phase/end))
+(def end-init (make-facade phase/end-init))
 (def advance-phase (make-facade game/advance-phase))
 (def init-investigator (make-facade game/init-investigator))
 (def awaken (make-facade ancient-one/awaken))
