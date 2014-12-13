@@ -22,6 +22,12 @@
   {:pre [(not (nil? investigators))]}
   (set (dissoc game :investigators) (make investigators)))
 
+(defn start-init [game]
+  (help/set-available-actions (start game)
+                              '(init-investigator {:speed <speed>
+                                                   :fight <fight>
+                                                   :lore <lore>})))
+
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)
           (if (phase :current-investigator) [(phase :current-investigator)] [])

@@ -32,10 +32,12 @@
       (won? game)))
 
 (defn init-investigator [game stats]
-  (phase/update game #(phase/init-investigator % stats)))
+  (-> (phase/update game #(phase/init-investigator % stats))
+      help/save-actions
+      (help/set-available-actions '(advance-phase))))
 
 (defn advance-phase [game]
-  (phase/update game phase/advance))
+  (help/restore-actions (phase/update game phase/advance)))
 
 (defn message [game]
   (cond (won? game) "You win"

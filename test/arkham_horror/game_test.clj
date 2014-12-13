@@ -18,7 +18,19 @@
   (is (= (help/get-message (game/make {:investigators ["Monterey Jack"]}))
          "Welcome to Arkham Horror!"))
   (is (= (help/get-available-actions (game/make {:investigators ["Monterey Jack"]}))
-         '(start-init))))
+         '(start-init)))
+  (is (= (help/get-available-actions (phase/start-init cthulu-game))
+         '(init-investigator {:speed <speed> :fight <fight> :lore <lore>})))
+  (is (= (help/get-available-actions (game/init-investigator (phase/start-init cthulu-game)
+                                                             {:speed 2 :fight 2 :lore 2}))
+         '(advance-phase)))
+  (is (= (help/get-available-actions
+          (game/advance-phase
+           (game/init-investigator
+            (phase/start-init (game/make {:ancient-one "Cthulu"
+                                          :investigators (repeat 2 "Monterey Jack")}))
+            {:speed 2 :fight 2 :lore 2})))
+         '(init-investigator {:speed <speed> :fight <fight> :lore <lore>}))))
 
 (deftest won-test
   (is (game/won? won-game))

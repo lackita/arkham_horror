@@ -5,8 +5,8 @@
             [arkham-horror.investigator :as investigator]
             [arkham-horror.help :as help]))
 
-(def single-investigator (phase/start (game/make {:investigators ["Monterey Jack"]})))
-(def two-investigators (phase/start (game/make {:investigators (repeat 2 "Monterey Jack")})))
+(def single-investigator (phase/start-init (game/make {:investigators ["Monterey Jack"]})))
+(def two-investigators (phase/start-init (game/make {:investigators (repeat 2 "Monterey Jack")})))
 
 (deftest end-test
   (is (= (:investigators (phase/end single-investigator))
