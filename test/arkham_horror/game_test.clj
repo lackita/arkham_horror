@@ -1,11 +1,8 @@
 (ns arkham-horror.game-test
   (:require [clojure.test :refer :all]
-            [arkham-horror.setup :as setup]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.game :as game]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.stat :as stat]
-            [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
             [arkham-horror.message :as message]))
 
