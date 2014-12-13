@@ -14,9 +14,11 @@
 (def won-game (ancient-one/update awakened-game ancient-one/defeat))
 (def lost-game (ancient-one/awaken azathoth-game))
 
-(deftest message-test
+(deftest help-test
   (is (= (help/get-message (game/make {:investigators ["Monterey Jack"]}))
-         "Welcome to Arkham Horror!")))
+         "Welcome to Arkham Horror!"))
+  (is (= (help/get-available-actions (game/make {:investigators ["Monterey Jack"]}))
+         '(start-init))))
 
 (deftest won-test
   (is (game/won? won-game))

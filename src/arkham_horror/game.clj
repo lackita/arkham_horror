@@ -15,7 +15,8 @@
       (ancient-one/set (ancient-one/make (or (config :ancient-one)
                                              (ancient-one/random))))
       (investigator/set-all (config :investigators) (config :dice))
-      (help/set-message "Welcome to Arkham Horror!")))
+      (help/set-message "Welcome to Arkham Horror!")
+      (help/set-available-actions '(start-init))))
 
 (defn lost? [game]
   (every? investigator/devoured? (if (phase/get game)
