@@ -12,18 +12,20 @@
                              :investigators ["Monterey Jack"]}))
 (def azathoth-game (game/make {:ancient-one "Azathoth"
                                :investigators ["Monterey Jack"]}))
-(def init-game (setup/init cthulu-game [{:speed 2 :fight 2 :lore 2}]))
+(def init-game (phase/end-init (game/init-investigator (phase/start cthulu-game)
+                                                       {:speed 2 :fight 2 :lore 2})))
 (def awakened-game (ancient-one/awaken cthulu-game))
 (def won-game (ancient-one/update awakened-game ancient-one/defeat))
 (def lost-game (ancient-one/awaken azathoth-game))
 (def attack-started-game (combat/start awakened-game))
 (def rigged-game (combat/start
                   (ancient-one/awaken
-                   (setup/init
-                    (game/make {:ancient-one "Cthulu"
-                                :investigators ["Monterey Jack"]
-                                :dice 6})
-                    [{:speed 0 :fight 19 :lore 0}]))))
+                   (phase/end
+                    (game/init-investigator
+                     (phase/start (game/make {:ancient-one "Cthulu"
+                                              :investigators ["Monterey Jack"]
+                                              :dice 6}))
+                     {:speed 0 :fight 19 :lore 0})))))
 
 (deftest won-test
   (is (game/won? won-game))
@@ -38,7 +40,6 @@
 (deftest message-test
   (is (= (game/message (game/make {:investigators ["Monterey Jack"]}))
          "Welcome to Arkham Horror!"))
-  ;(is (= (game/message cthulu-game) "Initialize investigators"))
   (is (= (game/message init-game) "Awaken ancient one"))
   (is (= (game/message awakened-game) "Refresh investigators"))
   (is (= (game/message attack-started-game) "Attack\nDoom track: 13"))

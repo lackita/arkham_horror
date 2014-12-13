@@ -11,13 +11,15 @@
             [arkham-horror.structure :as structure]))
 
 (defn make-game-with [fights pips]
-  (setup/init (game/make {:ancient-one "Cthulu"
-                          :dice pips
-                          :investigators [(repeat "Monterey Jack" (count fights))]})
-              (map (fn [fight] {:speed 0 :fight fight :lore 0}) fights)))
+  (phase/end (reduce (comp game/advance-phase game/init-investigator)
+                     (phase/start
+                      (game/make {:ancient-one "Cthulu"
+                                  :dice pips
+                                  :investigators (repeat (count fights) "Monterey Jack")}))
+                     (map (fn [fight] {:speed 0 :fight fight :lore 0}) fights))))
 
 (defn everybody-attack [game]
-  (if (structure/get-path game [phase investigator])
+  (if (not (phase/over? (phase/get game)))
     (everybody-attack (combat/accept-roll (combat/investigator-attack game)))
     game))
 

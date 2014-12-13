@@ -7,11 +7,6 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.structure :as structure]))
 
-(defn init [{investigators :investigators :as game} config]
-  (merge game
-         {:investigators (map investigator/init investigators config)
-          :initialized true}))
-
 (defn focus [{investigators :investigators :as active-game} deltas]
   (assoc active-game :investigators (map investigator/focus investigators deltas)))
 

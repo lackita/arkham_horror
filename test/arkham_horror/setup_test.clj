@@ -1,5 +1,6 @@
 (ns arkham-horror.setup-test
   (:require [clojure.test :refer :all]
+            [arkham-horror.phase :as phase]
             [arkham-horror.setup :as setup]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.game :as game]
@@ -13,7 +14,9 @@
 (deftest begin-test
   (is (= (:investigators active-game) [(investigator/make "Monterey Jack")])))
 
-(def init-game (setup/init active-game [{:speed 2 :fight 2 :lore 2}]))
+(def init-game (phase/end
+                (game/init-investigator (phase/start active-game)
+                                        {:speed 2 :fight 2 :lore 2})))
 (deftest init-test
   (is (= (:investigators init-game)
          [(investigator/init (investigator/make "Monterey Jack")

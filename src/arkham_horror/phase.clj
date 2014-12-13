@@ -30,6 +30,9 @@
   (assoc (dissoc game :phase)
     :investigators (all-investigators (get game))))
 
+(defn end-init [game]
+  (assoc (end game) :initialized true))
+
 (defn advance [{processed :processed-investigators
                 current :current-investigator
                 remaining :remaining-investigators
