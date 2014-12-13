@@ -8,14 +8,14 @@
             [arkham-horror.combat :as combat]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.ancient-one.doom-track :as doom-track]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (defn make [config]
   (-> config
       (ancient-one/set (ancient-one/make (or (config :ancient-one)
                                              (ancient-one/random))))
       (investigator/set-all (config :investigators) (config :dice))
-      (message/set "Welcome to Arkham Horror!")))
+      (help/set-message "Welcome to Arkham Horror!")))
 
 (defn lost? [game]
   (every? investigator/devoured? (if (phase/get game)
@@ -39,4 +39,4 @@
 (defn message [game]
   (cond (won? game) "You win"
         (lost? game) "You lose"
-        :else (message/get game)))
+        :else (help/get-message game)))

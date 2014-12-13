@@ -3,7 +3,7 @@
             [arkham-horror.game :as game]
             [arkham-horror.phase :as phase]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (def single-investigator (phase/start (game/make {:investigators ["Monterey Jack"]})))
 (def two-investigators (phase/start (game/make {:investigators ["Monterey Jack"
@@ -18,7 +18,7 @@
          (map investigator/make (repeat 2 "Monterey Jack"))))
   (is (= (:investigators (phase/end (phase/update two-investigators phase/advance)))
          (map investigator/make (repeat 2 "Monterey Jack"))))
-  (is (= (message/get (phase/end-init single-investigator)) "Investigators initialized")))
+  (is (= (help/get-message (phase/end-init single-investigator)) "Investigators initialized")))
 
 (deftest advance-test
   (is (nil? (-> (phase/update single-investigator phase/advance)

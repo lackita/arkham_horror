@@ -9,7 +9,7 @@
             [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.structure :as structure]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (def started-attack-game (-> (game/make {:ancient-one "Cthulu"
                                          :investigators ["Monterey Jack"]})
@@ -32,6 +32,6 @@
          [6 6 6])))
 
 (deftest message-test
-  (is (= (message/get rigged-game) "Attack\nDoom track: 13"))
-  (is (= (message/get (combat/accept-roll (combat/investigator-attack rigged-game)))
+  (is (= (help/get-message rigged-game) "Attack\nDoom track: 13"))
+  (is (= (help/get-message (combat/accept-roll (combat/investigator-attack rigged-game)))
          "Attack\nDoom track: 10")))

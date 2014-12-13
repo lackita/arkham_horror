@@ -4,7 +4,7 @@
             [arkham-horror.game :as game]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.phase :as phase]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (def cthulu-game (game/make {:ancient-one "Cthulu"
                              :investigators ["Monterey Jack"]}))
@@ -15,7 +15,7 @@
 (def lost-game (ancient-one/awaken azathoth-game))
 
 (deftest message-test
-  (is (= (message/get (game/make {:investigators ["Monterey Jack"]}))
+  (is (= (help/get-message (game/make {:investigators ["Monterey Jack"]}))
          "Welcome to Arkham Horror!")))
 
 (deftest won-test

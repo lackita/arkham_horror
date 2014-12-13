@@ -8,7 +8,7 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.phase :as phase]
             [arkham-horror.structure :as structure]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (defn update [game function]
   (update-in game [:combat] function))
@@ -21,17 +21,17 @@
    :remainder 0})
 
 (defn attach-ancient-one-status-message [game]
-  (message/set game (str "Attack\nDoom track: "
-                         (-> game
-                             (structure/get-path [ancient-one doom-track])
-                             doom-track/level))))
+  (help/set-message game (str "Attack\nDoom track: "
+                              (-> game
+                                  (structure/get-path [ancient-one doom-track])
+                                  doom-track/level))))
 
 (defn start [game]
   (let [game (assoc (phase/start game) :combat (make))]
     (attach-ancient-one-status-message game)))
 
 (defn end [game]
-  (message/set (dissoc (phase/end game) :combat) "Defend"))
+  (help/set-message (dissoc (phase/end game) :combat) "Defend"))
 
 (defn ancient-one-attack [game]
   (structure/update-path (investigator/update-all game investigator/reduce-max-sanity-or-stamina)
@@ -76,7 +76,7 @@
                                     #(->> (items/get investigator)
                                           (calculate-combat-modifier (ancient-one/get game))
                                           (dice/combat-check % investigator)))]
-    (message/set game (->> (structure/get-path game [phase investigator dice])
-                           dice/pending-roll
-                           (clojure.string/join " ")
-                           (str "Roll: ")))))
+    (help/set-message game (->> (structure/get-path game [phase investigator dice])
+                                dice/pending-roll
+                                (clojure.string/join " ")
+                                (str "Roll: ")))))

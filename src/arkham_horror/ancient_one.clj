@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (def available #{"Azathoth" "Cthulu"})
 
@@ -22,9 +22,9 @@
   (update game #(doom-track/update % doom-track/fill)))
 
 (defn awaken [game]
-  (message/set (assoc-in (rouse game)
-                   [:ancient-one :awakened] true)
-               (str (:name (get game)) " awakened")))
+  (help/set-message (assoc-in (rouse game)
+                              [:ancient-one :awakened] true)
+                    (str (:name (get game)) " awakened")))
 
 (def capacities {"Cthulu" 13
                  "Azathoth" 14})

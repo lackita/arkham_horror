@@ -3,8 +3,7 @@
             [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
-            [arkham-horror.phase :as phase]
-            [arkham-horror.message :as message]))
+            [arkham-horror.phase :as phase]))
 
 (def active-game (agent nil))
 

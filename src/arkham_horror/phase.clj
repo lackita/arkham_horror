@@ -1,7 +1,7 @@
 (ns arkham-horror.phase
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.investigator :as investigator]
-            [arkham-horror.message :as message]))
+            [arkham-horror.help :as help]))
 
 (defn get [game]
   (game :phase))
@@ -32,7 +32,7 @@
     :investigators (all-investigators (get game))))
 
 (defn end-init [game]
-  (message/set (end game) "Investigators initialized"))
+  (help/set-message (end game) "Investigators initialized"))
 
 (defn advance [{processed :processed-investigators
                 current :current-investigator
