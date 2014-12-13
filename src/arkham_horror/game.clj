@@ -49,12 +49,5 @@
         (and (combat/get game)
              (not (structure/get-path game [phase investigator])))
         "Defend"
-        (combat/get game)
-        (str "Attack\n" "Doom track: "
-             (doom-track/level (structure/get-path game [ancient-one doom-track])))
-        (ancient-one/awakened? (ancient-one/get game))
-        "Refresh investigators"
-        (game :initialized)
-        "Awaken ancient one"
         :else
         (message/get game)))

@@ -40,8 +40,8 @@
 (deftest message-test
   (is (= (game/message (game/make {:investigators ["Monterey Jack"]}))
          "Welcome to Arkham Horror!"))
-  (is (= (game/message init-game) "Awaken ancient one"))
-  (is (= (game/message awakened-game) "Refresh investigators"))
+  (is (= (game/message init-game) "Investigators initialized"))
+  (is (= (game/message awakened-game) "Cthulu awakened"))
   (is (= (game/message attack-started-game) "Attack\nDoom track: 13"))
   (is (= (game/message (combat/investigator-attack rigged-game))
          "Roll: 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6"))

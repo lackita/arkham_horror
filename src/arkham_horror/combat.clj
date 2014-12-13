@@ -7,7 +7,8 @@
             [arkham-horror.investigator.items :as items]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.phase :as phase]
-            [arkham-horror.structure :as structure]))
+            [arkham-horror.structure :as structure]
+            [arkham-horror.message :as message]))
 
 (defn update [game function]
   (update-in game [:combat] function))
@@ -19,8 +20,15 @@
   {:successes 0
    :remainder 0})
 
+(defn attach-ancient-one-status-message [game]
+  (message/set game (str "Attack\nDoom track: "
+                         (-> game
+                             (structure/get-path [ancient-one doom-track])
+                             doom-track/level))))
+
 (defn start [game]
-  (assoc (phase/start game) :combat (make)))
+  (let [game (assoc (phase/start game) :combat (make))]
+    (attach-ancient-one-status-message game)))
 
 (defn end [game]
   (dissoc (phase/end game) :combat))
@@ -55,7 +63,8 @@
 (defn accept-roll [game]
   (-> (apply-successes game (count-successes game))
       (structure/update-path [phase investigator dice] dice/accept-roll)
-      (phase/update phase/advance)))
+      (phase/update phase/advance)
+      attach-ancient-one-status-message))
 
 (defn calculate-combat-modifier [ancient-one items]
   (apply + (ancient-one/combat-modifier ancient-one)

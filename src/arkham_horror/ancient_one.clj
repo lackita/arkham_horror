@@ -1,7 +1,8 @@
 (ns arkham-horror.ancient-one
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.ancient-one.doom-track :as doom-track]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.message :as message]))
 
 (def available #{"Azathoth" "Cthulu"})
 
@@ -21,8 +22,9 @@
   (update game #(doom-track/update % doom-track/fill)))
 
 (defn awaken [game]
-  (assoc-in (rouse game)
-            [:ancient-one :awakened] true))
+  (message/set (assoc-in (rouse game)
+                   [:ancient-one :awakened] true)
+               (str (:name (get game)) " awakened")))
 
 (def capacities {"Cthulu" 13
                  "Azathoth" 14})
