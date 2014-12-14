@@ -23,19 +23,24 @@
 (def single-investigator cthulu-game)
 (def two-investigators (game/make {:ancient-one "Cthulu"
                                    :investigators (repeat 2 "Monterey Jack")}))
+(def initialized-investigator (phase/end-init
+                               (game/init-investigator
+                                (phase/start-init single-investigator)
+                                {:speed 2 :fight 2 :lore 2})))
 (deftest help-test
   (is (= (help/get-message single-investigator) "Welcome to Arkham Horror!"))
   (is (= (help/get-available-actions single-investigator) '(start-init)))
   (is (= (help/get-available-actions (phase/start-init single-investigator))
          '(init-investigator {:speed <speed> :fight <fight> :lore <lore>})))
-  (is (= (help/get-available-actions (game/init-investigator (phase/start-init cthulu-game)
-                                                             {:speed 2 :fight 2 :lore 2}))
+  (is (= (help/get-available-actions (game/init-investigator
+                                      (phase/start-init single-investigator)
+                                      {:speed 2 :fight 2 :lore 2}))
          '(advance-phase)))
   (is (= (help/get-available-actions (init-after-one-round two-investigators))
          '(init-investigator {:speed <speed> :fight <fight> :lore <lore>})))
   (is (= (help/get-available-actions (init-after-one-round single-investigator))
          '(end-init)))
-  (is (= (help/get-available-actions (phase/end-init (phase/start-init cthulu-game)))
+  (is (= (help/get-available-actions initialized-investigator)
          '(awaken))))
 
 (deftest won-test
@@ -62,3 +67,7 @@
 (deftest advance-phase-test
   (is (= (phase/get (game/advance-phase (phase/start cthulu-game)))
          (phase/advance (phase/get (phase/start cthulu-game))))))
+
+(deftest focus-investigator-test
+  (is (= (phase/get (game/focus-investigator (phase/start initialized-investigator)
+                                             {:fight-will 2})))))

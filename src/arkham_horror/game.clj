@@ -42,6 +42,9 @@
       (help/set-available-actions game '(end-init))
       (help/restore-actions game))))
 
+(defn focus-investigator [game delta]
+  game)
+
 (defn message [game]
   (cond (won? game) "You win"
         (lost? game) "You lose"
