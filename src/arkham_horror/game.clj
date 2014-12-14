@@ -37,7 +37,10 @@
       (help/set-available-actions '(advance-phase))))
 
 (defn advance-phase [game]
-  (help/restore-actions (phase/update game phase/advance)))
+  (let [game (phase/update game phase/advance)]
+    (if (phase/over? (phase/get game))
+      (help/set-available-actions game '(end-init))
+      (help/restore-actions game))))
 
 (defn message [game]
   (cond (won? game) "You win"

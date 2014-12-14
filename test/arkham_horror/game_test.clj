@@ -14,23 +14,29 @@
 (def won-game (ancient-one/update awakened-game ancient-one/defeat))
 (def lost-game (ancient-one/awaken azathoth-game))
 
+(defn init-after-one-round [game]
+  (game/advance-phase
+   (game/init-investigator
+    (phase/start-init game)
+    {:speed 2 :fight 2 :lore 2})))
+
+(def single-investigator cthulu-game)
+(def two-investigators (game/make {:ancient-one "Cthulu"
+                                   :investigators (repeat 2 "Monterey Jack")}))
 (deftest help-test
-  (is (= (help/get-message (game/make {:investigators ["Monterey Jack"]}))
-         "Welcome to Arkham Horror!"))
-  (is (= (help/get-available-actions (game/make {:investigators ["Monterey Jack"]}))
-         '(start-init)))
-  (is (= (help/get-available-actions (phase/start-init cthulu-game))
+  (is (= (help/get-message single-investigator) "Welcome to Arkham Horror!"))
+  (is (= (help/get-available-actions single-investigator) '(start-init)))
+  (is (= (help/get-available-actions (phase/start-init single-investigator))
          '(init-investigator {:speed <speed> :fight <fight> :lore <lore>})))
   (is (= (help/get-available-actions (game/init-investigator (phase/start-init cthulu-game)
                                                              {:speed 2 :fight 2 :lore 2}))
          '(advance-phase)))
-  (is (= (help/get-available-actions
-          (game/advance-phase
-           (game/init-investigator
-            (phase/start-init (game/make {:ancient-one "Cthulu"
-                                          :investigators (repeat 2 "Monterey Jack")}))
-            {:speed 2 :fight 2 :lore 2})))
-         '(init-investigator {:speed <speed> :fight <fight> :lore <lore>}))))
+  (is (= (help/get-available-actions (init-after-one-round two-investigators))
+         '(init-investigator {:speed <speed> :fight <fight> :lore <lore>})))
+  (is (= (help/get-available-actions (init-after-one-round single-investigator))
+         '(end-init)))
+  (is (= (help/get-available-actions (phase/end-init (phase/start-init cthulu-game)))
+         '(awaken))))
 
 (deftest won-test
   (is (game/won? won-game))

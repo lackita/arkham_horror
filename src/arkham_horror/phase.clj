@@ -38,7 +38,9 @@
     :investigators (all-investigators (get game))))
 
 (defn end-init [game]
-  (help/set-message (end game) "Investigators initialized"))
+  (-> (end game)
+      (help/set-message "Investigators initialized")
+      (help/set-available-actions '(awaken))))
 
 (defn advance [{processed :processed-investigators
                 current :current-investigator
