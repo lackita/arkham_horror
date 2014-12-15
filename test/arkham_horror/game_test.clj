@@ -43,7 +43,10 @@
   (is (= (help/get-available-actions initialized-investigator)
          '(awaken)))
   (is (= (help/get-available-actions awakened-game)
-         '(start-upkeep))))
+         '(start-upkeep)))
+  (is (= (help/get-available-actions (phase/start-upkeep awakened-game))
+         '[(focus {:speed-sneak <delta> :fight-will <delta> :lore-luck <delta>})
+           (advance-phase)])))
 
 (deftest won-test
   (is (game/won? won-game))

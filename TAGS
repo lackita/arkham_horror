@@ -23,14 +23,14 @@ src/arkham_horror/ancient_one.clj,692
 (defmethod rouse "Azathoth" [game]rouse19,495
 (defmethod rouse :default [game]rouse21,609
 (defn awaken [game]awaken24,699
-(def capacities {"Cthulu" 13capacities29,883
-(defn make [name]make31,945
-(defn valid? [ancient-one]valid?35,1033
-(defn random []random38,1088
-(defn awakened? [ancient-one]awakened?41,1136
-(defn combat-modifier [ancient-one]combat-modifier44,1194
-(defn defeat [ancient-one]defeat47,1237
-(defn defeated? [ancient-one]defeated?50,1317
+(def capacities {"Cthulu" 13capacities30,901
+(defn make [name]make32,963
+(defn valid? [ancient-one]valid?36,1051
+(defn random []random39,1106
+(defn awakened? [ancient-one]awakened?42,1154
+(defn combat-modifier [ancient-one]combat-modifier45,1212
+(defn defeat [ancient-one]defeat48,1255
+(defn defeated? [ancient-one]defeated?51,1335
 
 src/arkham_horror/combat.clj,776
 (defn update [game function]update13,534
@@ -49,15 +49,15 @@ src/arkham_horror/combat.clj,776
 (defn calculate-combat-modifier [ancient-one items]calculate-combat-modifier69,2354
 (defn investigator-attack [game]investigator-attack73,2500
 
-src/arkham_horror/game.clj,342
+src/arkham_horror/game.clj,343
 (defn make [config]make13,556
 (defn lost? [game]lost?21,898
 (defn won? [game]won?26,1110
 (defn over? [game]over?30,1211
-(defn init-investigator [game stats]init-investigator34,1270
-(defn advance-phase [game]advance-phase39,1447
-(defn focus-investigator [game delta]focus-investigator45,1651
-(defn message [game]message48,1698
+(defn message [game]message34,1270
+(defn init-investigator [game stats]init-investigator39,1394
+(defn focus-investigator [game deltas]focus-investigator44,1571
+(defn advance-phase [game]advance-phase47,1671
 
 src/arkham_horror/help.clj,325
 (defn get-message [game]get-message3,25
@@ -103,7 +103,7 @@ src/arkham_horror/investigator.clj,681
 (defn refresh [investigator]refresh71,2178
 (defn exhaust-item [investigator n]exhaust-item74,2253
 
-src/arkham_horror/phase.clj,526
+src/arkham_horror/phase.clj,640
 (defn get [game]get6,165
 (defn update [game function]update9,200
 (defn set [game phase]set12,268
@@ -116,6 +116,8 @@ src/arkham_horror/phase.clj,526
 (defn advance [{processed :processed-investigatorsadvance45,1472
 (defn over? [phase]over?51,1733
 (defn init-investigator [phase stats]init-investigator54,1794
+(defn start-upkeep [game]start-upkeep57,1893
+(defn focus-investigator [phase deltas]focus-investigator60,1936
 
 src/arkham_horror/player.clj,0
 
@@ -153,7 +155,7 @@ src/arkham_horror/structure.clj,107
 (defmacro get-path [item path]get-path3,30
 (defmacro update-path [item path function]update-path10,200
 
-src/user.clj,979
+src/user.clj,991
 (def active-game (agent (help/set-available-actions {} '(begin <config>))))active-game9,286
 (defn make-facade [function]make-facade11,363
 (defn help []help17,517
@@ -163,12 +165,12 @@ src/user.clj,979
 (def advance-phase (make-facade game/advance-phase))advance-phase24,745
 (def end-init (make-facade phase/end-init))end-init25,798
 (def awaken (make-facade ancient-one/awaken))awaken26,842
-(def focus (make-facade setup/focus))focus27,888
-(def start-attack (make-facade combat/start))start-attack28,926
-(def attack (make-facade combat/investigator-attack))attack29,972
-(def exhaust-item (make-facade setup/exhaust-item))exhaust-item30,1026
-(def accept-roll (make-facade combat/accept-roll))accept-roll31,1078
-(def defend (make-facade (comp combat/end combat/ancient-one-attack)))defend32,1129
+(def focus (make-facade game/focus-investigator))focus27,888
+(def start-attack (make-facade combat/start))start-attack28,938
+(def attack (make-facade combat/investigator-attack))attack29,984
+(def exhaust-item (make-facade setup/exhaust-item))exhaust-item30,1038
+(def accept-roll (make-facade combat/accept-roll))accept-roll31,1090
+(def defend (make-facade (comp combat/end combat/ancient-one-attack)))defend32,1141
 
 test/arkham_horror/ancient_one_test.clj,85
 (deftest random-testrandom-test6,175
@@ -220,12 +222,12 @@ test/arkham_horror/game_test.clj,995
 (def two-investigators (game/make {:ancient-one "Cthulu"two-investigators24,909
 (def initialized-investigator (phase/end-initinitialized-investigator26,1046
 (deftest help-testhelp-test30,1281
-(deftest won-testwon-test46,2186
-(deftest over-testover-test51,2310
-(deftest message-testmessage-test56,2430
-(deftest init-investigator-testinit-investigator-test61,2604
-(deftest advance-phase-testadvance-phase-test67,2932
-(deftest focus-investigator-testfocus-investigator-test71,3095
+(deftest won-testwon-test51,2449
+(deftest over-testover-test56,2573
+(deftest message-testmessage-test61,2693
+(deftest init-investigator-testinit-investigator-test66,2867
+(deftest advance-phase-testadvance-phase-test72,3195
+(deftest focus-investigator-testfocus-investigator-test76,3358
 
 test/arkham_horror/investigator_fights_back_test.clj,215
 (defn make-game-with [fights pips]make-game-with13,553
@@ -245,12 +247,15 @@ test/arkham_horror/investigator_test.clj,687
 (def luck-changing-investigator (dice/update (investigator/make "Monterey Jack" 6)luck-changing-investigator74,3999
 (deftest exhaust-item-testexhaust-item-test76,4157
 
-test/arkham_horror/phase_test.clj,355
-(def single-investigator (phase/start-init (game/make {:investigators ["Monterey Jack"]})))single-investigator8,257
-(def two-investigators (phase/start-init (game/make {:investigators (repeat 2 "Monterey Jack")})))two-investigators9,349
-(deftest end-testend-test11,449
-(deftest advance-testadvance-test22,1072
-(deftest init-testinit-test28,1359
+test/arkham_horror/phase_test.clj,576
+(def single-investigator (game/make {:investigators ["Monterey Jack"]}))single-investigator9,313
+(def single-started (phase/start-init single-investigator))single-started10,386
+(def two-investigators (phase/start-init (game/make {:investigators (repeat 2 "Monterey Jack")})))two-investigators11,446
+(deftest end-testend-test13,546
+(deftest advance-testadvance-test24,1154
+(deftest init-testinit-test30,1431
+(def initialized-investigator (investigator/init (investigator/make "Monterey Jack")initialized-investigator37,1764
+(deftest focus-testfocus-test39,1928
 
 test/arkham_horror/setup_test.clj,387
 (def active-game (game/make {:ancient-one "Cthulu"active-game12,458

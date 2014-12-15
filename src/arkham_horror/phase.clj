@@ -55,7 +55,11 @@
   (investigator/update phase #(investigator/init % stats)))
 
 (defn start-upkeep [game]
-  (start game))
+  (-> (start game)
+      (help/set-available-actions '[(focus {:speed-sneak <delta>
+                                            :fight-will <delta>
+                                            :lore-luck <delta>})
+                                    (advance-phase)])))
 
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))
