@@ -1,7 +1,10 @@
 (ns arkham-horror.stat)
 
-(defn make [min value max]
-  {:min min :value value :max max})
+(defn make [name min max]
+  {:name (.toUpperCase (str name)) :min min :max max})
+
+(defn describe [stat]
+  (str (stat :name) "  1  <2>  3   4 "))
 
 (defn extract [s]
   #((% s) :value))

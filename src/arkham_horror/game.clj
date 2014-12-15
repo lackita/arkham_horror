@@ -39,13 +39,21 @@
 (defn init-investigator [game stats]
   (-> (phase/update game #(phase/init-investigator % stats))
       help/save-actions
-      (help/set-available-actions '[(advance-phase)])))
+      (help/set-available-actions '[(advance-phase)])
+      (help/set-message (clojure.string/join "\n" ["Monterey Jack initialized"
+                                                   "Speed  1  <2>  3   4 "
+                                                   "Sneak  3  <2>  1   0 "
+                                                   "Fight  2  <3>  4   5 "
+                                                   "Will   3  <2>  1   0 "
+                                                   "Lore   1   2   3  <4>"
+                                                   "Luck   5   4   3  <2>"]))))
 
 (defn focus-investigator [game deltas]
   (phase/update game #(phase/focus-investigator % deltas)))
 
 (defn advance-phase [game]
   (let [game (phase/update game phase/advance)]
-    (if (phase/over? (phase/get game))
-      (help/set-available-actions game '[(end-init)])
-      (help/restore-actions game))))
+    (help/set-message (if (phase/over? (phase/get game))
+                        (help/set-available-actions game '[(end-init)])
+                        (help/restore-actions game))
+                      "")))

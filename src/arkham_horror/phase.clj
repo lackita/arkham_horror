@@ -23,10 +23,10 @@
   (set (dissoc game :investigators) (make investigators)))
 
 (defn start-init [game]
-  (help/set-available-actions (start game)
-                              '[(init-investigator {:speed <speed>
-                                                    :fight <fight>
-                                                    :lore <lore>})]))
+  (->  (start game)
+       (help/set-message "Initialization started")
+       (help/set-available-actions
+        '[(init-investigator {:speed <speed> :fight <fight> :lore <lore>})])))
 
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)

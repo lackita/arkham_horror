@@ -13,12 +13,12 @@
 (defn make
   ([name] (make name :random))
   ([name pips]
-     {:speed (stat/make 1 1 4)
-      :sneak (stat/make 0 0 3)
-      :fight (stat/make 2 2 5)
-      :will  (stat/make 0 0 3)
-      :lore  (stat/make 1 1 4)
-      :luck  (stat/make 2 2 5)
+     {:speed (stat/make :speed 1 4)
+      :sneak (stat/make :sneak 0 3)
+      :fight (stat/make :fight 2 5)
+      :will  (stat/make :will 0 3)
+      :lore  (stat/make :lore 1 4)
+      :luck  (stat/make :luck 2 5)
       :focus 2
       :items [{:name ".38 Revolver" :combat-modifier 3}
               {:name "Bullwhip" :combat-modifier 1}]

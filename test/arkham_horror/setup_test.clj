@@ -22,7 +22,7 @@
          [(investigator/init (investigator/make "Monterey Jack")
                              {:speed 2 :fight 2 :lore 2})])))
 
-(def awakened-game (ancient-one/awaken active-game))
+(def awakened-game (ancient-one/awaken init-game))
 (def focused-game (setup/focus awakened-game [{:fight-will 2}]))
 (deftest focus-test
   (is (= (map stat/fight (:investigators focused-game)) [4])))
