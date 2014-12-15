@@ -24,9 +24,9 @@
 
 (defn start-init [game]
   (help/set-available-actions (start game)
-                              '(init-investigator {:speed <speed>
-                                                   :fight <fight>
-                                                   :lore <lore>})))
+                              '[(init-investigator {:speed <speed>
+                                                    :fight <fight>
+                                                    :lore <lore>})]))
 
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)
@@ -40,7 +40,7 @@
 (defn end-init [game]
   (-> (end game)
       (help/set-message "Investigators initialized")
-      (help/set-available-actions '(awaken))))
+      (help/set-available-actions '[(awaken)])))
 
 (defn advance [{processed :processed-investigators
                 current :current-investigator
@@ -56,9 +56,9 @@
 
 (defn start-upkeep [game]
   (-> (start game)
-      (help/set-available-actions '[(focus {:speed-sneak <delta>
-                                            :fight-will <delta>
-                                            :lore-luck <delta>})
+      (help/set-available-actions '[(focus-investigator {:speed-sneak <delta>
+                                                         :fight-will <delta>
+                                                         :lore-luck <delta>})
                                     (advance-phase)])))
 
 (defn focus-investigator [phase deltas]

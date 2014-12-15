@@ -16,7 +16,7 @@
                                              (ancient-one/random))))
       (investigator/set-all (config :investigators) (config :dice))
       (help/set-message "Welcome to Arkham Horror!")
-      (help/set-available-actions '(start-init))))
+      (help/set-available-actions '[(start-init)])))
 
 (defn lost? [game]
   (every? investigator/devoured? (if (phase/get game)
@@ -39,7 +39,7 @@
 (defn init-investigator [game stats]
   (-> (phase/update game #(phase/init-investigator % stats))
       help/save-actions
-      (help/set-available-actions '(advance-phase))))
+      (help/set-available-actions '[(advance-phase)])))
 
 (defn focus-investigator [game deltas]
   (phase/update game #(phase/focus-investigator % deltas)))
@@ -47,5 +47,5 @@
 (defn advance-phase [game]
   (let [game (phase/update game phase/advance)]
     (if (phase/over? (phase/get game))
-      (help/set-available-actions game '(end-init))
+      (help/set-available-actions game '[(end-init)])
       (help/restore-actions game))))
