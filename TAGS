@@ -49,14 +49,15 @@ src/arkham_horror/combat.clj,776
 (defn calculate-combat-modifier [ancient-one items]calculate-combat-modifier69,2354
 (defn investigator-attack [game]investigator-attack73,2500
 
-src/arkham_horror/game.clj,277
+src/arkham_horror/game.clj,342
 (defn make [config]make13,556
 (defn lost? [game]lost?21,898
 (defn won? [game]won?26,1110
 (defn over? [game]over?30,1211
 (defn init-investigator [game stats]init-investigator34,1270
 (defn advance-phase [game]advance-phase39,1447
-(defn message [game]message45,1651
+(defn focus-investigator [game delta]focus-investigator45,1651
+(defn message [game]message48,1698
 
 src/arkham_horror/help.clj,325
 (defn get-message [game]get-message3,25
@@ -208,7 +209,7 @@ test/arkham_horror/doom_track_test.clj,161
 (deftest level-testlevel-test15,553
 (deftest advance-testadvance-test19,685
 
-test/arkham_horror/game_test.clj,851
+test/arkham_horror/game_test.clj,995
 (def cthulu-game (game/make {:ancient-one "Cthulu"cthulu-game9,312
 (def azathoth-game (game/make {:ancient-one "Azathoth"azathoth-game11,428
 (def awakened-game (ancient-one/awaken cthulu-game))awakened-game13,550
@@ -217,12 +218,14 @@ test/arkham_horror/game_test.clj,851
 (defn init-after-one-round [game]init-after-one-round17,724
 (def single-investigator cthulu-game)single-investigator23,871
 (def two-investigators (game/make {:ancient-one "Cthulu"two-investigators24,909
-(deftest help-testhelp-test26,1046
-(deftest won-testwon-test41,1951
-(deftest over-testover-test46,2075
-(deftest message-testmessage-test51,2195
-(deftest init-investigator-testinit-investigator-test56,2369
-(deftest advance-phase-testadvance-phase-test62,2697
+(def initialized-investigator (phase/end-initinitialized-investigator26,1046
+(deftest help-testhelp-test30,1281
+(deftest won-testwon-test46,2186
+(deftest over-testover-test51,2310
+(deftest message-testmessage-test56,2430
+(deftest init-investigator-testinit-investigator-test61,2604
+(deftest advance-phase-testadvance-phase-test67,2932
+(deftest focus-investigator-testfocus-investigator-test71,3095
 
 test/arkham_horror/investigator_fights_back_test.clj,215
 (defn make-game-with [fights pips]make-game-with13,553

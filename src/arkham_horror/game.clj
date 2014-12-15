@@ -31,21 +31,21 @@
   (or (lost? game)
       (won? game)))
 
+(defn message [game]
+  (cond (won? game) "You win"
+        (lost? game) "You lose"
+        :else (help/get-message game)))
+
 (defn init-investigator [game stats]
   (-> (phase/update game #(phase/init-investigator % stats))
       help/save-actions
       (help/set-available-actions '(advance-phase))))
+
+(defn focus-investigator [game delta]
+  game)
 
 (defn advance-phase [game]
   (let [game (phase/update game phase/advance)]
     (if (phase/over? (phase/get game))
       (help/set-available-actions game '(end-init))
       (help/restore-actions game))))
-
-(defn focus-investigator [game delta]
-  game)
-
-(defn message [game]
-  (cond (won? game) "You win"
-        (lost? game) "You lose"
-        :else (help/get-message game)))

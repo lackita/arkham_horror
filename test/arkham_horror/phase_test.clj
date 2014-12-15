@@ -31,3 +31,10 @@
                             {:speed 2 :fight 3 :lore 4}))
          (investigator/init (investigator/make "Monterey Jack")
                             {:speed 2 :fight 3 :lore 4}))))
+
+(def initialized-investigator (investigator/init (investigator/make "Monterey Jack")
+                                                 {:speed 2 :fight 2 :lore 2}))
+(deftest focus-test
+  (is (= (investigator/get (phase/focus-investigator (phase/make [initialized-investigator])
+                                                     {:fight-will 2}))
+         (investigator/focus initialized-investigator {:fight-will 2}))))

@@ -53,3 +53,6 @@
 
 (defn init-investigator [phase stats]
   (investigator/update phase #(investigator/init % stats)))
+
+(defn focus-investigator [phase deltas]
+  (investigator/update phase #(investigator/focus % deltas)))
