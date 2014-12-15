@@ -41,8 +41,8 @@
       help/save-actions
       (help/set-available-actions '(advance-phase))))
 
-(defn focus-investigator [game delta]
-  game)
+(defn focus-investigator [game deltas]
+  (phase/update game #(phase/focus-investigator % deltas)))
 
 (defn advance-phase [game]
   (let [game (phase/update game phase/advance)]

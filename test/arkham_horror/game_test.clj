@@ -70,4 +70,6 @@
 
 (deftest focus-investigator-test
   (is (= (phase/get (game/focus-investigator (phase/start initialized-investigator)
-                                             {:fight-will 2})))))
+                                             {:fight-will 2}))
+         (phase/focus-investigator (phase/get (phase/start initialized-investigator))
+                                   {:fight-will 2}))))
