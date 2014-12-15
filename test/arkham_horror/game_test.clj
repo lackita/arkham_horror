@@ -41,7 +41,9 @@
   (is (= (help/get-available-actions (init-after-one-round single-investigator))
          '(end-init)))
   (is (= (help/get-available-actions initialized-investigator)
-         '(awaken))))
+         '(awaken)))
+  (is (= (help/get-available-actions awakened-game)
+         '(start-upkeep))))
 
 (deftest won-test
   (is (game/won? won-game))

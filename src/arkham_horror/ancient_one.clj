@@ -22,9 +22,10 @@
   (update game #(doom-track/update % doom-track/fill)))
 
 (defn awaken [game]
-  (help/set-message (assoc-in (rouse game)
-                              [:ancient-one :awakened] true)
-                    (str (:name (get game)) " awakened")))
+  (-> (rouse game)
+      (assoc-in [:ancient-one :awakened] true)
+      (help/set-message (str (:name (get game)) " awakened"))
+      (help/set-available-actions '(start-upkeep))))
 
 (def capacities {"Cthulu" 13
                  "Azathoth" 14})

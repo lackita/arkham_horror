@@ -54,5 +54,8 @@
 (defn init-investigator [phase stats]
   (investigator/update phase #(investigator/init % stats)))
 
+(defn start-upkeep [game]
+  (start game))
+
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))
