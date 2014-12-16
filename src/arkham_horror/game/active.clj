@@ -17,17 +17,20 @@
 
 (reset)
 
+(defn help []
+  (await active-game)
+  (help/get-available-actions @active-game))
+
 (defn make-facade [function]
   (fn [& args]
     (apply send active-game function args)
     (await active-game)
     (when (game/over? @active-game)
-      (send active-game #(help/set-available-actions % [])))
-    (print (game/message @active-game))))
+      (send active-game #(help/set-available-actions % '[(reset)])))
+    (print (game/message @active-game))
+    (help)))
 
-(defn make-game-ignore-first-argument [_ config]
-  (game/make config))
-(def begin (make-facade make-game-ignore-first-argument))
+(def begin (make-facade (fn [_ config] (game/make config))))
 (def start-init (make-facade phase/start-init))
 (def init-investigator (make-facade game/init-investigator))
 (def advance-phase (make-facade game/advance-phase))
@@ -35,12 +38,10 @@
 (def awaken (make-facade ancient-one/awaken))
 (def start-upkeep (make-facade phase/start-upkeep))
 (def focus-investigator (make-facade game/focus-investigator))
+(def end-upkeep (make-facade phase/end-upkeep))
 (def start-attack (make-facade combat/start))
 (def attack (make-facade combat/investigator-attack))
 (def exhaust-item (make-facade setup/exhaust-item))
 (def accept-roll (make-facade combat/accept-roll))
-(def defend (make-facade (comp combat/end combat/ancient-one-attack)))
-
-(defn help []
-  (await active-game)
-  (help/get-available-actions @active-game))
+(def end-attack (make-facade combat/end))
+(def defend (make-facade combat/ancient-one-attack))

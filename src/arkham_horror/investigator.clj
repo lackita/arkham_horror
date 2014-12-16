@@ -28,9 +28,13 @@
       :dice (dice/make pips)}))
 
 (defn describe [investigator]
-  (clojure.string/join "\n" (cons (str (investigator :name))
-                                  (map (comp stat/describe investigator)
-                                       [:speed :sneak :fight :will :lore :luck]))))
+  (clojure.string/join "\n" (concat [(str (investigator :name))
+                                     (str "Stamina: " (investigator :maximum-stamina)
+                                          "/" (investigator :maximum-stamina))
+                                     (str "Sanity:  " (investigator :maximum-sanity)
+                                          "/" (investigator :maximum-sanity))]
+                                    (map (comp stat/describe investigator)
+                                         [:speed :sneak :fight :will :lore :luck]))))
 
 (defn make-all [investigators dice]
   (map #(make % (or dice :random)) investigators))

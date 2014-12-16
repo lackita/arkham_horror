@@ -21,22 +21,31 @@
    :remainder 0})
 
 (defn attach-ancient-one-status-message [game]
-  (help/set-message game (str "Attack\nDoom track: "
-                              (-> game
-                                  (structure/get-path [ancient-one doom-track])
-                                  doom-track/level))))
+  (if (phase/over? (phase/get game))
+    (help/set-available-actions (help/set-message game "Phase over")
+                                '[(end-attack)])
+    (help/set-message game (str "Attack\nDoom track: "
+                                (-> game
+                                    (structure/get-path [ancient-one doom-track])
+                                    doom-track/level)))))
 
 (defn start [game]
   (let [game (assoc (phase/start game 'end) :combat (make))]
-    (attach-ancient-one-status-message game)))
+    (help/set-available-actions (attach-ancient-one-status-message game)
+                                '[(attack)])))
 
 (defn end [game]
-  (help/set-message (dissoc (phase/end game) :combat) "Defend"))
+  (help/set-available-actions (help/set-message (dissoc (phase/end game) :combat) "Defend")
+                              '[(defend)]))
 
 (defn ancient-one-attack [game]
-  (structure/update-path (investigator/update-all game investigator/reduce-max-sanity-or-stamina)
-                         [ancient-one doom-track]
-                         doom-track/advance))
+  (let [game (structure/update-path
+              (investigator/update-all game investigator/reduce-max-sanity-or-stamina)
+              [ancient-one doom-track]
+              doom-track/advance)]
+    (help/set-message game
+                      (clojure.string/join "\n" (map investigator/describe
+                                                     (game :investigators))))))
 
 (defn successes [game]
   (->> (structure/get-path game [phase investigator dice])
@@ -76,7 +85,10 @@
                                     #(->> (items/get investigator)
                                           (calculate-combat-modifier (ancient-one/get game))
                                           (dice/combat-check % investigator)))]
-    (help/set-message game (->> (structure/get-path game [phase investigator dice])
-                                dice/pending-roll
-                                (clojure.string/join " ")
-                                (str "Roll: ")))))
+    (help/set-available-actions
+     (help/set-message game (->> (structure/get-path game [phase investigator dice])
+                                 dice/pending-roll
+                                 (clojure.string/join " ")
+                                 (str "Roll: ")))
+     '[(accept-roll)
+       (exhaust-item <n>)])))

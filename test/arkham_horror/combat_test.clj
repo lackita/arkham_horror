@@ -30,8 +30,3 @@
   (is (= (dice/pending-roll (structure/get-path (combat/investigator-attack rigged-game)
                                                 [phase investigator dice]))
          [6 6 6])))
-
-(deftest message-test
-  (is (= (help/get-message rigged-game) "Attack\nDoom track: 13"))
-  (is (= (help/get-message (combat/accept-roll (combat/investigator-attack rigged-game)))
-         "Attack\nDoom track: 10")))

@@ -1,7 +1,6 @@
 (ns arkham-horror.phase
   (:refer-clojure :exclude [get set])
-  (:require [arkham-horror.phase :as phase]
-            [arkham-horror.investigator :as investigator]
+  (:require [arkham-horror.investigator :as investigator]
             [arkham-horror.structure :as structure]
             [arkham-horror.help :as help]))
 
@@ -63,9 +62,12 @@
                                                                     :fight-will <delta>
                                                                     :lore-luck <delta>})
                                                (advance-phase)]))]
-    (help/set-message game
-                      (investigator/describe (structure/get-path game
-                                                                 [phase investigator])))))
+    (help/set-message game (investigator/describe (investigator/get (get game))))))
+
+(defn end-upkeep [game]
+  (-> (end game)
+      (help/set-message "Investigators refreshed")
+      (help/set-available-actions '[(start-attack)])))
 
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))
