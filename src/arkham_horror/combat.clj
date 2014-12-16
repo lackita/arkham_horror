@@ -27,7 +27,7 @@
                                   doom-track/level))))
 
 (defn start [game]
-  (let [game (assoc (phase/start game) :combat (make))]
+  (let [game (assoc (phase/start game 'end) :combat (make))]
     (attach-ancient-one-status-message game)))
 
 (defn end [game]

@@ -1,6 +1,8 @@
 (ns arkham-horror.phase
   (:refer-clojure :exclude [get set])
-  (:require [arkham-horror.investigator :as investigator]
+  (:require [arkham-horror.phase :as phase]
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.structure :as structure]
             [arkham-horror.help :as help]))
 
 (defn get [game]
@@ -18,15 +20,16 @@
                                   :remaining-investigators remaining})
   ([investigators] (make [] (first investigators) (rest investigators))))
 
-(defn start [{investigators :investigators :as game}]
+(defn start [{investigators :investigators :as game} end-phase]
   {:pre [(not (nil? investigators))]}
-  (set (dissoc game :investigators) (make investigators)))
+  (assoc (set (dissoc game :investigators) (make investigators))
+    :end-phase end-phase))
 
 (defn start-init [game]
-  (->  (start game)
-       (help/set-message "Initialization started")
-       (help/set-available-actions
-        '[(init-investigator {:speed <speed> :fight <fight> :lore <lore>})])))
+  (-> (start game 'end-init)
+      (help/set-message "Initialization started")
+      (help/set-available-actions
+       '[(init-investigator {:speed <speed> :fight <fight> :lore <lore>})])))
 
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)
@@ -55,11 +58,14 @@
   (investigator/update phase #(investigator/init % stats)))
 
 (defn start-upkeep [game]
-  (-> (start game)
-      (help/set-available-actions '[(focus-investigator {:speed-sneak <delta>
-                                                         :fight-will <delta>
-                                                         :lore-luck <delta>})
-                                    (advance-phase)])))
+  (let [game (-> (start game 'end-upkeep)
+                 (help/set-available-actions '[(focus-investigator {:speed-sneak <delta>
+                                                                    :fight-will <delta>
+                                                                    :lore-luck <delta>})
+                                               (advance-phase)]))]
+    (help/set-message game
+                      (investigator/describe (structure/get-path game
+                                                                 [phase investigator])))))
 
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))

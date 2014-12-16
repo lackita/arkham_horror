@@ -1,10 +1,20 @@
 (ns arkham-horror.stat)
 
-(defn make [name min max]
-  {:name (.toUpperCase (str name)) :min min :max max})
+(defn make [stat-name min max direction]
+  {:name (clojure.string/capitalize (name stat-name))
+   :min min
+   :max max
+   :direction direction})
 
 (defn describe [stat]
-  (str (stat :name) "  1  <2>  3   4 "))
+  (clojure.string/join " "
+    (cons (format "%-5s" (stat :name))
+          (map #(if (= (stat :value) %)
+                  (str "<" % ">")
+                  (str " " % " "))
+               (if (= (stat :direction) :ascending)
+                 (range (stat :min) (inc (stat :max)))
+                 (range (stat :max) (dec (stat :min)) -1))))))
 
 (defn extract [s]
   #((% s) :value))

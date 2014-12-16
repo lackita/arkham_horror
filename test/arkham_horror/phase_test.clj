@@ -41,4 +41,4 @@
                                                      {:fight-will 2}))
          (investigator/focus initialized-investigator {:fight-will 2})))
   (is (= (phase/get (phase/start-upkeep single-investigator))
-         (phase/get (phase/start single-investigator)))))
+         (phase/get (phase/start single-investigator 'end-upkeep)))))

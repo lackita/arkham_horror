@@ -13,18 +13,24 @@
 (defn make
   ([name] (make name :random))
   ([name pips]
-     {:speed (stat/make :speed 1 4)
-      :sneak (stat/make :sneak 0 3)
-      :fight (stat/make :fight 2 5)
-      :will  (stat/make :will 0 3)
-      :lore  (stat/make :lore 1 4)
-      :luck  (stat/make :luck 2 5)
+     {:name name
+      :speed (stat/make :speed 1 4 :ascending)
+      :sneak (stat/make :sneak 0 3 :descending)
+      :fight (stat/make :fight 2 5 :ascending)
+      :will  (stat/make :will 0 3 :descending)
+      :lore  (stat/make :lore 1 4 :ascending)
+      :luck  (stat/make :luck 2 5 :descending)
       :focus 2
       :items [{:name ".38 Revolver" :combat-modifier 3}
               {:name "Bullwhip" :combat-modifier 1}]
       :maximum-sanity 3
       :maximum-stamina 7
       :dice (dice/make pips)}))
+
+(defn describe [investigator]
+  (clojure.string/join "\n" (cons (str (investigator :name))
+                                  (map (comp stat/describe investigator)
+                                       [:speed :sneak :fight :will :lore :luck]))))
 
 (defn make-all [investigators dice]
   (map #(make % (or dice :random)) investigators))

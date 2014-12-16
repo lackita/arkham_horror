@@ -13,9 +13,9 @@
 
 (def started-attack-game (-> (game/make {:ancient-one "Cthulu"
                                          :investigators ["Monterey Jack"]})
-                             phase/start
+                             phase/start-init
                              (game/init-investigator {:speed 2 :fight 5 :lore 2})
-                             phase/end
+                             phase/end-init
                              ancient-one/awaken
                              combat/start))
 (def rigged-game (structure/update-path started-attack-game [phase investigator dice]
