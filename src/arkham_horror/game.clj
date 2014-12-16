@@ -32,7 +32,7 @@
       (won? game)))
 
 (defn message [game]
-  (cond (won? game) "You win"
+  (cond (won? game) (str (:name (ancient-one/get game)) " has been defeated!")
         (lost? game) (str (:name (ancient-one/get game)) " has destroyed the world!")
         :else (help/get-message game)))
 

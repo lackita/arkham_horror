@@ -93,4 +93,32 @@
     (is (= (with-out-str (end-attack)) "Defend"))
     (is (= (help) '[(defend)]))
     (is (= (with-out-str (defend)) "Cthulu has destroyed the world!"))
-    (is (= (help) '[(reset)]))))
+    (is (= (help) '[(reset)])))
+  (testing "Cthulu is defeated"
+    (reset)
+    (with-out-str
+      (begin {:ancient-one "Cthulu"
+              :investigators ["Monterey Jack"]})
+      (start-init)
+      (init-investigator {:speed 2 :fight 5 :lore 4})
+      (send active-game #(structure/update-path % [phase investigator dice]
+                                                (fn [dice] (assoc dice :value 6))))
+      (advance-phase)
+      (end-init)
+      (awaken)
+      (dotimes [n 5]
+        (start-upkeep)
+        (advance-phase)
+        (end-upkeep)
+        (start-attack)
+        (attack)
+        (accept-roll)
+        (end-attack)
+        (defend))
+      (start-upkeep)
+      (advance-phase)
+      (end-upkeep))
+    (is (= (help) '[(start-attack)]))
+    (is (= (with-out-str (start-attack)) "Attack\nDoom track: 3"))
+    (is (= (with-out-str (attack)) "Roll: 6 6 6"))
+    (is (= (with-out-str (accept-roll)) "Cthulu has been defeated!"))))

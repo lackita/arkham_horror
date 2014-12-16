@@ -42,11 +42,6 @@
   (is (not (game/over? azathoth-game)))
   (is (game/over? won-game)))
 
-(deftest message-test
-  (is (= (game/message awakened-game) "Cthulu awakened"))
-  (is (= (game/message lost-game) "Azathoth has destroyed the world!"))
-  (is (= (game/message won-game) "You win")))
-
 (deftest init-investigator-test
   (is (= (phase/get (game/init-investigator (phase/start-init cthulu-game)
                                             {:speed 2 :fight 3 :lore 4}))
