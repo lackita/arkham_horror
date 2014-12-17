@@ -22,8 +22,7 @@
 
 (defn attach-ancient-one-status-message [game]
   (if (phase/over? (phase/get game))
-    (help/set-available-actions (help/set-message game "Phase over")
-                                '[(end-attack)])
+    (help/set-message game "Phase over")
     (help/set-message game (str "Attack\nDoom track: "
                                 (-> game
                                     (structure/get-path [ancient-one doom-track])
@@ -31,12 +30,10 @@
 
 (defn start [game]
   (let [game (assoc (phase/start game 'end) :combat (make))]
-    (help/set-available-actions (attach-ancient-one-status-message game)
-                                '[(attack)])))
+    (attach-ancient-one-status-message game)))
 
 (defn end [game]
-  (help/set-available-actions (help/set-message (dissoc (phase/end game) :combat) "Defend")
-                              '[(defend)]))
+  (help/set-message (dissoc (phase/end game) :combat) "Defend"))
 
 (defn ancient-one-attack [game]
   (let [game (structure/update-path
@@ -85,10 +82,7 @@
                                     #(->> (items/get investigator)
                                           (calculate-combat-modifier (ancient-one/get game))
                                           (dice/combat-check % investigator)))]
-    (help/set-available-actions
-     (help/set-message game (->> (structure/get-path game [phase investigator dice])
-                                 dice/pending-roll
-                                 (clojure.string/join " ")
-                                 (str "Roll: ")))
-     '[(accept-roll)
-       (exhaust-item <n>)])))
+    (help/set-message game (->> (structure/get-path game [phase investigator dice])
+                                dice/pending-roll
+                                (clojure.string/join " ")
+                                (str "Roll: ")))))

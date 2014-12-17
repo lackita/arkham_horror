@@ -26,9 +26,7 @@
 
 (defn start-init [game]
   (-> (start game 'end-init)
-      (help/set-message "Initialization started")
-      (help/set-available-actions
-       '[(init-investigator {:speed <speed> :fight <fight> :lore <lore>})])))
+      (help/set-message "Initialization started")))
 
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)
@@ -41,8 +39,7 @@
 
 (defn end-init [game]
   (-> (end game)
-      (help/set-message "Investigators initialized")
-      (help/set-available-actions '[(awaken)])))
+      (help/set-message "Investigators initialized")))
 
 (defn advance [{processed :processed-investigators
                 current :current-investigator
@@ -57,17 +54,12 @@
   (investigator/update phase #(investigator/init % stats)))
 
 (defn start-upkeep [game]
-  (let [game (-> (start game 'end-upkeep)
-                 (help/set-available-actions '[(focus-investigator {:speed-sneak <delta>
-                                                                    :fight-will <delta>
-                                                                    :lore-luck <delta>})
-                                               (advance-phase)]))]
+  (let [game (start game 'end-upkeep)]
     (help/set-message game (investigator/describe (investigator/get (get game))))))
 
 (defn end-upkeep [game]
   (-> (end game)
-      (help/set-message "Investigators refreshed")
-      (help/set-available-actions '[(start-attack)])))
+      (help/set-message "Investigators refreshed")))
 
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))

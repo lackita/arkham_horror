@@ -20,7 +20,7 @@
   @help-info)
 
 (defn pre-begin [& _]
-  (help/set-available-actions {} '[(begin <config>)]))
+  {})
 (defn reset []
   (set-help! '[(begin <config>)])
   (if (agent-error active-game)
@@ -33,8 +33,6 @@
   (fn [& args]
     (apply send active-game function args)
     (await active-game)
-    (when (game/over? @active-game)
-      (send active-game #(help/set-available-actions % '[(reset)])))
     (print (game/message @active-game))
     (help)))
 

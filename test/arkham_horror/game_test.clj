@@ -23,15 +23,6 @@
 (def single-investigator cthulu-game)
 (def two-investigators (game/make {:ancient-one "Cthulu"
                                    :investigators (repeat 2 "Monterey Jack")}))
-(def initialized-investigator (phase/end-init
-                               (game/init-investigator
-                                (phase/start-init single-investigator)
-                                {:speed 2 :fight 2 :lore 2})))
-(deftest help-test
-  (is (= (help/get-available-actions (phase/start-upkeep awakened-game))
-         '[(focus-investigator {:speed-sneak <delta> :fight-will <delta> :lore-luck <delta>})
-           (advance-phase)])))
-
 (deftest won-test
   (is (game/won? won-game))
   (is (not (game/won? awakened-game)))
@@ -52,6 +43,10 @@
   (is (= (phase/get (game/advance-phase (phase/start-init cthulu-game)))
          (phase/advance (phase/get (phase/start-init cthulu-game))))))
 
+(def initialized-investigator (phase/end-init
+                               (game/init-investigator
+                                (phase/start-init single-investigator)
+                                {:speed 2 :fight 2 :lore 2})))
 (deftest focus-investigator-test
   (is (= (phase/get (game/focus-investigator (phase/start-init initialized-investigator)
                                              {:fight-will 2}))
