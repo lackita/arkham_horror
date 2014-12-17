@@ -4,9 +4,13 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
-            [arkham-horror.help :as help]))
+            [arkham-horror.help :as help]
+            [arkham-horror.structure :as structure]
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.dice :as dice]))
 
 (def active-game (agent nil))
+(def dice (agent (dice/make :random)))
 
 (defn pre-begin [& _]
   (help/set-available-actions {} '[(begin <config>)]))
@@ -40,7 +44,10 @@
 (def focus-investigator (make-facade game/focus-investigator))
 (def end-upkeep (make-facade phase/end-upkeep))
 (def start-attack (make-facade combat/start))
-(def attack (make-facade combat/investigator-attack))
+(defn attack []
+  (send dice #(dice/roll-and-save % 3))
+  (structure/get-path @active-game [phase investigator])
+  ((make-facade combat/investigator-attack)))
 (def exhaust-item (make-facade setup/exhaust-item))
 (def accept-roll (make-facade combat/accept-roll))
 (def end-attack (make-facade combat/end))
