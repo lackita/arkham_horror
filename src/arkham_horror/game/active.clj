@@ -11,6 +11,7 @@
 
 (def active-game (agent nil))
 (def dice (agent (dice/make :random)))
+(def help (ref (help/make)))
 
 (defn pre-begin [& _]
   (help/set-available-actions {} '[(begin <config>)]))
@@ -34,21 +35,35 @@
     (print (game/message @active-game))
     (help)))
 
-(def begin (make-facade (fn [_ config] (game/make config))))
-(def start-init (make-facade phase/start-init))
-(def init-investigator (make-facade game/init-investigator))
-(def advance-phase (make-facade game/advance-phase))
-(def end-init (make-facade phase/end-init))
-(def awaken (make-facade ancient-one/awaken))
-(def start-upkeep (make-facade phase/start-upkeep))
-(def focus-investigator (make-facade game/focus-investigator))
-(def end-upkeep (make-facade phase/end-upkeep))
-(def start-attack (make-facade combat/start))
+(defn begin [config]
+  ((make-facade (fn [_] (game/make config)))))
+(defn start-init []
+  ((make-facade phase/start-init)))
+(defn init-investigator [config]
+  ((make-facade #(game/init-investigator % config))))
+(defn advance-phase []
+  ((make-facade game/advance-phase)))
+(defn end-init []
+  ((make-facade phase/end-init)))
+(defn awaken []
+  ((make-facade ancient-one/awaken)))
+(defn start-upkeep []
+  ((make-facade phase/start-upkeep)))
+(defn focus-investigator [deltas]
+  ((make-facade #(game/focus-investigator % deltas))))
+(defn end-upkeep []
+  ((make-facade phase/end-upkeep)))
+(defn start-attack []
+  ((make-facade combat/start)))
 (defn attack []
   (send dice #(dice/roll-and-save % 3))
   (structure/get-path @active-game [phase investigator])
   ((make-facade combat/investigator-attack)))
-(def exhaust-item (make-facade setup/exhaust-item))
-(def accept-roll (make-facade combat/accept-roll))
-(def end-attack (make-facade combat/end))
-(def defend (make-facade combat/ancient-one-attack))
+(defn exhaust-item [n]
+  ((make-facade #(setup/exhaust-item % n))))
+(defn accept-roll []
+  ((make-facade combat/accept-roll)))
+(defn end-attack []
+  ((make-facade combat/end)))
+(defn defend []
+  ((make-facade combat/ancient-one-attack)))

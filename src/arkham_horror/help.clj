@@ -1,5 +1,8 @@
 (ns arkham-horror.help)
 
+(defn make []
+  {})
+
 (defn get-message [game]
   (-> game :help :message))
 
