@@ -49,4 +49,4 @@
   (let [game (phase/update game phase/advance)]
     (if (phase/over? (phase/get game))
       (help/set-message game "Phase over")
-      (help/set-message (help/restore-actions game) ""))))
+      (help/set-message game ""))))
