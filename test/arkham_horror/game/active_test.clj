@@ -6,6 +6,10 @@
             [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.dice :as dice]))
 
+(defn rig-dice [pips]
+  (send active-game #(structure/update-path % [phase investigator dice]
+                                            (fn [dice] (assoc dice :value pips)))))
+
 (deftest full-game-test
   (testing "Azathoth ends the world"
     (reset)
@@ -40,8 +44,7 @@
               :investigators ["Monterey Jack"]})
       (start-init)
       (init-investigator {:speed 2 :fight 5 :lore 4})
-      (send active-game #(structure/update-path % [phase investigator dice]
-                                                (fn [dice] (assoc dice :value 1))))
+      (rig-dice 1)
       (advance-phase)
       (end-init))
     (is (= (with-out-str (awaken)) "Cthulu awakened"))
@@ -101,8 +104,7 @@
               :investigators ["Monterey Jack"]})
       (start-init)
       (init-investigator {:speed 2 :fight 5 :lore 4})
-      (send active-game #(structure/update-path % [phase investigator dice]
-                                                (fn [dice] (assoc dice :value 6))))
+      (rig-dice 6)
       (advance-phase)
       (end-init)
       (awaken)
@@ -121,4 +123,19 @@
     (is (= (help) '[(start-attack)]))
     (is (= (with-out-str (start-attack)) "Attack\nDoom track: 3"))
     (is (= (with-out-str (attack)) "Roll: 6 6 6"))
-    (is (= (with-out-str (accept-roll)) "Cthulu has been defeated!"))))
+    (is (= (with-out-str (accept-roll)) "Cthulu has been defeated!")))
+  (testing "Bullwhip re-roll"
+    (with-out-str
+      (reset)
+      (begin {:ancient-one "Cthulu"
+              :investigators ["Monterey Jack"]})
+      (start-init)
+      (init-investigator {:speed 2 :fight 5 :lore 4})
+      (rig-dice 1)
+      (advance-phase)
+      (end-init)
+      (awaken)
+      (start-upkeep)
+      (attack)
+      (rig-dice 6))
+    (is (= (with-out-str (exhaust-item 1)) "Roll: 1 1 6"))))
