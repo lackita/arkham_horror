@@ -16,7 +16,7 @@
 (defn init-after-one-round [game]
   (game/advance-phase
    (game/init-investigator
-    (phase/start-init game)
+    (phase/start game)
     {:speed 2 :fight 2 :lore 2})))
 
 (def single-investigator cthulu-game)
@@ -34,21 +34,21 @@
   (is (not (game/over? {}))))
 
 (deftest init-investigator-test
-  (is (= (phase/get (game/init-investigator (phase/start-init cthulu-game)
+  (is (= (phase/get (game/init-investigator (phase/start cthulu-game)
                                             {:speed 2 :fight 3 :lore 4}))
          (phase/init-investigator (phase/make [(investigator/make "Monterey Jack")])
                                   {:speed 2 :fight 3 :lore 4}))))
 
 (deftest advance-phase-test
-  (is (= (phase/get (game/advance-phase (phase/start-init cthulu-game)))
-         (phase/advance (phase/get (phase/start-init cthulu-game))))))
+  (is (= (phase/get (game/advance-phase (phase/start cthulu-game)))
+         (phase/advance (phase/get (phase/start cthulu-game))))))
 
-(def initialized-investigator (phase/end-init
+(def initialized-investigator (phase/end
                                (game/init-investigator
-                                (phase/start-init single-investigator)
+                                (phase/start single-investigator)
                                 {:speed 2 :fight 2 :lore 2})))
 (deftest focus-investigator-test
-  (is (= (phase/get (game/focus-investigator (phase/start-init initialized-investigator)
+  (is (= (phase/get (game/focus-investigator (phase/start initialized-investigator)
                                              {:fight-will 2}))
-         (phase/focus-investigator (phase/get (phase/start-init initialized-investigator))
+         (phase/focus-investigator (phase/get (phase/start initialized-investigator))
                                    {:fight-will 2}))))

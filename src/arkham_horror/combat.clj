@@ -20,7 +20,7 @@
    :remainder 0})
 
 (defn start [game]
-  (assoc (phase/start game 'end) :combat (make)))
+  (assoc (phase/start game) :combat (make)))
 
 (defn end [game]
   (dissoc (phase/end game) :combat))

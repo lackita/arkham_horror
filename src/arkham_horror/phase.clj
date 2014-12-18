@@ -18,13 +18,9 @@
                                   :remaining-investigators remaining})
   ([investigators] (make [] (first investigators) (rest investigators))))
 
-(defn start [{investigators :investigators :as game} end-phase]
+(defn start [{investigators :investigators :as game}]
   {:pre [(not (nil? investigators))]}
-  (assoc (set (dissoc game :investigators) (make investigators))
-    :end-phase end-phase))
-
-(defn start-init [game]
-  (start game 'end-init))
+  (set (dissoc game :investigators) (make investigators)))
 
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)
@@ -34,9 +30,6 @@
 (defn end [game]
   (assoc (dissoc game :phase)
     :investigators (all-investigators (get game))))
-
-(defn end-init [game]
-  (end game))
 
 (defn advance [{processed :processed-investigators
                 current :current-investigator
@@ -49,12 +42,6 @@
 
 (defn init-investigator [phase stats]
   (investigator/update phase #(investigator/init % stats)))
-
-(defn start-upkeep [game]
-  (start game 'end-upkeep))
-
-(defn end-upkeep [game]
-  (end game))
 
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))

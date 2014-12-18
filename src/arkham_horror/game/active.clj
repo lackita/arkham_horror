@@ -12,6 +12,7 @@
 
 (def active-game (ref {}))
 (def help-info (ref nil))
+(def phase (ref nil))
 
 (defn set-help! [actions]
   (dosync (ref-set help-info (if (game/over? @active-game)
@@ -43,16 +44,18 @@
   (make-move (fn [_] (game/make config)) '[(start-init)] "Welcome to Arkham Horror!"))
 
 (defn start-init []
-  (make-move phase/start-init
-             '[(init-investigator {:speed <speed> :fight <fight> :lore <lore>})]
-             "Initialization started"))
+  (dosync (ref-set phase (assoc (phase/make (@active-game :investigators))
+                           :end-phase 'end-init))
+          (make-move phase/start
+                     '[(init-investigator {:speed <speed> :fight <fight> :lore <lore>})]
+                     "Initialization started")))
 
 (defn advance-phase []
-  (make-move game/advance-phase `[(~(@active-game :end-phase))]
+  (make-move game/advance-phase `[(~(@phase :end-phase))]
              (if (phase/over? (phase/get @active-game)) "Phase over" "")))
 
 (defn end-init []
-  (make-move phase/end-init '[(awaken)] "Investigators initialized"))
+  (make-move phase/end '[(awaken)] "Investigators initialized"))
 
 (defn awaken []
   (make-move ancient-one/awaken '[(start-upkeep)]
@@ -65,16 +68,20 @@
   (make-move #(game/init-investigator % config) '[(advance-phase)] (investigator-status)))
 
 (defn start-upkeep []
-  (make-move phase/start-upkeep
-             '[(focus-investigator {:speed-sneak <delta> :fight-will <delta> :lore-luck <delta>})
-               (advance-phase)]
-             (investigator-status)))
+  (dosync (ref-set phase (assoc (phase/make (@active-game :investigators))
+                           :end-phase 'end-upkeep))
+          (make-move phase/start
+                     '[(focus-investigator {:speed-sneak <delta>
+                                            :fight-will <delta>
+                                            :lore-luck <delta>})
+                       (advance-phase)]
+                     (investigator-status))))
 
 (defn focus-investigator [deltas]
   (make-move #(game/focus-investigator % deltas) '[(advance-phase)] (investigator-status)))
 
 (defn end-upkeep []
-  (make-move phase/end-upkeep '[(start-attack)]
+  (make-move phase/end '[(start-attack)]
              "Investigators refreshed"))
 
 (defn roll-status []

@@ -15,7 +15,7 @@
   (is (= (:investigators active-game) [(investigator/make "Monterey Jack")])))
 
 (def init-game (phase/end
-                (game/init-investigator (phase/start-init active-game)
+                (game/init-investigator (phase/start active-game)
                                         {:speed 2 :fight 2 :lore 2})))
 (deftest init-test
   (is (= (:investigators init-game)

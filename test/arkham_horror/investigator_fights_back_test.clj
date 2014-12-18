@@ -12,7 +12,7 @@
 
 (defn make-game-with [fights pips]
   (phase/end (reduce (comp game/advance-phase game/init-investigator)
-                     (phase/start-init
+                     (phase/start
                       (game/make {:ancient-one "Cthulu"
                                   :dice pips
                                   :investigators (repeat (count fights) "Monterey Jack")}))

@@ -6,8 +6,8 @@
             [arkham-horror.ancient-one :as ancient-one]))
 
 (def single-investigator (game/make {:investigators ["Monterey Jack"]}))
-(def single-started (phase/start-init single-investigator))
-(def two-investigators (phase/start-init (game/make {:investigators (repeat 2 "Monterey Jack")})))
+(def single-started (phase/start single-investigator))
+(def two-investigators (phase/start (game/make {:investigators (repeat 2 "Monterey Jack")})))
 
 (deftest end-test
   (is (= (:investigators (phase/end single-started))
@@ -37,8 +37,4 @@
 (deftest focus-test
   (is (= (investigator/get (phase/focus-investigator (phase/make [initialized-investigator])
                                                      {:fight-will 2}))
-         (investigator/focus initialized-investigator {:fight-will 2})))
-  (is (= (phase/get (phase/start-upkeep single-investigator))
-         (phase/get (phase/start single-investigator 'end-upkeep))))
-  (is (= (phase/get (phase/end-upkeep (phase/start-upkeep single-investigator)))
-         (phase/get (phase/end (phase/start-upkeep single-investigator))))))
+         (investigator/focus initialized-investigator {:fight-will 2}))))
