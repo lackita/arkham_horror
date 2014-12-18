@@ -25,8 +25,8 @@
        (ancient-one/defeated? (ancient-one/get game))))
 
 (defn over? [game]
-  (or (lost? game)
-      (won? game)))
+  (and (ancient-one/get game)
+       (or (lost? game) (won? game))))
 
 (defn init-investigator [game stats]
   (phase/update game #(phase/init-investigator % stats)))

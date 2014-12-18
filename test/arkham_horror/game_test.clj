@@ -30,7 +30,8 @@
 (deftest over-test
   (is (game/over? lost-game))
   (is (not (game/over? azathoth-game)))
-  (is (game/over? won-game)))
+  (is (game/over? won-game))
+  (is (not (game/over? {}))))
 
 (deftest init-investigator-test
   (is (= (phase/get (game/init-investigator (phase/start-init cthulu-game)

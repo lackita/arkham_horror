@@ -69,6 +69,7 @@
                                       "Will   3   2   1  <0>"
                                       "Lore   1   2   3  <4>"
                                       "Luck   5   4   3  <2>"])))
+    (is (= (help) '[(start-upkeep)]))
     (is (= (with-out-str (start-upkeep))
            (clojure.string/join "\n" ["Monterey Jack"
                                       "Stamina: 1/1"
@@ -83,6 +84,17 @@
                                          :fight-will <delta>
                                          :lore-luck <delta>})
                     (advance-phase)]))
+    (is (= (with-out-str (focus-investigator {:speed-sneak 2}))
+           (clojure.string/join "\n" ["Monterey Jack"
+                                      "Stamina: 1/1"
+                                      "Sanity:  1/1"
+                                      "Speed  1   2   3  <4>"
+                                      "Sneak  3   2   1  <0>"
+                                      "Fight  2   3   4  <5>"
+                                      "Will   3   2   1  <0>"
+                                      "Lore   1   2   3  <4>"
+                                      "Luck   5   4   3  <2>"])))
+    (is (= (help) '[(advance-phase)]))
     (is (= (with-out-str (advance-phase)) "Phase over"))
     (is (= (help) '[(end-upkeep)]))
     (is (= (with-out-str (end-upkeep)) "Investigators refreshed"))
@@ -91,7 +103,7 @@
     (is (= (help) '[(attack)]))
     (is (= (with-out-str (attack)) "Roll: 1 1 1"))
     (is (= (help) '[(accept-roll) (exhaust-item <n>)]))
-    (is (= (with-out-str (accept-roll)) "Phase over"))
+    (is (= (with-out-str (accept-roll)) "Attack\nDoom track: 13"))
     (is (= (help) '[(end-attack)]))
     (is (= (with-out-str (end-attack)) "Defend"))
     (is (= (help) '[(defend)]))
@@ -138,4 +150,5 @@
       (start-upkeep)
       (attack)
       (rig-dice 6))
-    (is (= (with-out-str (exhaust-item 1)) "Roll: 1 1 6"))))
+    (is (= (with-out-str (exhaust-item 1)) "Roll: 1 1 6"))
+    (is (= (help) '[(accept-roll)]))))
