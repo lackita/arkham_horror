@@ -7,8 +7,8 @@
             [arkham-horror.investigator.dice :as dice]))
 
 (defn rig-dice [pips]
-  (send active-game #(structure/update-path % [phase investigator dice]
-                                            (fn [dice] (assoc dice :value pips)))))
+  (dosync (ref-set active-game (structure/update-path @active-game [phase investigator dice]
+                                                      (fn [dice] (assoc dice :value pips))))))
 
 (deftest full-game-test
   (testing "Azathoth ends the world"

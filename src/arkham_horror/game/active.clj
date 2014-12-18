@@ -10,7 +10,7 @@
             [arkham-horror.investigator.dice :as dice]
             [clojure.string :refer [join]]))
 
-(def active-game (agent {}))
+(def active-game (ref {}))
 (def help-info (ref nil))
 
 (defn set-help! [actions]
@@ -29,18 +29,15 @@
                :else message)))
 
 (defn reset []
-  (set-help! '[(begin <config>)])
-  (if (agent-error active-game)
-    (restart-agent active-game {} :clear-actions true)
-    (send active-game (fn [_] {}))))
+  (dosync (set-help! '[(begin <config>)])
+          (ref-set active-game {})))
 
 (reset)
 
 (defmacro make-move [move actions status]
-  `(do (send active-game ~move)
-       (await active-game)
-       (set-help! ~actions)
-       (print-status ~status)))
+  `(dosync (ref-set active-game (~move @active-game))
+           (set-help! ~actions)
+           (print-status ~status)))
 
 (defn begin [config]
   (make-move (fn [_] (game/make config)) '[(start-init)] "Welcome to Arkham Horror!"))
