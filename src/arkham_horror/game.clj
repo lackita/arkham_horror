@@ -14,8 +14,7 @@
   (-> config
       (ancient-one/set (ancient-one/make (or (config :ancient-one)
                                              (ancient-one/random))))
-      (investigator/set-all (config :investigators) (config :dice))
-      (help/set-message "Welcome to Arkham Horror!")))
+      (investigator/set-all (config :investigators) (config :dice))))
 
 (defn lost? [game]
   (every? investigator/devoured? (if (phase/get game)
@@ -36,17 +35,10 @@
         :else (help/get-message game)))
 
 (defn init-investigator [game stats]
-  (let [game (-> (phase/update game #(phase/init-investigator % stats))
-                 help/save-actions)]
-    (help/set-message game
-                      (investigator/describe
-                       (structure/get-path game [phase investigator])))))
+  (phase/update game #(phase/init-investigator % stats)))
 
 (defn focus-investigator [game deltas]
   (phase/update game #(phase/focus-investigator % deltas)))
 
 (defn advance-phase [game]
-  (let [game (phase/update game phase/advance)]
-    (if (phase/over? (phase/get game))
-      (help/set-message game "Phase over")
-      (help/set-message game ""))))
+  (phase/update game phase/advance))

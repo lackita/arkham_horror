@@ -25,8 +25,7 @@
     :end-phase end-phase))
 
 (defn start-init [game]
-  (-> (start game 'end-init)
-      (help/set-message "Initialization started")))
+  (start game 'end-init))
 
 (defn all-investigators [phase]
   (concat (phase :processed-investigators)
@@ -38,8 +37,7 @@
     :investigators (all-investigators (get game))))
 
 (defn end-init [game]
-  (-> (end game)
-      (help/set-message "Investigators initialized")))
+  (end game))
 
 (defn advance [{processed :processed-investigators
                 current :current-investigator
@@ -54,12 +52,10 @@
   (investigator/update phase #(investigator/init % stats)))
 
 (defn start-upkeep [game]
-  (let [game (start game 'end-upkeep)]
-    (help/set-message game (investigator/describe (investigator/get (get game))))))
+  (start game 'end-upkeep))
 
 (defn end-upkeep [game]
-  (-> (end game)
-      (help/set-message "Investigators refreshed")))
+  (end game))
 
 (defn focus-investigator [phase deltas]
   (investigator/update phase #(investigator/focus % deltas)))

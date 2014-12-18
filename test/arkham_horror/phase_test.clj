@@ -18,8 +18,7 @@
   (is (= (:investigators (phase/end two-investigators))
          (map investigator/make (repeat 2 "Monterey Jack"))))
   (is (= (:investigators (phase/end (phase/update two-investigators phase/advance)))
-         (map investigator/make (repeat 2 "Monterey Jack"))))
-  (is (= (help/get-message (phase/end-init single-started)) "Investigators initialized")))
+         (map investigator/make (repeat 2 "Monterey Jack")))))
 
 (deftest advance-test
   (is (nil? (-> (phase/update single-started phase/advance)

@@ -29,8 +29,7 @@
                                     doom-track/level)))))
 
 (defn start [game]
-  (let [game (assoc (phase/start game 'end) :combat (make))]
-    (attach-ancient-one-status-message game)))
+  (assoc (phase/start game 'end) :combat (make)))
 
 (defn end [game]
   (help/set-message (dissoc (phase/end game) :combat) "Defend"))
@@ -82,7 +81,4 @@
                                     #(->> (items/get investigator)
                                           (calculate-combat-modifier (ancient-one/get game))
                                           (dice/combat-check % investigator)))]
-    (help/set-message game (->> (structure/get-path game [phase investigator dice])
-                                dice/pending-roll
-                                (clojure.string/join " ")
-                                (str "Roll: ")))))
+    game))

@@ -24,7 +24,7 @@
 (defn awaken [game]
   (-> (rouse game)
       (assoc-in [:ancient-one :awakened] true)
-      (help/set-message (str (:name (get game)) " awakened"))))
+      ))
 
 (def capacities {"Cthulu" 13
                  "Azathoth" 14})
