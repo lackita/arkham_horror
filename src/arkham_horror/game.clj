@@ -7,8 +7,7 @@
             [arkham-horror.investigator.dice :as dice]
             [arkham-horror.combat :as combat]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.ancient-one.doom-track :as doom-track]
-            [arkham-horror.help :as help]))
+            [arkham-horror.ancient-one.doom-track :as doom-track]))
 
 (defn make [config]
   (-> config
@@ -28,11 +27,6 @@
 (defn over? [game]
   (or (lost? game)
       (won? game)))
-
-(defn message [game]
-  (cond (won? game) (str (:name (ancient-one/get game)) " has been defeated!")
-        (lost? game) (str (:name (ancient-one/get game)) " has destroyed the world!")
-        :else (help/get-message game)))
 
 (defn init-investigator [game stats]
   (phase/update game #(phase/init-investigator % stats)))

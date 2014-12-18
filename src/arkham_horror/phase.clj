@@ -1,8 +1,7 @@
 (ns arkham-horror.phase
   (:refer-clojure :exclude [get set])
   (:require [arkham-horror.investigator :as investigator]
-            [arkham-horror.structure :as structure]
-            [arkham-horror.help :as help]))
+            [arkham-horror.structure :as structure]))
 
 (defn get [game]
   (game :phase))

@@ -3,8 +3,7 @@
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.game :as game]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.phase :as phase]
-            [arkham-horror.help :as help]))
+            [arkham-horror.phase :as phase]))
 
 (def cthulu-game (game/make {:ancient-one "Cthulu"
                              :investigators ["Monterey Jack"]}))

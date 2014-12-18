@@ -3,7 +3,6 @@
             [arkham-horror.game :as game]
             [arkham-horror.phase :as phase]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.help :as help]
             [arkham-horror.ancient-one :as ancient-one]))
 
 (def single-investigator (game/make {:investigators ["Monterey Jack"]}))

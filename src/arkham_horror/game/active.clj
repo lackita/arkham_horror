@@ -5,7 +5,6 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.combat :as combat]
             [arkham-horror.phase :as phase]
-            [arkham-horror.help :as help]
             [arkham-horror.structure :as structure]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.dice :as old-dice]
@@ -32,11 +31,10 @@
 (defn make-facade [function]
   (fn [& args]
     (apply send active-game function args)
-    (await active-game)
-    (print (game/message @active-game))))
+    (await active-game)))
 
 (defn begin [config]
-  ((make-facade (fn [_] (help/set-message (game/make config) ""))))
+  ((make-facade (fn [_] (game/make config))))
   (set-help! '[(start-init)])
   (print "Welcome to Arkham Horror!"))
 
@@ -52,7 +50,6 @@
   (print (investigator/describe (structure/get-path @active-game [phase investigator]))))
 
 (defn advance-phase []
-  (send active-game #(help/set-message % ""))
   ((make-facade game/advance-phase))
   (await active-game)
   (set-help! `[(~(@active-game :end-phase))])
@@ -71,13 +68,16 @@
     (set-help! '[(reset)])
     (set-help! '[(start-upkeep)]))
   (await active-game)
-  (when (not (game/over? @active-game))
+  (if (game/lost? @active-game)
+    (print (str (:name (ancient-one/get @active-game)) " has destroyed the world!"))
     (print (:name (ancient-one/get @active-game)) "awakened")))
 
 (defn start-upkeep []
   ((make-facade phase/start-upkeep))
   (set-help! '[(focus-investigator {:speed-sneak <delta> :fight-will <delta> :lore-luck <delta>})
-               (advance-phase)]))
+               (advance-phase)])
+  (await active-game)
+  (print (investigator/describe (structure/get-path @active-game [phase investigator]))))
 
 (defn focus-investigator [deltas]
   ((make-facade #(game/focus-investigator % deltas)))
@@ -105,24 +105,41 @@
   ((make-facade combat/investigator-attack))
   (set-help! '[(accept-roll) (exhaust-item <n>)])
   (await active-game)
-  (print (->> (structure/get-path @active-game [phase investigator old-dice])
-              old-dice/pending-roll
-              (clojure.string/join " ")
-              (str "Roll: "))))
+  (apply print "Roll:"
+         (old-dice/pending-roll
+          (structure/get-path @active-game [phase investigator old-dice]))))
 
 (defn exhaust-item [n]
-  ((make-facade #(setup/exhaust-item % n))))
+  ((make-facade #(setup/exhaust-item % n)))
+  (await active-game)
+  (apply print "Roll:"
+         (sort (old-dice/pending-roll
+                (structure/get-path @active-game [phase investigator old-dice])))))
 
 (defn accept-roll []
   ((make-facade combat/accept-roll))
-  (set-help! '[(end-attack)]))
+  (set-help! '[(end-attack)])
+  (await active-game)
+  (if (game/won? @active-game)
+    (print (str (:name (ancient-one/get @active-game)) " has been defeated!"))
+    (if (phase/over? (phase/get @active-game))
+      (print "Phase over")
+      (print "Attack\nDoom track:" (doom-track/level
+                                    (structure/get-path @active-game
+                                                        [ancient-one doom-track]))))))
 
 (defn end-attack []
   ((make-facade combat/end))
-  (set-help! '[(defend)]))
+  (set-help! '[(defend)])
+  (print "Defend"))
 
 (defn defend []
   ((make-facade combat/ancient-one-attack))
   (await active-game)
-  (when (game/over? @active-game)
-    (set-help! '[(reset)])))
+  (if (game/over? @active-game)
+    (do (set-help! '[(reset)])
+        (print (if (game/won? @active-game)
+                 nil
+                 (str (:name (ancient-one/get @active-game)) " has destroyed the world!"))))
+    (print (clojure.string/join "\n" (map investigator/describe
+                                          (@active-game :investigators))))))

@@ -8,8 +8,7 @@
             [arkham-horror.ancient-one.doom-track :as doom-track]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.investigator.dice :as dice]
-            [arkham-horror.structure :as structure]
-            [arkham-horror.help :as help]))
+            [arkham-horror.structure :as structure]))
 
 (def started-attack-game (-> (game/make {:ancient-one "Cthulu"
                                          :investigators ["Monterey Jack"]})

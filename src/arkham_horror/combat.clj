@@ -7,8 +7,7 @@
             [arkham-horror.investigator.items :as items]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.phase :as phase]
-            [arkham-horror.structure :as structure]
-            [arkham-horror.help :as help]))
+            [arkham-horror.structure :as structure]))
 
 (defn update [game function]
   (update-in game [:combat] function))
@@ -20,28 +19,18 @@
   {:successes 0
    :remainder 0})
 
-(defn attach-ancient-one-status-message [game]
-  (if (phase/over? (phase/get game))
-    (help/set-message game "Phase over")
-    (help/set-message game (str "Attack\nDoom track: "
-                                (-> game
-                                    (structure/get-path [ancient-one doom-track])
-                                    doom-track/level)))))
-
 (defn start [game]
   (assoc (phase/start game 'end) :combat (make)))
 
 (defn end [game]
-  (help/set-message (dissoc (phase/end game) :combat) "Defend"))
+  (dissoc (phase/end game) :combat))
 
 (defn ancient-one-attack [game]
   (let [game (structure/update-path
               (investigator/update-all game investigator/reduce-max-sanity-or-stamina)
               [ancient-one doom-track]
               doom-track/advance)]
-    (help/set-message game
-                      (clojure.string/join "\n" (map investigator/describe
-                                                     (game :investigators))))))
+    game))
 
 (defn successes [game]
   (->> (structure/get-path game [phase investigator dice])
@@ -68,8 +57,7 @@
 (defn accept-roll [game]
   (-> (apply-successes game (count-successes game))
       (structure/update-path [phase investigator dice] dice/accept-roll)
-      (phase/update phase/advance)
-      attach-ancient-one-status-message))
+      (phase/update phase/advance)))
 
 (defn calculate-combat-modifier [ancient-one items]
   (apply + (ancient-one/combat-modifier ancient-one)
@@ -77,8 +65,7 @@
 
 (defn investigator-attack [game]
   {:pre [(:dice (structure/get-path game [phase investigator]))]}
-  (let [game (structure/update-path game [phase investigator dice]
-                                    #(->> (items/get investigator)
-                                          (calculate-combat-modifier (ancient-one/get game))
-                                          (dice/combat-check % investigator)))]
-    game))
+  (structure/update-path game [phase investigator dice]
+                         #(->> (items/get investigator)
+                               (calculate-combat-modifier (ancient-one/get game))
+                               (dice/combat-check % investigator))))
