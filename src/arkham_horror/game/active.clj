@@ -11,8 +11,10 @@
             [clojure.string :refer [join]]))
 
 (def active-game (ref {}))
-(def help-info (ref nil))
 (def phase (ref nil))
+(def ancient-one (ref nil))
+(def help-info (ref nil))
+(def lost? (ref false))
 
 (defn set-help! [actions]
   (dosync (ref-set help-info (if (game/over? @active-game)
@@ -25,23 +27,26 @@
 (defn print-status [message]
   (print (cond (game/won? @active-game) (str (:name (ancient-one/get @active-game))
                                              " has been defeated!")
-               (game/lost? @active-game) (str (:name (ancient-one/get @active-game))
-                                              " has destroyed the world!")
+               (or @lost? (game/lost? @active-game)) (str (:name (ancient-one/get @active-game))
+                                                          " has destroyed the world!")
                :else message)))
 
 (defn reset []
-  (dosync (set-help! '[(begin <config>)])
+  (dosync (ref-set ancient-one nil)
+          (ref-set phase nil)
+          (set-help! '[(begin <config>)])
           (ref-set active-game {})))
 
 (reset)
 
 (defmacro make-move [move actions status]
-  `(dosync (ref-set active-game (~move @active-game))
+  `(dosync (alter active-game ~move)
            (set-help! ~actions)
            (print-status ~status)))
 
 (defn begin [config]
-  (make-move (fn [_] (game/make config)) '[(start-init)] "Welcome to Arkham Horror!"))
+  (dosync (ref-set ancient-one (ancient-one/make (or (config :ancient-one) (ancient-one/random))))
+          (make-move (fn [_] (game/make config)) '[(start-init)] "Welcome to Arkham Horror!")))
 
 (defn start-init []
   (dosync (ref-set phase (assoc (phase/make (@active-game :investigators))
@@ -51,15 +56,20 @@
                      "Initialization started")))
 
 (defn advance-phase []
-  (make-move game/advance-phase `[(~(@phase :end-phase))]
-             (if (phase/over? (phase/get @active-game)) "Phase over" "")))
+  (dosync (alter phase phase/advance)
+          (make-move game/advance-phase `[(~(@phase :end-phase))]
+                     (if (phase/over? (phase/get @active-game)) "Phase over" ""))))
 
 (defn end-init []
-  (make-move phase/end '[(awaken)] "Investigators initialized"))
+  (dosync (ref-set phase nil)
+          (make-move phase/end '[(awaken)] "Investigators initialized")))
 
 (defn awaken []
-  (make-move ancient-one/awaken '[(start-upkeep)]
-             (str (:name (ancient-one/get @active-game)) " awakened")))
+  (dosync (let [results (ancient-one/awaken-actions @ancient-one)]
+            (ref-set lost? (results :lost?))
+            (ref-set ancient-one (results :ancient-one)))
+          (make-move ancient-one/awaken '[(start-upkeep)]
+                     (str (:name (ancient-one/get @active-game)) " awakened"))))
 
 (defn investigator-status []
   (investigator/describe (structure/get-path @active-game [phase investigator])))
@@ -81,8 +91,9 @@
   (make-move #(game/focus-investigator % deltas) '[(advance-phase)] (investigator-status)))
 
 (defn end-upkeep []
-  (make-move phase/end '[(start-attack)]
-             "Investigators refreshed"))
+  (dosync (ref-set phase nil)
+          (make-move phase/end '[(start-attack)]
+                     "Investigators refreshed")))
 
 (defn roll-status []
   (join " " (cons "Roll:"
@@ -105,7 +116,8 @@
   (make-move combat/start '[(attack)] (ancient-one-status)))
 
 (defn accept-roll []
-  (make-move combat/accept-roll '[(end-attack)] (ancient-one-status)))
+  (dosync (alter phase phase/advance)
+          (make-move combat/accept-roll '[(end-attack)] (ancient-one-status))))
 
 (defn end-attack []
   (make-move combat/end '[(defend)] "Defend"))

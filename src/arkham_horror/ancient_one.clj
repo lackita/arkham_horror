@@ -22,8 +22,13 @@
 
 (defn awaken [game]
   (-> (rouse game)
-      (assoc-in [:ancient-one :awakened] true)
-      ))
+      (assoc-in [:ancient-one :awakened] true)))
+
+(defn awaken-actions [ancient-one]
+  {:lost? (= (ancient-one :name) "Azathoth")
+   :ancient-one (merge ancient-one
+                       {:awakened true
+                        :doom-track (doom-track/fill (ancient-one :doom-track))})})
 
 (def capacities {"Cthulu" 13
                  "Azathoth" 14})
