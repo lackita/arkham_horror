@@ -16,9 +16,11 @@
   (testing "Devour once attributes exhausted"
     (reset)
     (begin {:ancient-one "Cthulu"})
-    (is (= (get-status) "Welcome to Arkham Horror!\nCommands:\n\t(def investigator (investigator/make <name> {:speed <speed> :fight <fight> :lore <lore>}))\n\t(awaken)"))))
+    (let [monterey-jack (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
+      (awaken)
+      (is (= (get-status) "Cthulu has been awakened.\nPhase: Upkeep\nCommands:\n\t(investigator/focus <investigator> {:speed-sneak <speed-delta> :fight-will <fight-delta> :lore-luck <lore-delta>})\n\t(end-upkeep)")))))
 
-(deftest investigator-test
+(deftest monterey-jack-test
   (testing "Basic initialize"
     (reset)
     (begin {:ancient-one "Azathoth"})
@@ -29,7 +31,9 @@
       (is (= (:fight @investigator) 3))
       (is (= (:will  @investigator) 2))
       (is (= (:lore  @investigator) 4))
-      (is (= (:luck  @investigator) 2))))
+      (is (= (:luck  @investigator) 2))
+      (is (= (:maximum-stamina @investigator) 7))
+      (is (= (:maximum-sanity  @investigator) 3))))
   (testing "Cannot initialize after awakening"
     (reset)
     (begin {:ancient-one "Azathoth"})
@@ -46,4 +50,21 @@
     (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 1 :lore 2})))
     (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 6 :lore 2})))
     (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 0})))
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 5})))))
+    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 5}))))
+  (testing "Focus"
+    (reset)
+    (begin {:ancient-one "Cthulu"})
+    (let [investigator (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
+      (awaken)
+      (investigator/focus investigator {:speed-sneak 2})
+      (is (= (@investigator :speed) 4))
+      (is (= (@investigator :sneak) 0)))
+    (reset)
+    (begin {:ancient-one "Cthulu"})
+    (let [investigator (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
+      (awaken)
+      (investigator/focus investigator {:fight-will 1 :lore-luck 1})
+      (is (= (@investigator :fight) 3))
+      (is (= (@investigator :will)  2))
+      (is (= (@investigator :lore)  3))
+      (is (= (@investigator :luck)  3)))))

@@ -23,9 +23,14 @@
   (dosync (set-status! "Welcome to Arkham Horror!"
                        "(def investigator (investigator/make <name> {:speed <speed> :fight <fight> :lore <lore>}))"
                        "(awaken)")
-          (alter game assoc :begun true)))
+          (alter game assoc :begun true)
+          (alter ancient-one assoc :name (config :ancient-one))))
 
 (defn awaken []
-  (dosync (set-status! "Azathoth has destroyed the world!"
-                       "(reset)")
+  (dosync (if (= (@ancient-one :name) "Azathoth")
+            (set-status! "Azathoth has destroyed the world!"
+                         "(reset)")
+            (set-status! "Cthulu has been awakened.\nPhase: Upkeep"
+                         "(investigator/focus <investigator> {:speed-sneak <speed-delta> :fight-will <fight-delta> :lore-luck <lore-delta>})"
+                         "(end-upkeep)"))
           (alter ancient-one assoc :awakened true)))
