@@ -1,4 +1,4 @@
-(defproject arkham_horror "0.1.0-SNAPSHOT"
+(defproject arkham-horror-new "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
