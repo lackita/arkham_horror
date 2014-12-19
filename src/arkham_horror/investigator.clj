@@ -7,10 +7,11 @@
          (> fight 1) (< fight 6)
          (> lore  0) (< lore  5)]}
   (ref {:name name
-        :maximum-stamina 7 :maximum-sanity  3
-        :speed speed       :sneak (- 4 speed)
-        :fight fight       :will  (- 5 fight)
-        :lore  lore        :luck  (- 6 lore)
+        :maximum-stamina (if (= (@core/ancient-one :name) "Cthulu") 6 7)
+        :maximum-sanity  (if (= (@core/ancient-one :name) "Cthulu") 2 3)
+        :speed speed     :sneak (- 4 speed)
+        :fight fight     :will  (- 5 fight)
+        :lore  lore      :luck  (- 6 lore)
         :focus 2}))
 
 (defn get-focus-amount [deltas]
@@ -28,3 +29,8 @@
                                                 :lore  (or lore-delta 0)
                                                 :luck  (- (or lore-delta 0))
                                                 :focus (- (get-focus-amount deltas))}))))
+
+(defn attack [investigator]
+  (dosync (core/set-status! "Roll: "
+                            "Attack"
+                            '(accept-roll))))

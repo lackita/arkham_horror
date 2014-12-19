@@ -43,3 +43,13 @@
                                                               :lore-luck <lore-delta>})
                          '(end-upkeep)))
           (alter ancient-one assoc :awakened true)))
+
+(defn end-upkeep []
+  (dosync (set-status! "Doom track: 13"
+                       "Attack"
+                       '(investigator/attack <investigator>))))
+
+(defn accept-roll []
+  (dosync (set-status! "Remaining stats:\n\tMonterey Jack\n\t\tStamina: 7/7\n\t\tSanity: 3/3"
+                       "Defend"
+                       '(investigator/defend <investigator>))))
