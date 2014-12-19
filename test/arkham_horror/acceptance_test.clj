@@ -6,11 +6,17 @@
 (deftest azathoth-test
   (testing "Awakening ends world"
     (reset)
-    (is (= (get-status) "To begin a game, type (begin <config>)"))
+    (is (= (get-status) "Game not started.\nCommands:\n\t(begin <config>)"))
     (begin {:ancient-one "Azathoth"})
-    (is (= (get-status) "Welcome to Arkham Horror!\nType (awaken) to rouse Azathoth."))
+    (is (= (get-status) "Welcome to Arkham Horror!\nCommands:\n\t(def investigator (investigator/make <name> {:speed <speed> :fight <fight> :lore <lore>}))\n\t(awaken)"))
     (awaken)
-    (is (= (get-status) "Azathoth has destroyed the world!\nType (reset) to start over."))))
+    (is (= (get-status) "Azathoth has destroyed the world!\nCommands:\n\t(reset)"))))
+
+(deftest cthulu-test
+  (testing "Devour once attributes exhausted"
+    (reset)
+    (begin {:ancient-one "Cthulu"})
+    (is (= (get-status) "Welcome to Arkham Horror!\nCommands:\n\t(def investigator (investigator/make <name> {:speed <speed> :fight <fight> :lore <lore>}))\n\t(awaken)"))))
 
 (deftest investigator-test
   (testing "Basic initialize"
