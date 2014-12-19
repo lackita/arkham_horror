@@ -67,4 +67,12 @@
       (is (= (@investigator :fight) 3))
       (is (= (@investigator :will)  2))
       (is (= (@investigator :lore)  3))
-      (is (= (@investigator :luck)  3)))))
+      (is (= (@investigator :luck)  3))
+      (is (thrown? AssertionError (investigator/focus investigator {:fight-will 1}))))
+    (reset)
+    (begin {:ancient-one "Cthulu"})
+    (let [investigator (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
+      (awaken)
+      (is (thrown? AssertionError (investigator/focus investigator {:speed-sneak 1
+                                                                    :fight-will 1
+                                                                    :lore-luck -1}))))))
