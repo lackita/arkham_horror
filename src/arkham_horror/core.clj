@@ -16,7 +16,7 @@
 (defn reset []
   (dosync (set-status! "Game not started."
                        "None"
-                       "(begin <config>)")
+                       '(begin <config>))
           (ref-set ancient-one {})
           (ref-set game {})))
 (reset)
@@ -24,8 +24,10 @@
 (defn begin [config]
   (dosync (set-status! "Welcome to Arkham Horror!"
                        "Setup"
-                       "(def investigator (investigator/make <name> {:speed <speed> :fight <fight> :lore <lore>}))"
-                       "(awaken)")
+                       '(def investigator (investigator/make <name> {:speed <speed>
+                                                                     :fight <fight>
+                                                                     :lore <lore>}))
+                       '(awaken))
           (alter game assoc :begun true)
           (alter ancient-one assoc :name (config :ancient-one))))
 
@@ -33,9 +35,11 @@
   (dosync (if (= (@ancient-one :name) "Azathoth")
             (set-status! "Azathoth has destroyed the world!"
                          "Lost"
-                         "(reset)")
+                         '(reset))
             (set-status! "Cthulu has been awakened."
                          "Upkeep"
-                         "(investigator/focus <investigator> {:speed-sneak <speed-delta> :fight-will <fight-delta> :lore-luck <lore-delta>})"
-                         "(end-upkeep)"))
+                         '(investigator/focus <investigator> {:speed-sneak <speed-delta>
+                                                              :fight-will <fight-delta>
+                                                              :lore-luck <lore-delta>})
+                         '(end-upkeep)))
           (alter ancient-one assoc :awakened true)))

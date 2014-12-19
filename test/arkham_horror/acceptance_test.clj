@@ -8,7 +8,7 @@
     (reset)
     (is (= (get-status) "Game not started.\nPhase: None\nCommands:\n\t(begin <config>)"))
     (begin {:ancient-one "Azathoth"})
-    (is (= (get-status) "Welcome to Arkham Horror!\nPhase: Setup\nCommands:\n\t(def investigator (investigator/make <name> {:speed <speed> :fight <fight> :lore <lore>}))\n\t(awaken)"))
+    (is (= (get-status) "Welcome to Arkham Horror!\nPhase: Setup\nCommands:\n\t(def investigator (investigator/make <name> {:speed <speed>, :fight <fight>, :lore <lore>}))\n\t(awaken)"))
     (awaken)
     (is (= (get-status) "Azathoth has destroyed the world!\nPhase: Lost\nCommands:\n\t(reset)"))))
 
@@ -18,7 +18,7 @@
     (begin {:ancient-one "Cthulu"})
     (let [monterey-jack (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
       (awaken)
-      (is (= (get-status) "Cthulu has been awakened.\nPhase: Upkeep\nCommands:\n\t(investigator/focus <investigator> {:speed-sneak <speed-delta> :fight-will <fight-delta> :lore-luck <lore-delta>})\n\t(end-upkeep)"))
+      (is (= (get-status) "Cthulu has been awakened.\nPhase: Upkeep\nCommands:\n\t(investigator/focus <investigator> {:speed-sneak <speed-delta>, :fight-will <fight-delta>, :lore-luck <lore-delta>})\n\t(end-upkeep)"))
       )))
 
 (deftest monterey-jack-test
