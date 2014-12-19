@@ -15,6 +15,7 @@
 (def ancient-one (ref nil))
 (def help-info (ref nil))
 (def lost? (ref false))
+(def roll (ref []))
 
 (defn set-help! [actions]
   (dosync (ref-set help-info (if (game/over? @active-game)
@@ -102,7 +103,8 @@
                                              [phase investigator dice]))))))
 
 (defn attack []
-  (make-move combat/investigator-attack '[(accept-roll) (exhaust-item <n>)] (roll-status)))
+  (dosync (make-move combat/investigator-attack '[(accept-roll) (exhaust-item <n>)] (roll-status))
+          (ref-set roll (dice/pending-roll (structure/get-path @active-game [phase investigator dice])))))
 
 (defn exhaust-item [n]
   (make-move #(setup/exhaust-item % n) '[(accept-roll)] (roll-status)))

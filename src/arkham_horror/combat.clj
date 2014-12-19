@@ -54,10 +54,11 @@
     (apply-successes (structure/update-path game [ancient-one doom-track] doom-track/retract)
                      (- successes (count-investigators game)))))
 
-(defn accept-roll [game]
-  (-> (apply-successes game (count-successes game))
-      (structure/update-path [phase investigator dice] dice/accept-roll)
-      (phase/update phase/advance)))
+(defn accept-roll
+  ([game] (accept-roll game (count-successes game)))
+  ([game successes] (-> (apply-successes game successes)
+                        (structure/update-path [phase investigator dice] dice/accept-roll)
+                        (phase/update phase/advance))))
 
 (defn calculate-combat-modifier [ancient-one items]
   (apply + (ancient-one/combat-modifier ancient-one)
