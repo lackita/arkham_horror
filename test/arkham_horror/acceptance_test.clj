@@ -75,4 +75,5 @@
       (awaken)
       (is (thrown? AssertionError (investigator/focus investigator {:speed-sneak 1
                                                                     :fight-will 1
-                                                                    :lore-luck -1}))))))
+                                                                    :lore-luck -1}))))
+    ;; TODO: post-refresh refocusing))
