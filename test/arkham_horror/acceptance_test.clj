@@ -18,7 +18,7 @@
     (begin {:ancient-one "Cthulu"})
     (let [monterey-jack (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
       (is (= (@monterey-jack :maximum-stamina) 6))
-      (is (= (@monterey-jack :maximum-sanity) 2))
+      (is (= (@monterey-jack :maximum-sanity)  2))
       (awaken)
       (is (= (get-status) "Cthulu has been awakened.\nPhase: Upkeep\nCommands:\n\t(investigator/focus <investigator> {:speed-sneak <speed-delta>, :fight-will <fight-delta>, :lore-luck <lore-delta>})\n\t(end-upkeep)"))
       (end-upkeep)
@@ -26,7 +26,7 @@
       (investigator/attack monterey-jack)
       (is (= (get-status) "Roll: \nPhase: Attack\nCommands:\n\t(accept-roll)"))
       (accept-roll)
-      ;; (is (= (get-status) "Remaining meters:\n\tMonterey Jack\n\t\tStamina: 7/7\n\t\tSanity: 3/3\nPhase: Defend\nCommands:\n\t(investigator/defend <investigator> <meter>)"))
+      (is (= (get-status) "Remaining meters:\n\tMonterey Jack\n\t\t:maximum-stamina: 6/6\n\t\t:maximum-sanity: 2/2\nPhase: Defend\nCommands:\n\t(investigator/defend <investigator> <meter>)"))
       ;; (investigator/defend <investig)
       )))
 

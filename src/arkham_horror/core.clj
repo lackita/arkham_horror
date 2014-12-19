@@ -50,6 +50,6 @@
                        '(investigator/attack <investigator>))))
 
 (defn accept-roll []
-  (dosync (set-status! "Remaining stats:\n\tMonterey Jack\n\t\tStamina: 7/7\n\t\tSanity: 3/3"
+  (dosync (set-status! "Remaining meters:\n\tMonterey Jack\n\t\t:maximum-stamina: 6/6\n\t\t:maximum-sanity: 2/2"
                        "Defend"
-                       '(investigator/defend <investigator>))))
+                       '(investigator/defend <investigator> <meter>))))
