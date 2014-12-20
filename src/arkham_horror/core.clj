@@ -1,14 +1,10 @@
-(ns arkham-horror.core)
+(ns arkham-horror.core
+  (:require [arkham-horror.status :as status]))
 
-(def status-message (ref ""))
 (defn get-status []
-  @status-message)
-(defn set-status! [message phase & commands]
-  (ref-set status-message
-           (clojure.string/join "\n" `[~message
-                                       ~(str "Phase: " phase)
-                                       "Commands:"
-                                       ~@(map #(str "\t" %) commands)])))
+  (status/get-message))
+(defn set-status! [& args]
+  (apply status/set-message! args))
 
 (def game (ref nil))
 (def ancient-one (ref nil))
@@ -36,12 +32,19 @@
             (set-status! "Azathoth has destroyed the world!"
                          "Lost"
                          '(reset))
-            (set-status! "Cthulu has been awakened."
+            (set-status! (clojure.string/join "\n" ["Monterey Jack:"
+                                                    "\tStamina: 6/6"
+                                                    "\tSanity:  2/2"
+                                                    "\tSpeed:  1 <2> 3  4 "
+                                                    "\tSneak:  3 <2> 1  0 "
+                                                    "\tFight: <2> 3  4  5 "
+                                                    "\tWill:  <3> 2  1  0 "
+                                                    "\tLore:   1 <2> 3  4 "
+                                                    "\tLuck:   5 <4> 3  2 "])
                          "Upkeep"
                          '(investigator/focus <investigator> {:speed-sneak <speed-delta>
                                                               :fight-will <fight-delta>
-                                                              :lore-luck <lore-delta>})
-                         '(end-upkeep)))
+                                                              :lore-luck <lore-delta>})))
           (alter ancient-one assoc :awakened true)))
 
 (defn end-upkeep []

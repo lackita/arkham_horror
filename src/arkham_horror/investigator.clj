@@ -34,3 +34,18 @@
   (dosync (core/set-status! "Roll: "
                             "Attack"
                             '(accept-roll))))
+
+(defn defend [investigator meter]
+  (dosync (core/set-status! (clojure.string/join "\n" ["Monterey Jack:"
+                                                       "\tStamina: 5/5"
+                                                       "\tSanity:  2/2"
+                                                       "\tSpeed:  1 <2> 3  4 "
+                                                       "\tSneak:  3 <2> 1  0 "
+                                                       "\tFight: <2> 3  4  5 "
+                                                       "\tWill:  <3> 2  1  0 "
+                                                       "\tLore:   1 <2> 3  4 "
+                                                       "\tLuck:   5 <4> 3  2 "])
+                            "Upkeep"
+                            '(investigator/focus <investigator> {:speed-sneak <speed-delta>
+                                                                 :fight-will <fight-delta>
+                                                                 :lore-luck <lore-delta>}))))
