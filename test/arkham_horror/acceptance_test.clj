@@ -7,53 +7,65 @@
 
 (deftest azathoth-test
   (testing "Awakening ends world"
-    (board/reset)
-    (is (= (board/get-status) "Game not started.\nPhase: None\nCommands:\n\t(begin <config>)"))
-    (begin {:ancient-one "Azathoth"})
-    (is (= (board/get-status) "Welcome to Arkham Horror!\nPhase: Setup\nCommands:\n\t(def investigator (investigator/make <name> {:speed <speed>, :fight <fight>, :lore <lore>}))\n\t(awaken)"))
-    (awaken)
-    (is (= (board/get-status) "Azathoth has destroyed the world!\nPhase: Lost\nCommands:\n\t(board/reset)"))))
+    (let [board (board/make)]
+      (is (= (board/get-status board)
+             (board/make-status "Game not started."
+                                "None"
+                                '(begin <config>))))
+      (begin board {:ancient-one "Azathoth"})
+      (is (= (board/get-status board)
+             (board/make-status "Welcome to Arkham Horror!"
+                                "Setup"
+                                '(def investigator (investigator/make <name> {:speed <speed>
+                                                                              :fight <fight>
+                                                                              :lore <lore>}))
+                                '(awaken))))
+      (awaken board)
+      (is (= (board/get-status board)
+             (board/make-status "Azathoth has destroyed the world!"
+                                "Lost"
+                                '(board/reset)))))))
 
 (deftest cthulu-test
   (testing "Devour once meters exhausted"
-    (board/reset)
-    (begin {:ancient-one "Cthulu"})
-    (let [monterey-jack (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
-      (is (= (@monterey-jack :maximum-stamina) 6))
-      (is (= (@monterey-jack :maximum-sanity)  2))
-      (awaken)
-      (is (= (board/get-status) (join "\n" ["Monterey Jack:"
-                                              "\tStamina: 6/6"
-                                              "\tSanity:  2/2"
-                                              "\tSpeed:  1 <2> 3  4 "
-                                              "\tSneak:  3 <2> 1  0 "
-                                              "\tFight: <2> 3  4  5 "
-                                              "\tWill:  <3> 2  1  0 "
-                                              "\tLore:   1 <2> 3  4 "
-                                              "\tLuck:   5 <4> 3  2 "
-                                              "Phase: Upkeep"
-                                              "Commands:"
-                                              "\t(investigator/focus <investigator> {:speed-sneak <speed-delta>, :fight-will <fight-delta>, :lore-luck <lore-delta>})"])))
-      (end-upkeep)
-      (is (= (board/get-status) "Doom track: 13\nPhase: Attack\nCommands:\n\t(investigator/attack <investigator>)"))
-      (investigator/attack monterey-jack)
-      (is (= (board/get-status) "Roll: \nPhase: Attack\nCommands:\n\t(accept-roll)"))
-      (accept-roll)
-      (is (= (board/get-status) "Remaining meters:\n\tMonterey Jack\n\t\t:maximum-stamina: 6/6\n\t\t:maximum-sanity: 2/2\nPhase: Defend\nCommands:\n\t(investigator/defend <investigator> <meter>)"))
-      (investigator/defend monterey-jack :maximum-stamina)
-      (is (= (board/get-status) (join "\n" ["Monterey Jack:"
-                                              "\tStamina: 5/5"
-                                              "\tSanity:  2/2"
-                                              "\tSpeed:  1 <2> 3  4 "
-                                              "\tSneak:  3 <2> 1  0 "
-                                              "\tFight: <2> 3  4  5 "
-                                              "\tWill:  <3> 2  1  0 "
-                                              "\tLore:   1 <2> 3  4 "
-                                              "\tLuck:   5 <4> 3  2 "
-                                              "Phase: Upkeep"
-                                              "Commands:"
-                                              "\t(investigator/focus <investigator> {:speed-sneak <speed-delta>, :fight-will <fight-delta>, :lore-luck <lore-delta>})"])))
-      )))
+    (let [board (board/make)]
+      (begin board {:ancient-one "Cthulu"})
+      (let [monterey-jack (investigator/make board "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
+        (is (= (@monterey-jack :maximum-stamina) 6))
+        (is (= (@monterey-jack :maximum-sanity)  2))
+        (awaken board)
+        (is (= (board/get-status board) (join "\n" ["Monterey Jack:"
+                                                    "\tStamina: 6/6"
+                                                    "\tSanity:  2/2"
+                                                    "\tSpeed:  1 <2> 3  4 "
+                                                    "\tSneak:  3 <2> 1  0 "
+                                                    "\tFight: <2> 3  4  5 "
+                                                    "\tWill:  <3> 2  1  0 "
+                                                    "\tLore:   1 <2> 3  4 "
+                                                    "\tLuck:   5 <4> 3  2 "
+                                                    "Phase: Upkeep"
+                                                    "Commands:"
+                                                    "\t(investigator/focus <investigator> {:speed-sneak <speed-delta>, :fight-will <fight-delta>, :lore-luck <lore-delta>})"])))
+        (end-upkeep board)
+        (is (= (board/get-status board) "Doom track: 13\nPhase: Attack\nCommands:\n\t(investigator/attack <investigator>)"))
+        (investigator/attack monterey-jack)
+        (is (= (board/get-status board) "Roll: \nPhase: Attack\nCommands:\n\t(accept-roll)"))
+        (accept-roll board)
+        (is (= (board/get-status board) "Remaining meters:\n\tMonterey Jack\n\t\t:maximum-stamina: 6/6\n\t\t:maximum-sanity: 2/2\nPhase: Defend\nCommands:\n\t(investigator/defend <investigator> <meter>)"))
+        (investigator/defend monterey-jack :maximum-stamina)
+        (is (= (board/get-status board) (join "\n" ["Monterey Jack:"
+                                                    "\tStamina: 5/5"
+                                                    "\tSanity:  2/2"
+                                                    "\tSpeed:  1 <2> 3  4 "
+                                                    "\tSneak:  3 <2> 1  0 "
+                                                    "\tFight: <2> 3  4  5 "
+                                                    "\tWill:  <3> 2  1  0 "
+                                                    "\tLore:   1 <2> 3  4 "
+                                                    "\tLuck:   5 <4> 3  2 "
+                                                    "Phase: Upkeep"
+                                                    "Commands:"
+                                                    "\t(investigator/focus <investigator> {:speed-sneak <speed-delta>, :fight-will <fight-delta>, :lore-luck <lore-delta>})"])))
+        ))))
 
 (deftest monterey-jack-test
   (testing "Basic initialize"
