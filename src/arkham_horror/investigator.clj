@@ -1,6 +1,6 @@
 (ns arkham-horror.investigator
   (:refer-clojure :exclude [name])
-  (:require [arkham-horror.item :as item]))
+  (:require [arkham-horror.card :as card]))
 
 (defn make [name stats]
   stats)
@@ -38,8 +38,8 @@
 (defn clue-tokens [investigator]
   1)
 
-(defn items [investigator]
-  [(item/make :unique "Fake")
-   (item/make :unique "Fake")
-   (item/make :common "Bullwhip")
-   (item/make :common ".38 Revolver")])
+(defn cards [investigator]
+  [(card/make :unique "Fake")
+   (card/make :unique "Fake")
+   (card/make :common "Bullwhip")
+   (card/make :common ".38 Revolver")])

@@ -1,4 +1,4 @@
-(ns arkham-horror.item
+(ns arkham-horror.card
   (:refer-clojure :exclude [name]))
 
 (defn make [deck name]

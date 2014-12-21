@@ -1,7 +1,7 @@
 (ns arkham-horror.use-cases.create-monterey-jack
   (:require [clojure.test :refer :all]
             [arkham-horror.investigator :as investigator]
-            [arkham-horror.item :as item]))
+            [arkham-horror.card :as card]))
 
 (deftest create-monterey-jack-example
   (testing "Primary Course: Basic Stats"
@@ -17,9 +17,9 @@
       (is (= (investigator/luck monterey-jack)         4))
       (is (= (investigator/money monterey-jack)        7))
       (is (= (investigator/clue-tokens monterey-jack)  1))
-      (is (= (count (investigator/items monterey-jack)) 4))
-      (is (some #(= (item/name %) "Bullwhip") (investigator/items monterey-jack)))
-      (is (some #(= (item/name %) ".38 Revolver") (investigator/items monterey-jack)))
-      (is (= (count (filter #(= (item/deck %) :unique)
-                            (investigator/items monterey-jack)))
+      (is (= (count (investigator/cards monterey-jack)) 4))
+      (is (some #(= (card/name %) "Bullwhip") (investigator/cards monterey-jack)))
+      (is (some #(= (card/name %) ".38 Revolver") (investigator/cards monterey-jack)))
+      (is (= (count (filter #(= (card/deck %) :unique)
+                            (investigator/cards monterey-jack)))
              2)))))
