@@ -69,35 +69,50 @@
 
 (deftest monterey-jack-test
   (testing "Basic initialize"
-    (board/reset)
-    (begin {:ancient-one "Azathoth"})
-    (let [investigator (investigator/make "Monterey Jack" {:speed 3 :fight 3 :lore 4})]
-      (is (= (:name @investigator) "Monterey Jack"))
-      (is (= (:speed @investigator) 3))
-      (is (= (:sneak @investigator) 1))
-      (is (= (:fight @investigator) 3))
-      (is (= (:will  @investigator) 2))
-      (is (= (:lore  @investigator) 4))
-      (is (= (:luck  @investigator) 2))
-      (is (= (:maximum-stamina @investigator) 7))
-      (is (= (:maximum-sanity  @investigator) 3))))
+    (let [board (board/make)]
+      (begin board {:ancient-one "Azathoth"})
+      (let [investigator (investigator/make board "Monterey Jack" {:speed 3 :fight 3 :lore 4})]
+        (is (= (:name @investigator) "Monterey Jack"))
+        (is (= (:speed @investigator) 3))
+        (is (= (:sneak @investigator) 1))
+        (is (= (:fight @investigator) 3))
+        (is (= (:will  @investigator) 2))
+        (is (= (:lore  @investigator) 4))
+        (is (= (:luck  @investigator) 2))
+        (is (= (:maximum-stamina @investigator) 7))
+        (is (= (:maximum-sanity  @investigator) 3)))))
   (testing "Cannot initialize after awakening"
-    (board/reset)
-    (begin {:ancient-one "Azathoth"})
-    (awaken)
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2}))))
+    (let [board (board/make)]
+      (begin board {:ancient-one "Azathoth"})
+      (awaken board)
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 2 :fight 2 :lore 2})))))
   (testing "Cannot initialize before beginning"
-    (board/reset)
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2}))))
+    (is (thrown? AssertionError (investigator/make (board/make)
+                                                   "Monterey Jack"
+                                                   {:speed 2 :fight 2 :lore 2}))))
   (testing "Stat bounds"
-    (board/reset)
-    (begin {:ancient-one "Azathoth"})
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 0 :fight 2 :lore 2})))
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 5 :fight 2 :lore 2})))
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 1 :lore 2})))
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 6 :lore 2})))
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 0})))
-    (is (thrown? AssertionError (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 5}))))
+    (let [board (board/make)]
+      (begin board {:ancient-one "Azathoth"})
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 0 :fight 2 :lore 2})))
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 5 :fight 2 :lore 2})))
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 2 :fight 1 :lore 2})))
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 2 :fight 6 :lore 2})))
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 2 :fight 2 :lore 0})))
+      (is (thrown? AssertionError (investigator/make board
+                                                     "Monterey Jack"
+                                                     {:speed 2 :fight 2 :lore 5})))))
   (testing "Focus"
     (board/reset)
     (begin {:ancient-one "Cthulu"})
