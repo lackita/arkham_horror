@@ -8,4 +8,8 @@
   (testing "Primary Course"
     (let [board (board/make {:ancient-one "Azathoth"})]
       (ancient-one/awaken board)
-      (is (game/lost? board)))))
+      (is (game/lost? board))))
+  (testing "Exceptional Course: Ancient One Defeated"
+    (let [board (board/make {:ancient-one "Azathoth"})]
+      (ancient-one/defeat board)
+      (is (thrown? AssertionError (ancient-one/awaken board))))))
