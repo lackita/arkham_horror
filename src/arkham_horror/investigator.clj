@@ -7,6 +7,12 @@
 (defn name [investigator]
   "Monterey Jack")
 
+(defn sanity [investigator]
+  3)
+
+(defn stamina [investigator]
+  7)
+
 (defn speed [investigator]
   2)
 
