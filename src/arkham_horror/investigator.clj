@@ -39,7 +39,20 @@
   1)
 
 (defn cards [investigator]
-  [(card/make :unique "Fake")
+  [(card/make :skill  "Fake")
+   (card/make :unique "Fake")
    (card/make :unique "Fake")
    (card/make :common "Bullwhip")
    (card/make :common ".38 Revolver")])
+
+(defn cards-from-deck [investigator deck]
+  (filter #(= (card/deck %) deck) (cards investigator)))
+
+(defn unique-items [investigator]
+  (cards-from-deck investigator :unique))
+
+(defn common-items [investigator]
+  (cards-from-deck investigator :common))
+
+(defn skills [investigator]
+  (cards-from-deck investigator :skill))
