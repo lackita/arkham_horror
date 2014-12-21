@@ -3,7 +3,9 @@
   (:require [arkham-horror.card :as card]))
 
 (defn make [name stats]
-  {:pre [(> (stats :speed) 0)]}
+  {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
+         (> (stats :fight) 1) (< (stats :fight) 6)
+         (> (stats :lore)  0) (< (stats :lore)  5)]}
   (ref (merge stats {:decisions [nil]
                      :cards [(card/make :skill  "Fake")
                              (card/make :common "Bullwhip")
