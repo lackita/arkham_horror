@@ -3,7 +3,10 @@
   (:require [arkham-horror.card :as card]))
 
 (defn make [name stats]
-  stats)
+  (ref (merge stats {:decisions [nil]
+                     :cards [(card/make :skill  "Fake")
+                             (card/make :common "Bullwhip")
+                             (card/make :common ".38 Revolver")]})))
 
 (defn name [investigator]
   "Monterey Jack")
@@ -39,11 +42,7 @@
   1)
 
 (defn cards [investigator]
-  [(card/make :skill  "Fake")
-   (card/make :unique "Fake")
-   (card/make :unique "Fake")
-   (card/make :common "Bullwhip")
-   (card/make :common ".38 Revolver")])
+  (@investigator :cards))
 
 (defn cards-from-deck [investigator deck]
   (filter #(= (card/deck %) deck) (cards investigator)))
@@ -56,3 +55,11 @@
 
 (defn skills [investigator]
   (cards-from-deck investigator :skill))
+
+(defn pending-decisions [investigator]
+  (@investigator :decisions))
+
+(defn make-decision [investigator decision]
+  (dosync (alter investigator assoc :decisions [])
+          (alter investigator update-in [:cards] #(concat % [(card/make :unique "Fake")
+                                                             (card/make :unique "Fake")]))))

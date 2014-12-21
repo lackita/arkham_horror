@@ -9,7 +9,10 @@
 (deftest create-monterey-jack-example
   (testing "Primary Course: Basic Stats"
     (let [monterey-jack (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})]
-      ;(is (not (empty? (investigator/pending-decisions monterey-jack))))
+      (is (not (empty? (investigator/pending-decisions monterey-jack))))
+      (is (= (count (investigator/unique-items monterey-jack)) 0))
+      (investigator/make-decision monterey-jack [0 1])
+      (is (empty? (investigator/pending-decisions monterey-jack)))
       (is (= (investigator/name monterey-jack)                 "Monterey Jack"))
       (is (= (investigator/sanity monterey-jack)               3))
       (is (= (investigator/stamina monterey-jack)              7))
