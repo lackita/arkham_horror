@@ -3,6 +3,7 @@
   (:require [arkham-horror.card :as card]))
 
 (defn make [name stats]
+  {:pre [(> (stats :speed) 0)]}
   (ref (merge stats {:decisions [nil]
                      :cards [(card/make :skill  "Fake")
                              (card/make :common "Bullwhip")
@@ -18,22 +19,22 @@
   7)
 
 (defn speed [investigator]
-  2)
+  (@investigator :speed))
 
 (defn sneak [investigator]
-  2)
+  (- 4 (speed investigator)))
 
 (defn fight [investigator]
-  2)
+  (@investigator :fight))
 
 (defn will [investigator]
-  3)
+  (- 5 (fight investigator)))
 
 (defn lore [investigator]
-  2)
+  (@investigator :lore))
 
 (defn luck [investigator]
-  4)
+  (- 6 (lore investigator)))
 
 (defn money [investigator]
   7)
