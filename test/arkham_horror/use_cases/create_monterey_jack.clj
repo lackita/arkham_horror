@@ -12,14 +12,15 @@
 (defspec primary-course
   (prop/for-all [speed (gen/choose 1 4)
                  fight (gen/choose 2 5)
-                 lore  (gen/choose 1 4)]
+                 lore  (gen/choose 1 4)
+                 decision (gen/vector (gen/elements (range 3)) 2)]
                 (let [monterey-jack (investigator/make "Monterey Jack" {:speed speed
                                                                         :fight fight
                                                                         :lore  lore})]
-                  (is (not (empty? (investigator/pending-decisions monterey-jack))))
+                  (is (not (empty? (investigator/pending-decision monterey-jack))))
                   (is (= (count (investigator/unique-items monterey-jack)) 0))
-                  (investigator/make-decision monterey-jack [0 1])
-                  (is (empty? (investigator/pending-decisions monterey-jack)))
+                  (investigator/make-decision monterey-jack decision)
+                  (is (empty? (investigator/pending-decision monterey-jack)))
                   (is (= (investigator/name monterey-jack) "Monterey Jack"))
                   (is (= (investigator/sanity monterey-jack) 3))
                   (is (= (investigator/stamina monterey-jack) 7))
@@ -81,3 +82,9 @@
                 (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2
                                                                           :fight 2
                                                                           :lore lore})))))
+(defspec exceptional-course-out-of-range-decision
+  (prop/for-all [bad-decision (gen/vector (gen/fmap #(+ % 3) gen/pos-int) 2)]
+                (is (assertion-error?
+                     (investigator/make-decision
+                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+                      bad-decision)))))

@@ -6,7 +6,9 @@
   {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
          (> (stats :fight) 1) (< (stats :fight) 6)
          (> (stats :lore)  0) (< (stats :lore)  5)]}
-  (ref (merge stats {:decisions [nil]
+  (ref (merge stats {:decision [(card/make :unique "Fake")
+                                (card/make :unique "Fake")
+                                (card/make :unique "Fake")]
                      :cards [(card/make :skill  "Fake")
                              (card/make :common "Bullwhip")
                              (card/make :common ".38 Revolver")]})))
@@ -59,10 +61,11 @@
 (defn skills [investigator]
   (cards-from-deck investigator :skill))
 
-(defn pending-decisions [investigator]
-  (@investigator :decisions))
+(defn pending-decision [investigator]
+  (@investigator :decision))
 
 (defn make-decision [investigator decision]
-  (dosync (alter investigator assoc :decisions [])
-          (alter investigator update-in [:cards] #(concat % [(card/make :unique "Fake")
-                                                             (card/make :unique "Fake")]))))
+  {:pre [(every? #(< % (count (pending-decision investigator))) decision)]}
+  (dosync (alter investigator update-in [:cards]
+                 #(concat % (replace (pending-decision investigator) decision)))
+          (alter investigator assoc :decision [])))
