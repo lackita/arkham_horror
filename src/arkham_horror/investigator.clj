@@ -65,7 +65,8 @@
   (@investigator :decision))
 
 (defn make-decision [investigator decision]
-  {:pre [(every? #(< % (count (pending-decision investigator))) decision)]}
+  {:pre [(every? #(and (< % (count (pending-decision investigator))) (>= % 0)) decision)
+         (= (count decision) 2)]}
   (dosync (alter investigator update-in [:cards]
                  #(concat % (replace (pending-decision investigator) decision)))
           (alter investigator assoc :decision [])))

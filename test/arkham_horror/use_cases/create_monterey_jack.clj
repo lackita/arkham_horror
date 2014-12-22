@@ -13,7 +13,7 @@
   (prop/for-all [speed (gen/choose 1 4)
                  fight (gen/choose 2 5)
                  lore  (gen/choose 1 4)
-                 decision (gen/vector (gen/elements (range 3)) 2)]
+                 decision (gen/vector (gen/choose 0 2) 2)]
                 (let [monterey-jack (investigator/make "Monterey Jack" {:speed speed
                                                                         :fight fight
                                                                         :lore  lore})]
@@ -82,8 +82,28 @@
                 (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2
                                                                           :fight 2
                                                                           :lore lore})))))
+
 (defspec exceptional-course-out-of-range-decision
   (prop/for-all [bad-decision (gen/vector (gen/fmap #(+ % 3) gen/pos-int) 2)]
+                (is (assertion-error?
+                     (investigator/make-decision
+                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+                      bad-decision))))
+  (prop/for-all [bad-decision (gen/vector gen/s-neg-int 2)]
+                (is (assertion-error?
+                     (investigator/make-decision
+                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+                      bad-decision)))))
+
+(defspec exceptional-course-too-few-decision
+  (prop/for-all [bad-decision (gen/vector (gen/choose 0 2) 1)]
+                (is (assertion-error?
+                     (investigator/make-decision
+                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+                      bad-decision)))))
+
+(defspec exceptional-course-too-many-decision
+  (prop/for-all [bad-decision (gen/vector (gen/choose 0 2) 3)]
                 (is (assertion-error?
                      (investigator/make-decision
                       (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
