@@ -1,8 +1,7 @@
-(ns arkham-horror.use-cases.create-monterey-jack
+(ns arkham-horror.use-cases.monterey-jack
   (:require [clojure.test :refer :all]
             [clojure.test.check :as tc]
             [clojure.test.check.clojure-test :refer :all]
-            [clojure.test.check.properties :as prop]
             [clojure.test.check.generators :as gen]
             [arkham-horror.investigator :as investigator]
             [arkham-horror.card :as card]))
@@ -12,12 +11,6 @@
 
 (defmacro assertion-error? [expression]
   `(try ~expression false (catch AssertionError ~(gensym "e") true)))
-
-(defmacro checking [name bindings & body]
-  `(testing ~name
-     (tc/quick-check 100
-       (prop/for-all ~bindings
-         ~@body))))
 
 (deftest create
   (checking "Primary Course" [speed (gen/choose 1 4)

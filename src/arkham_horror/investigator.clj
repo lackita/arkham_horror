@@ -19,6 +19,12 @@
 (defn sanity [investigator]
   3)
 
+(defn initial-maximum-sanity [_]
+  3)
+
+(defn maximum-sanity [_]
+  2)
+
 (defn stamina [investigator]
   7)
 
