@@ -1,4 +1,4 @@
-(ns arkham-horror.use-cases.monterey-jack-creation
+(ns arkham-horror.use-cases.create-monterey-jack
   (:require [clojure.test :refer :all]
             [clojure.test.check.clojure-test :refer :all]
             [clojure.test.check.properties :as prop]
