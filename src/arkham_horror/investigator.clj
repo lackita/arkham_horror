@@ -2,6 +2,9 @@
   (:refer-clojure :exclude [name])
   (:require [arkham-horror.card :as card]))
 
+(defn initial-maximum-sanity [_]
+  3)
+
 (defn make [name stats]
   {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
          (> (stats :fight) 1) (< (stats :fight) 6)
@@ -11,7 +14,9 @@
                                 (card/make :unique "Fake")]
                      :cards [(card/make :skill  "Fake")
                              (card/make :common "Bullwhip")
-                             (card/make :common ".38 Revolver")]})))
+                             (card/make :common ".38 Revolver")]
+                     :sanity {:value (initial-maximum-sanity name)
+                              :maximum (initial-maximum-sanity name)}})))
 
 (defn name [investigator]
   "Monterey Jack")
@@ -19,11 +24,8 @@
 (defn sanity [investigator]
   3)
 
-(defn initial-maximum-sanity [_]
-  3)
-
-(defn maximum-sanity [_]
-  2)
+(defn maximum-sanity [investigator]
+  (-> @investigator :sanity :maximum))
 
 (defn stamina [investigator]
   7)

@@ -44,7 +44,8 @@
       (is (belonging? monterey-jack ".38 Revolver"))
       (is (= (count (investigator/unique-items monterey-jack)) 2))
       (is (= (count (investigator/common-items monterey-jack)) 2))
-      (is (= (count (investigator/skills monterey-jack)) 1))))
+      (is (= (count (investigator/skills monterey-jack)) 1))
+      (is (= (investigator/maximum-sanity monterey-jack) 3))))
   (checking "Exceptional Course: Speed Below Range" [speed gen/neg-int]
     (is (assertion-error? (investigator/make "Monterey Jack" {:speed speed :fight 2 :lore 2}))))
   (checking "Exceptional Course: Speed Above Range" [speed (gen/fmap #(+ % 5) gen/pos-int)]

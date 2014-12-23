@@ -1,4 +1,6 @@
 (ns arkham-horror.board)
 
 (defn make [config]
-  {:ancient-one (ref {})})
+  (dosync (doseq [investigator (config :investigators)]
+            (alter investigator update-in [:sanity :maximum] dec))
+          {:ancient-one (ref {})}))
