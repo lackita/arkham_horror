@@ -1,7 +1,7 @@
 (ns arkham-horror.ancient-one)
 
-(defn awaken [board]
-  {:pre [(not (:defeated @(board :ancient-one)))]}
+(defn awaken [ancient-one]
+  {:pre [(not (:defeated @ancient-one))]}
   nil)
 
 (defn defeat [board]

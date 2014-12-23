@@ -10,12 +10,12 @@
 (deftest awaken
   (testing "Primary Course"
     (let [board (board/make {:ancient-one "Azathoth"})]
-      (ancient-one/awaken board)
+      (ancient-one/awaken (board :ancient-one))
       (is (game/lost? board))))
   (testing "Exceptional Course: Ancient One Defeated"
     (let [board (board/make {:ancient-one "Azathoth"})]
       (ancient-one/defeat board)
-      (is (thrown? AssertionError (ancient-one/awaken board))))))
+      (is (thrown? AssertionError (ancient-one/awaken (board :ancient-one)))))))
 
 (deftest investigators-maximum-sanity-and-stamina-constant
   (checking "Primary Course" [investigator gen/investigator]
