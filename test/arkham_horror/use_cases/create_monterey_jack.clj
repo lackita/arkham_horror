@@ -1,5 +1,6 @@
 (ns arkham-horror.use-cases.create-monterey-jack
   (:require [clojure.test :refer :all]
+            [clojure.test.check :as tc]
             [clojure.test.check.clojure-test :refer :all]
             [clojure.test.check.properties :as prop]
             [clojure.test.check.generators :as gen]
@@ -9,14 +10,21 @@
 (defn belonging? [investigator card-name]
   (some #(= (card/name %) card-name) (investigator/cards investigator)))
 
-(defspec primary-course 100
-  (prop/for-all [speed (gen/choose 1 4)
-                 fight (gen/choose 2 5)
-                 lore  (gen/choose 1 4)
-                 decision (gen/vector (gen/choose 0 2) 2)]
-    (let [monterey-jack (investigator/make "Monterey Jack" {:speed speed
-                                                            :fight fight
-                                                            :lore  lore})]
+(defmacro assertion-error? [expression]
+  `(try ~expression false (catch AssertionError ~(gensym "e") true)))
+
+(defmacro checking [name bindings & body]
+  `(testing ~name
+     (tc/quick-check 100
+       (prop/for-all ~bindings
+         ~@body))))
+
+(deftest create
+  (checking "Primary Course" [speed (gen/choose 1 4)
+                              fight (gen/choose 2 5)
+                              lore  (gen/choose 1 4)
+                              decision (gen/vector (gen/choose 0 2) 2)]
+    (let [monterey-jack (investigator/make "Monterey Jack" {:speed speed :fight fight :lore  lore})]
       (is (not (empty? (investigator/pending-decision monterey-jack))))
       (is (= (count (investigator/unique-items monterey-jack)) 0))
       (investigator/make-decision monterey-jack decision)
@@ -43,68 +51,40 @@
       (is (belonging? monterey-jack ".38 Revolver"))
       (is (= (count (investigator/unique-items monterey-jack)) 2))
       (is (= (count (investigator/common-items monterey-jack)) 2))
-      (is (= (count (investigator/skills monterey-jack)) 1)))))
-
-(defmacro assertion-error? [expression]
-  `(try ~expression false (catch AssertionError ~(gensym "e") true)))
-
-(defspec exceptional-course-speed-below-range
-  (prop/for-all [speed gen/neg-int]
-                (is (assertion-error? (investigator/make "Monterey Jack" {:speed speed
-                                                                          :fight 2
-                                                                          :lore 2})))))
-(defspec exceptional-course-speed-above-range
-  (prop/for-all [speed (gen/fmap #(+ % 5) gen/pos-int)]
-                (is (assertion-error? (investigator/make "Monterey Jack" {:speed speed
-                                                                          :fight 2
-                                                                          :lore 2})))))
-
-(defspec exceptional-course-fight-below-range
-  (prop/for-all [fight (gen/fmap inc gen/neg-int)]
-                (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2
-                                                                          :fight fight
-                                                                          :lore 2})))))
-
-(defspec exceptional-course-fight-above-range
-  (prop/for-all [fight (gen/fmap #(+ % 6) gen/pos-int)]
-                (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2
-                                                                          :fight fight
-                                                                          :lore 2})))))
-
-(defspec exceptional-course-lore-below-range
-  (prop/for-all [lore gen/neg-int]
-                (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2
-                                                                          :fight 2
-                                                                          :lore lore})))))
-
-(defspec exceptional-course-fight-above-range
-  (prop/for-all [lore (gen/fmap #(+ % 5) gen/pos-int)]
-                (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2
-                                                                          :fight 2
-                                                                          :lore lore})))))
-
-(defspec exceptional-course-out-of-range-decision
-  (prop/for-all [bad-decision (gen/vector (gen/fmap #(+ % 3) gen/pos-int) 2)]
-                (is (assertion-error?
-                     (investigator/make-decision
-                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
-                      bad-decision))))
-  (prop/for-all [bad-decision (gen/vector gen/s-neg-int 2)]
-                (is (assertion-error?
-                     (investigator/make-decision
-                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
-                      bad-decision)))))
-
-(defspec exceptional-course-too-few-decision
-  (prop/for-all [bad-decision (gen/vector (gen/choose 0 2) 1)]
-                (is (assertion-error?
-                     (investigator/make-decision
-                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
-                      bad-decision)))))
-
-(defspec exceptional-course-too-many-decision
-  (prop/for-all [bad-decision (gen/vector (gen/choose 0 2) 3)]
-                (is (assertion-error?
-                     (investigator/make-decision
-                      (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
-                      bad-decision)))))
+      (is (= (count (investigator/skills monterey-jack)) 1))))
+  (checking "Exceptional Course: Speed Below Range" [speed gen/neg-int]
+    (is (assertion-error? (investigator/make "Monterey Jack" {:speed speed :fight 2 :lore 2}))))
+  (checking "Exceptional Course: Speed Above Range" [speed (gen/fmap #(+ % 5) gen/pos-int)]
+    (is (assertion-error? (investigator/make "Monterey Jack" {:speed speed :fight 2 :lore 2}))))
+  (checking "Exceptional Course: Fight Below Range" [fight (gen/fmap inc gen/neg-int)]
+    (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2 :fight fight :lore 2}))))
+  (checking "Exceptional Course: Fight Above Range" [fight (gen/fmap #(+ % 6) gen/pos-int)]
+    (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2 :fight fight :lore 2}))))
+  (checking "Exceptional Course: Lore Below Range" [lore gen/neg-int]
+    (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore lore}))))
+  (checking "Exceptional Course: Lore Above Range" [lore (gen/fmap #(+ % 5) gen/pos-int)]
+    (is (assertion-error? (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore lore}))))
+  (checking "Exceptional Course: Decision Above Range"
+    [bad-decision (gen/vector (gen/fmap #(+ % 3) gen/pos-int) 2)]
+    (is (assertion-error?
+         (investigator/make-decision
+          (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+          bad-decision))))
+  (checking "Exceptional Course: Decision Below Range"
+    [bad-decision (gen/vector gen/s-neg-int 2)]
+    (is (assertion-error?
+         (investigator/make-decision
+          (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+          bad-decision))))
+  (checking "Exception Course: Too Few Decisions"
+    [bad-decision (gen/vector (gen/choose 0 2) 1)]
+    (is (assertion-error?
+         (investigator/make-decision
+          (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+          bad-decision))))
+  (checking "Exceptional Course: Too Many Decisions"
+    [bad-decision (gen/vector (gen/choose 0 2) 3)]
+    (is (assertion-error?
+         (investigator/make-decision
+          (investigator/make "Monterey Jack" {:speed 2 :fight 2 :lore 2})
+          bad-decision)))))
