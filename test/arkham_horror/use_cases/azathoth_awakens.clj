@@ -4,7 +4,7 @@
             [arkham-horror.game :as game]
             [arkham-horror.ancient-one :as ancient-one]))
 
-(deftest destroy-world-example
+(deftest awakening-destroys-world-example
   (testing "Primary Course"
     (let [board (board/make {:ancient-one "Azathoth"})]
       (ancient-one/awaken board)
