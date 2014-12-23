@@ -16,9 +16,3 @@
     (let [board (board/make {:ancient-one "Azathoth"})]
       (ancient-one/defeat board)
       (is (thrown? AssertionError (ancient-one/awaken (board :ancient-one)))))))
-
-(deftest investigators-maximum-sanity-and-stamina-constant
-  (checking "Primary Course" [investigator gen/investigator]
-    (board/make {:ancient-one "Azathoth" :investigators [investigator]})
-    (is (= (investigator/maximum-sanity investigator)
-           (investigator/initial-maximum-sanity (investigator/name investigator))))))

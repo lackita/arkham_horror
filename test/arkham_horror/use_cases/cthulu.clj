@@ -9,4 +9,8 @@
   (checking "Primary Course" [investigator gen/investigator]
     (board/make {:ancient-one "Cthulu" :investigators [investigator]})
     (is (= (investigator/maximum-sanity investigator)
-           (dec (investigator/initial-maximum-sanity (investigator/name investigator)))))))
+           (dec (investigator/initial-maximum-sanity (investigator/name investigator))))))
+  (checking "Exceptional Course: Ancient One not Cthulu" [investigator gen/investigator]
+    (board/make {:ancient-one "Azathoth" :investigators [investigator]})
+    (is (= (investigator/maximum-sanity investigator)
+           (investigator/initial-maximum-sanity (investigator/name investigator))))))
