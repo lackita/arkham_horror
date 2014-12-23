@@ -5,6 +5,9 @@
 (defn initial-maximum-sanity [_]
   3)
 
+(defn initial-maximum-stamina [_]
+  7)
+
 (defn make [name stats]
   {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
          (> (stats :fight) 1) (< (stats :fight) 6)
@@ -26,6 +29,9 @@
 
 (defn maximum-sanity [investigator]
   (-> @investigator :sanity :maximum))
+
+(defn maximum-stamina [investigator]
+  6)
 
 (defn stamina [investigator]
   7)
