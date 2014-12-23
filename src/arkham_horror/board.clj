@@ -2,7 +2,6 @@
 
 (defn make [config]
   (dosync (when (= (config :ancient-one) "Cthulu")
-            (doseq [investigator (config :investigators)]
-              (alter investigator update-in [:sanity :maximum] dec)
-              (alter investigator update-in [:stamina :maximum] dec)))
+            (doseq [investigator (config :investigators) meter [:sanity :stamina]]
+              (alter investigator update-in [meter :maximum] dec)))
           {:ancient-one (ref {})}))
