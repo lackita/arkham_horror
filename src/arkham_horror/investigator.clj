@@ -19,7 +19,9 @@
                              (card/make :common "Bullwhip")
                              (card/make :common ".38 Revolver")]
                      :sanity {:value (initial-maximum-sanity name)
-                              :maximum (initial-maximum-sanity name)}})))
+                              :maximum (initial-maximum-sanity name)}
+                     :stamina {:value (initial-maximum-stamina name)
+                               :maximum (initial-maximum-stamina name)}})))
 
 (defn name [investigator]
   "Monterey Jack")
@@ -31,7 +33,7 @@
   (-> @investigator :sanity :maximum))
 
 (defn maximum-stamina [investigator]
-  6)
+  (-> @investigator :stamina :maximum))
 
 (defn stamina [investigator]
   7)
