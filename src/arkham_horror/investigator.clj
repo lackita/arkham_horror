@@ -46,14 +46,17 @@
   (-> @investigator :stamina :maximum))
 
 (defn decrement-maximum-stamina [investigator]
-  (alter investigator update-in [:stamina :maximum] dec)
-  (alter investigator update-in [:stamina :value] #(min % (maximum-stamina investigator))))
+  (when (> (maximum-stamina investigator) 0)
+    (alter investigator update-in [:stamina :maximum] dec)
+    (alter investigator update-in [:stamina :value] #(min % (maximum-stamina investigator)))))
 
 (defn stamina [investigator]
   (-> @investigator :stamina :value))
 
 (defn move-stamina [investigator delta]
-  (alter investigator update-in [:stamina :value] #(+ % delta)))
+  (alter investigator update-in [:stamina :value] #(-> (+ % delta)
+                                                       (min (maximum-stamina investigator))
+                                                       (max 0))))
 
 (defn speed [investigator]
   (@investigator :speed))

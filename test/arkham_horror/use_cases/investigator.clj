@@ -37,4 +37,17 @@
      (is (= (investigator/maximum-stamina investigator) (investigator/stamina investigator)))
      (investigator/move-stamina investigator -2)
      (is (= (investigator/stamina investigator)
-            (- (investigator/maximum-stamina investigator) 2))))))
+            (- (investigator/maximum-stamina investigator) 2)))))
+  (checking "Exceptional Course: Too High" [investigator gen/investigator]
+    (dosync
+     (investigator/move-stamina investigator 1)
+     (is (= (investigator/stamina investigator) (investigator/maximum-stamina investigator)))))
+  (checking "Exceptional Course: Too Low" [investigator gen/investigator]
+    (dosync
+     (investigator/move-stamina investigator (- (inc (investigator/stamina investigator))))
+     (is (= (investigator/stamina investigator) 0))))
+  (checking "Exceptional Course: Maximum Too Low" [investigator gen/investigator]
+    (dosync
+     (dotimes [n (inc (investigator/maximum-stamina investigator))]
+       (investigator/decrement-maximum-stamina investigator))
+     (is (= (investigator/maximum-stamina investigator) 0)))))
