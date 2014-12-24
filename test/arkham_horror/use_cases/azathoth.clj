@@ -12,9 +12,4 @@
     (dosync
      (let [board (board/make {:ancient-one "Azathoth"})]
        (ancient-one/awaken (board :ancient-one))
-       (is (game/lost? board)))))
-  (testing "Exceptional Course: Ancient One Defeated"
-    (dosync
-     (let [board (board/make {:ancient-one "Azathoth"})]
-       (ancient-one/defeat board)
-       (is (thrown? AssertionError (ancient-one/awaken (board :ancient-one))))))))
+       (is (game/lost? board))))))
