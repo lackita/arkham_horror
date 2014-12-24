@@ -8,13 +8,20 @@
 (defn initial-maximum-stamina [_]
   7)
 
+(defn make-card-decision [cards]
+  (fn [investigator decision]
+    {:pre [(every? (set (range (count cards))) decision)
+           (= (count decision) 2)]}
+    (update-in investigator [:cards]
+               #(concat % (replace cards decision)))))
+
 (defn make [name stats]
   {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
          (> (stats :fight) 1) (< (stats :fight) 6)
          (> (stats :lore)  0) (< (stats :lore)  5)]}
-  (ref (merge stats {:decision [(card/make :unique "Fake")
-                                (card/make :unique "Fake")
-                                (card/make :unique "Fake")]
+  (ref (merge stats {:decision (make-card-decision [(card/make :unique "Fake")
+                                                    (card/make :unique "Fake")
+                                                    (card/make :unique "Fake")])
                      :cards [(card/make :skill  "Fake")
                              (card/make :common "Bullwhip")
                              (card/make :common ".38 Revolver")]
@@ -101,8 +108,5 @@
   (@investigator :decision))
 
 (defn make-decision [investigator decision]
-  {:pre [(every? #(and (< % (count (pending-decision investigator))) (>= % 0)) decision)
-         (= (count decision) 2)]}
-  (alter investigator update-in [:cards]
-         #(concat % (replace (pending-decision investigator) decision)))
+  (alter investigator (pending-decision investigator) decision)
   (alter investigator assoc :decision nil))
