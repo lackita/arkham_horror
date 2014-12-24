@@ -36,8 +36,8 @@
 (defn sanity [investigator]
   (-> @investigator :sanity :value))
 
-(defn decrement-sanity [investigator delta]
-  (alter investigator update-in [:sanity :value] dec))
+(defn move-sanity [investigator delta]
+  (alter investigator update-in [:sanity :value] #(+ % delta)))
 
 (defn maximum-stamina [investigator]
   (-> @investigator :stamina :maximum))
@@ -49,8 +49,8 @@
 (defn stamina [investigator]
   (-> @investigator :stamina :value))
 
-(defn decrement-stamina [investigator delta]
-  (alter investigator update-in [:stamina :value] dec))
+(defn move-stamina [investigator delta]
+  (alter investigator update-in [:stamina :value] #(+ % delta)))
 
 (defn speed [investigator]
   (@investigator :speed))
