@@ -22,3 +22,7 @@
 
 (defn defeat [ancient-one]
   (alter ancient-one assoc :defeated true))
+
+(defn attack [ancient-one investigators]
+  (doseq [investigator investigators]
+    (alter investigator assoc :decision [nil])))

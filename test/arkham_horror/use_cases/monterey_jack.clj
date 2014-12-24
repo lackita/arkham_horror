@@ -18,10 +18,10 @@
                               decision (gen/vector (gen/choose 0 2) 2)]
     (dosync
      (let [monterey-jack (investigator/make "Monterey Jack" {:speed speed :fight fight :lore  lore})]
-       (is (not (empty? (investigator/pending-decision monterey-jack))))
+       (is (investigator/pending-decision monterey-jack))
        (is (= (count (investigator/unique-items monterey-jack)) 0))
        (investigator/make-decision monterey-jack decision)
-       (is (empty? (investigator/pending-decision monterey-jack)))
+       (is (not (investigator/pending-decision monterey-jack)))
        (is (= (investigator/name monterey-jack) "Monterey Jack"))
        (is (= (investigator/sanity monterey-jack) 3))
        (is (= (investigator/stamina monterey-jack) 7))

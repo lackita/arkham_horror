@@ -3,6 +3,7 @@
             [clojure.test.check.clojure-test :refer :all]
             [arkham-horror.generators :as gen]
             [arkham-horror.board :as board]
+            [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator :as investigator]))
 
 (deftest investigators-max-sanity-and-stamina-reduced
@@ -18,3 +19,14 @@
      (board/make {:ancient-one "Azathoth" :investigators [investigator]})
      (is (= (investigator/maximum-sanity investigator)
             (investigator/initial-maximum-sanity (investigator/name investigator)))))))
+
+(deftest cthulu-wins
+  (checking "Primary Course" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
+       (ancient-one/awaken (board :ancient-one))
+       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (is (not (empty? (investigator/pending-decision investigator))))
+       (let [old-maximum-sanity (investigator/maximum-sanity investigator)]
+         (investigator/make-decision investigator :sanity)
+         )))))
