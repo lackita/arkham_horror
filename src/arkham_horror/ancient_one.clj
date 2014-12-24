@@ -1,4 +1,5 @@
 (ns arkham-horror.ancient-one
+  (:refer-clojure :exclude [name])
   (:require [arkham-horror.investigator :as investigator]))
 
 (defn make [name investigators]
@@ -6,7 +7,10 @@
     (doseq [investigator investigators]
       (investigator/decrement-maximum-sanity investigator)
       (investigator/decrement-maximum-stamina investigator)))
-  (ref {}))
+  (ref {:name name}))
+
+(defn name [ancient-one]
+  (@ancient-one :name))
 
 (defn awakened? [ancient-one]
   (@ancient-one :awakened))
