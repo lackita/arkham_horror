@@ -26,17 +26,31 @@
 (defn name [investigator]
   "Monterey Jack")
 
-(defn sanity [investigator]
-  3)
-
 (defn maximum-sanity [investigator]
   (-> @investigator :sanity :maximum))
+
+(defn decrement-maximum-sanity [investigator]
+  (alter investigator update-in [:sanity :maximum] dec)
+  (alter investigator update-in [:sanity :value] #(min % (maximum-sanity investigator))))
+
+(defn sanity [investigator]
+  (-> @investigator :sanity :value))
+
+(defn decrement-sanity [investigator delta]
+  (alter investigator update-in [:sanity :value] dec))
 
 (defn maximum-stamina [investigator]
   (-> @investigator :stamina :maximum))
 
+(defn decrement-maximum-stamina [investigator]
+  (alter investigator update-in [:stamina :maximum] dec)
+  (alter investigator update-in [:stamina :value] #(min % (maximum-stamina investigator))))
+
 (defn stamina [investigator]
-  7)
+  (-> @investigator :stamina :value))
+
+(defn decrement-stamina [investigator delta]
+  (alter investigator update-in [:stamina :value] dec))
 
 (defn speed [investigator]
   (@investigator :speed))

@@ -1,7 +1,9 @@
-(ns arkham-horror.board)
+(ns arkham-horror.board
+  (:require [arkham-horror.investigator :as investigator]))
 
 (defn make [config]
-  (dosync (when (= (config :ancient-one) "Cthulu")
-            (doseq [investigator (config :investigators) meter [:sanity :stamina]]
-              (alter investigator update-in [meter :maximum] dec)))
-          {:ancient-one (ref {})}))
+  (when (= (config :ancient-one) "Cthulu")
+    (doseq [investigator (config :investigators)]
+      (investigator/decrement-maximum-sanity investigator)
+      (investigator/decrement-maximum-stamina investigator)))
+  {:ancient-one (ref {})})

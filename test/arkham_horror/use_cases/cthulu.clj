@@ -7,12 +7,14 @@
 
 (deftest investigators-max-sanity-and-stamina-reduced
   (checking "Primary Course" [investigator gen/investigator]
-    (board/make {:ancient-one "Cthulu" :investigators [investigator]})
-    (is (= (investigator/maximum-sanity investigator)
-           (dec (investigator/initial-maximum-sanity (investigator/name investigator)))))
-    (is (= (investigator/maximum-stamina investigator)
-           (dec (investigator/initial-maximum-stamina (investigator/name investigator))))))
+    (dosync
+     (board/make {:ancient-one "Cthulu" :investigators [investigator]})
+     (is (= (investigator/maximum-sanity investigator)
+            (dec (investigator/initial-maximum-sanity (investigator/name investigator)))))
+     (is (= (investigator/maximum-stamina investigator)
+            (dec (investigator/initial-maximum-stamina (investigator/name investigator)))))))
   (checking "Exceptional Course: Ancient One not Cthulu" [investigator gen/investigator]
-    (board/make {:ancient-one "Azathoth" :investigators [investigator]})
-    (is (= (investigator/maximum-sanity investigator)
-           (investigator/initial-maximum-sanity (investigator/name investigator))))))
+    (dosync
+     (board/make {:ancient-one "Azathoth" :investigators [investigator]})
+     (is (= (investigator/maximum-sanity investigator)
+            (investigator/initial-maximum-sanity (investigator/name investigator)))))))
