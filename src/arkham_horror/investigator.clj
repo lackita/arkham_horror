@@ -30,14 +30,17 @@
   (-> @investigator :sanity :maximum))
 
 (defn decrement-maximum-sanity [investigator]
-  (alter investigator update-in [:sanity :maximum] dec)
-  (alter investigator update-in [:sanity :value] #(min % (maximum-sanity investigator))))
+  (when (> (maximum-sanity investigator) 0)
+    (alter investigator update-in [:sanity :maximum] dec)
+    (alter investigator update-in [:sanity :value] #(min % (maximum-sanity investigator)))))
 
 (defn sanity [investigator]
   (-> @investigator :sanity :value))
 
 (defn move-sanity [investigator delta]
-  (alter investigator update-in [:sanity :value] #(+ % delta)))
+  (alter investigator update-in [:sanity :value] #(-> (+ % delta)
+                                                      (min (maximum-sanity investigator))
+                                                      (max 0))))
 
 (defn maximum-stamina [investigator]
   (-> @investigator :stamina :maximum))
