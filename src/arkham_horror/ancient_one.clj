@@ -2,11 +2,14 @@
   (:refer-clojure :exclude [name])
   (:require [arkham-horror.investigator :as investigator]))
 
-(defn make [name investigators]
+(defn use-power [name investigators]
   (when (= name "Cthulu")
     (doseq [investigator investigators]
       (investigator/decrement-maximum-sanity investigator)
-      (investigator/decrement-maximum-stamina investigator)))
+      (investigator/decrement-maximum-stamina investigator))))
+
+(defn make [name investigators]
+  (use-power name investigators)
   (ref {:name name}))
 
 (defn name [ancient-one]
@@ -28,6 +31,7 @@
   (alter ancient-one assoc :defeated true))
 
 (defn attack [ancient-one investigators]
+  {:pre [(not-any? investigator/pending-decision investigators)]}
   (doseq [investigator investigators]
     (alter investigator assoc :decision
            (fn [investigator decision]

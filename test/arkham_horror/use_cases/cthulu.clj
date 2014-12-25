@@ -26,6 +26,7 @@
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
+       (is (not (investigator/pending-decision investigator)))
        (ancient-one/attack (board :ancient-one) (board :investigators))
        (is (investigator/pending-decision investigator))
        (let [old-maximum-sanity (investigator/maximum-sanity investigator)
@@ -50,4 +51,12 @@
        (dotimes [n (investigator/maximum-stamina investigator)]
          (ancient-one/attack (board :ancient-one) (board :investigators))
          (investigator/make-decision investigator :stamina))
-       (is (game/lost? board))))))
+       (is (game/lost? board)))))
+  (checking "Exceptional Course: Attacking Without Decision" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
+       (ancient-one/awaken (board :ancient-one))
+       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (is (thrown? AssertionError (ancient-one/attack (board :ancient-one)
+                                                       (board :investigators))))
+       (is true)))))
