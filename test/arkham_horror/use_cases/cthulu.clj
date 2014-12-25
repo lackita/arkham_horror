@@ -26,7 +26,8 @@
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (ancient-one/attack (board :ancient-one) (board :investigators))
-       (is (not (empty? (investigator/pending-decision investigator))))
+       (is (investigator/pending-decision investigator))
        (let [old-maximum-sanity (investigator/maximum-sanity investigator)]
          (investigator/make-decision investigator :sanity)
+         (is (= (investigator/maximum-sanity investigator) (dec old-maximum-sanity)))
          )))))

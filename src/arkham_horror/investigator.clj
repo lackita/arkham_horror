@@ -12,8 +12,7 @@
   (fn [investigator decision]
     {:pre [(every? (set (range (count cards))) decision)
            (= (count decision) 2)]}
-    (update-in investigator [:cards]
-               #(concat % (replace cards decision)))))
+    (alter investigator update-in [:cards] #(concat % (replace cards decision)))))
 
 (defn make [name stats]
   {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
@@ -108,5 +107,5 @@
   (@investigator :decision))
 
 (defn make-decision [investigator decision]
-  (alter investigator (pending-decision investigator) decision)
+  ((pending-decision investigator) investigator decision)
   (alter investigator assoc :decision nil))

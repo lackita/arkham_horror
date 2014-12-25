@@ -25,4 +25,6 @@
 
 (defn attack [ancient-one investigators]
   (doseq [investigator investigators]
-    (alter investigator assoc :decision [nil])))
+    (alter investigator assoc :decision
+           (fn [investigator decision]
+             (investigator/decrement-maximum-sanity investigator)))))
