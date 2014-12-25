@@ -64,6 +64,10 @@
                                                        (min (maximum-stamina investigator))
                                                        (max 0))))
 
+(defn defeated? [investigator]
+  (or (zero? (maximum-sanity investigator))
+      (zero? (maximum-stamina investigator))))
+
 (defn speed [investigator]
   (@investigator :speed))
 

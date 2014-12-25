@@ -20,6 +20,10 @@
          (not (awakened? ancient-one))]}
   (alter ancient-one assoc :awakened true))
 
+(defn victorious? [ancient-one]
+  (and (= (name ancient-one) "Azathoth")
+       (awakened? ancient-one)))
+
 (defn defeat [ancient-one]
   (alter ancient-one assoc :defeated true))
 
