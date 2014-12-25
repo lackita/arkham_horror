@@ -71,4 +71,13 @@
        (ancient-one/awaken (board :ancient-one))
        (defeat-investigator (board :ancient-one) investigator)
        (is (thrown? AssertionError (ancient-one/attack (board :ancient-one) [investigator])))
-       (is true)))))
+       (is true))))
+  (checking "Exceptional Course: Only Undefeated Investigators Attacked"
+    [investigator-1 gen/investigator investigator-2 gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu"
+                              :investigators [investigator-1 investigator-2]})]
+       (ancient-one/awaken (board :ancient-one))
+       (defeat-investigator (board :ancient-one) investigator-1)
+       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (is (not (investigator/pending-decision investigator-1)))))))

@@ -33,7 +33,7 @@
 (defn attack [ancient-one investigators]
   {:pre [(not-any? investigator/pending-decision investigators)
          (not-every? investigator/defeated? investigators)]}
-  (doseq [investigator investigators]
+  (doseq [investigator (filter (complement investigator/defeated?) investigators)]
     (alter investigator assoc :decision
            (fn [investigator decision]
              (when (= decision :sanity)
