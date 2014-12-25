@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [clojure.test.check.clojure-test :refer :all]
             [arkham-horror.generators :as gen]
+            [arkham-horror.game :as game]
             [arkham-horror.board :as board]
             [arkham-horror.ancient-one :as ancient-one]
             [arkham-horror.investigator :as investigator]))
@@ -27,7 +28,18 @@
        (ancient-one/awaken (board :ancient-one))
        (ancient-one/attack (board :ancient-one) (board :investigators))
        (is (investigator/pending-decision investigator))
-       (let [old-maximum-sanity (investigator/maximum-sanity investigator)]
+       (let [old-maximum-sanity (investigator/maximum-sanity investigator)
+             old-maximum-stamina (investigator/maximum-stamina investigator)]
          (investigator/make-decision investigator :sanity)
          (is (= (investigator/maximum-sanity investigator) (dec old-maximum-sanity)))
-         )))))
+         (is (= (investigator/maximum-stamina investigator) old-maximum-stamina)))
+       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (let [old-maximum-sanity (investigator/maximum-sanity investigator)
+             old-maximum-stamina (investigator/maximum-stamina investigator)]
+         (investigator/make-decision investigator :stamina)
+         (is (= (investigator/maximum-sanity investigator) old-maximum-sanity))
+         (is (= (investigator/maximum-stamina investigator) (dec old-maximum-stamina))))
+       (dotimes [n (investigator/maximum-sanity investigator)]
+         (ancient-one/attack (board :ancient-one) (board :investigators))
+         (investigator/make-decision investigator :sanity))
+       (is (game/lost? board))))))

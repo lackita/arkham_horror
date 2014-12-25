@@ -27,4 +27,7 @@
   (doseq [investigator investigators]
     (alter investigator assoc :decision
            (fn [investigator decision]
-             (investigator/decrement-maximum-sanity investigator)))))
+             (when (= decision :sanity)
+               (investigator/decrement-maximum-sanity investigator))
+             (when (= decision :stamina)
+               (investigator/decrement-maximum-stamina investigator))))))
