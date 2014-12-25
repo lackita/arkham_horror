@@ -21,6 +21,11 @@
      (is (= (investigator/maximum-sanity investigator)
             (investigator/initial-maximum-sanity (investigator/name investigator)))))))
 
+(defn defeat-investigator [ancient-one investigator]
+  (dotimes [n (investigator/maximum-stamina investigator)]
+    (ancient-one/attack ancient-one [investigator])
+    (investigator/make-decision investigator :stamina)))
+
 (deftest cthulu-wins
   (checking "Primary Course: Sanity Reduced" [investigator gen/investigator]
     (dosync
@@ -59,4 +64,11 @@
        (ancient-one/attack (board :ancient-one) (board :investigators))
        (is (thrown? AssertionError (ancient-one/attack (board :ancient-one)
                                                        (board :investigators))))
+       (is true))))
+  (checking "Exceptional Course: Attacking After Defeat" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
+       (ancient-one/awaken (board :ancient-one))
+       (defeat-investigator (board :ancient-one) investigator)
+       (is (thrown? AssertionError (ancient-one/attack (board :ancient-one) [investigator])))
        (is true)))))

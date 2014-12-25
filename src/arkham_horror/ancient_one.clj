@@ -31,7 +31,8 @@
   (alter ancient-one assoc :defeated true))
 
 (defn attack [ancient-one investigators]
-  {:pre [(not-any? investigator/pending-decision investigators)]}
+  {:pre [(not-any? investigator/pending-decision investigators)
+         (not-every? investigator/defeated? investigators)]}
   (doseq [investigator investigators]
     (alter investigator assoc :decision
            (fn [investigator decision]
