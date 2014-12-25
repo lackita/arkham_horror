@@ -22,7 +22,7 @@
             (investigator/initial-maximum-sanity (investigator/name investigator)))))))
 
 (deftest cthulu-wins
-  (checking "Primary Course" [investigator gen/investigator]
+  (checking "Primary Course: Sanity Reduced" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
@@ -42,4 +42,12 @@
        (dotimes [n (investigator/maximum-sanity investigator)]
          (ancient-one/attack (board :ancient-one) (board :investigators))
          (investigator/make-decision investigator :sanity))
+       (is (game/lost? board)))))
+  (checking "Primary Course: Stamina Reduced" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
+       (ancient-one/awaken (board :ancient-one))
+       (dotimes [n (investigator/maximum-stamina investigator)]
+         (ancient-one/attack (board :ancient-one) (board :investigators))
+         (investigator/make-decision investigator :stamina))
        (is (game/lost? board))))))

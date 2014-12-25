@@ -5,4 +5,6 @@
 (defn lost? [board]
   (or (and (= (ancient-one/name (board :ancient-one)) "Azathoth")
            (ancient-one/awakened? (board :ancient-one)))
-      (every? #(zero? (investigator/maximum-sanity %)) (board :investigators))))
+      (every? #(or (zero? (investigator/maximum-sanity %))
+                   (zero? (investigator/maximum-stamina %)))
+              (board :investigators))))
