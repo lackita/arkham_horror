@@ -8,3 +8,7 @@
   (checking "Primary Course" [times gen/pos-int]
     (is (= (count (dice/roll times)) times))
     (is (every? (set (range 1 7)) (dice/roll times)))))
+
+(deftest count-successes
+  (checking "Primary Course" [rolls (gen/fmap #(dice/roll %) gen/pos-int)]
+    (is (= (count (filter #{5 6} rolls)) (dice/count-successes rolls)))))
