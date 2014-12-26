@@ -34,6 +34,7 @@
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (is (not (investigator/pending-decision investigator)))
+       (ancient-one/retract-doom-track (board :ancient-one))
        (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
        (is (investigator/pending-decision investigator))
        (let [old-maximum-sanity (investigator/maximum-sanity investigator)
@@ -41,6 +42,7 @@
          (investigator/make-decision investigator :sanity)
          (is (= (investigator/maximum-sanity investigator) (dec old-maximum-sanity)))
          (is (= (investigator/maximum-stamina investigator) old-maximum-stamina)))
+       (is (= (ancient-one/doom-track (board :ancient-one)) 13))
        (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
        (let [old-maximum-sanity (investigator/maximum-sanity investigator)
              old-maximum-stamina (investigator/maximum-stamina investigator)]
@@ -127,13 +129,3 @@
        (is (= (ancient-one/doom-track (board :ancient-one)) 12))
        (final-battle/investigator-attack investigator-1 (board :ancient-one) 1)
        (is (= (ancient-one/doom-track (board :ancient-one)) 11))))))
-
-(deftest refresh
-  (checking "Primary Course" [investigator gen/investigator]
-    (dosync
-     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
-       (ancient-one/awaken (board :ancient-one))
-       (ancient-one/retract-doom-track (board :ancient-one))
-       (final-battle/refresh (board :ancient-one))
-       (is (= (ancient-one/doom-track (board :ancient-one)) 13))
-       (is true)))))

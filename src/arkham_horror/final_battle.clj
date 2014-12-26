@@ -11,7 +11,8 @@
              (when (= decision :sanity)
                (investigator/decrement-maximum-sanity investigator))
              (when (= decision :stamina)
-               (investigator/decrement-maximum-stamina investigator))))))
+               (investigator/decrement-maximum-stamina investigator)))))
+  (ancient-one/advance-doom-track ancient-one))
 
 (defn investigator-attack [investigator ancient-one successes]
   {:pre [(>= successes 0)]}
@@ -20,6 +21,3 @@
     (ancient-one/retract-doom-track ancient-one))
   (alter ancient-one assoc :remainder (rem (max 0 successes)
                                            (ancient-one/difficulty ancient-one))))
-
-(defn refresh [ancient-one]
-  (ancient-one/advance-doom-track ancient-one))
