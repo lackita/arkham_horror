@@ -100,18 +100,18 @@
        (is (not (game/won? board)))
        (ancient-one/awaken (board :ancient-one))
        (is (not (game/won? board)))
-       (final-battle/investigator-attack investigator (board :ancient-one) 7)
+       (final-battle/investigator-attack investigator (board :ancient-one) 1)
        (is (= (ancient-one/doom-track (board :ancient-one)) 12))
-       (final-battle/investigator-attack investigator (board :ancient-one) 8)
+       (final-battle/investigator-attack investigator (board :ancient-one) 2)
        (is (= (ancient-one/doom-track (board :ancient-one)) 10))
-       (final-battle/investigator-attack investigator (board :ancient-one) 16)
+       (final-battle/investigator-attack investigator (board :ancient-one) 10)
        (is (game/won? board)))))
 
-  (checking "Exceptional Course: Lower Than Difficulty" [investigator gen/investigator]
+  (checking "Exceptional Course: Negative Successes" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
-       (final-battle/investigator-attack investigator (board :ancient-one) 5)
+       (final-battle/investigator-attack investigator (board :ancient-one) -1)
        (is (= (ancient-one/doom-track (board :ancient-one)) 13))))))
 
 (deftest refresh
