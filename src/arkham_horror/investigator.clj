@@ -14,10 +14,31 @@
            (= (count decision) 2)]}
     (alter investigator update-in [:cards] #(concat % (replace cards decision)))))
 
+(defn maximum-speed [investigator]
+  4)
+
+(defn minimum-speed [investigator]
+  1)
+
+(defn maximum-fight [investigator]
+  5)
+
+(defn minimum-fight [investigator]
+  2)
+
+(defn maximum-lore [investigator]
+  4)
+
+(defn minimum-lore [investigator]
+  1)
+
 (defn make [name stats]
-  {:pre [(> (stats :speed) 0) (< (stats :speed) 5)
-         (> (stats :fight) 1) (< (stats :fight) 6)
-         (> (stats :lore)  0) (< (stats :lore)  5)]}
+  {:pre [(>= (stats :speed) (minimum-speed name))
+         (<= (stats :speed) (maximum-speed name))
+         (>= (stats :fight) (minimum-fight name))
+         (<= (stats :fight) (maximum-fight name))
+         (>= (stats :lore)  (minimum-lore  name))
+         (<= (stats :lore)  (maximum-lore  name))]}
   (ref (merge stats {:decision (make-card-decision [(card/make :unique "Fake")
                                                     (card/make :unique "Fake")
                                                     (card/make :unique "Fake")])
@@ -85,6 +106,10 @@
 
 (defn luck [investigator]
   (- 6 (lore investigator)))
+
+(defn focus [investigator deltas]
+  (alter investigator update-in [:speed] #(+ % (or (deltas :speed-sneak) 0)))
+  (alter investigator update-in [:fight] #(+ % (or (deltas :fight-will) 0))))
 
 (defn money [investigator]
   7)

@@ -26,7 +26,7 @@
     (ancient-one/attack ancient-one [investigator])
     (investigator/make-decision investigator :stamina)))
 
-(deftest cthulu-wins
+(deftest destroys-world
   (checking "Primary Course: Sanity Reduced" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
