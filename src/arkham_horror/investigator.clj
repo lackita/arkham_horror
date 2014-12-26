@@ -108,10 +108,10 @@
   (- 6 (lore investigator)))
 
 (defn focus [investigator deltas]
-  (alter investigator (partial merge-with +)
-         {:speed (or (deltas :speed-sneak) 0)
-          :fight (or (deltas :fight-will)  0)
-          :lore  (or (deltas :lore-luck)   0)}))
+  (alter investigator update-in [:speed] #(min (maximum-speed investigator)
+                                               (+ % (or (deltas :speed-sneak) 0))))
+  (alter investigator update-in [:fight] #(+ % (or (deltas :fight-will)  0)))
+  (alter investigator update-in [:lore]  #(+ % (or (deltas :lore-luck)   0))))
 
 (defn money [investigator]
   7)
