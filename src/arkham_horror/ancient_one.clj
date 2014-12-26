@@ -10,7 +10,8 @@
 
 (defn make [name investigators]
   (use-power name investigators)
-  (ref {:name name}))
+  (ref {:name name
+        :doom-track 0}))
 
 (defn name [ancient-one]
   (@ancient-one :name))
@@ -21,7 +22,14 @@
     "Azathoth" 14))
 
 (defn doom-track [ancient-one]
-  0)
+  (@ancient-one :doom-track))
+
+(defn advance-doom-track [ancient-one]
+  (alter ancient-one update-in [:doom-track] inc))
+
+(defn retract-doom-track [ancient-one]
+  (when (> (doom-track ancient-one) 0)
+    (alter ancient-one update-in [:doom-track] dec)))
 
 (defn awakened? [ancient-one]
   (@ancient-one :awakened))
@@ -29,7 +37,8 @@
 (defn awaken [ancient-one]
   {:pre [(not (:defeated @ancient-one))
          (not (awakened? ancient-one))]}
-  (alter ancient-one assoc :awakened true))
+  (alter ancient-one assoc :awakened true)
+  (alter ancient-one assoc :doom-track (maximum-doom-track ancient-one)))
 
 (defn victorious? [ancient-one]
   (and (= (name ancient-one) "Azathoth")

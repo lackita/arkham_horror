@@ -8,11 +8,8 @@
   (checking "Primary Course" [ancient-one gen/ancient-one]
     (dosync
      (is (not (ancient-one/awakened? ancient-one)))
-     (is (= (ancient-one/doom-track ancient-one) 0))
      (ancient-one/awaken ancient-one)
-     (is (ancient-one/awakened? ancient-one))
-     ;; (ancient-one/doom-track-capacity ancient-one)
-     ))
+     (is (ancient-one/awakened? ancient-one))))
 
   (checking "Exceptional Course: Ancient One Defeated" [ancient-one gen/ancient-one]
     (dosync
@@ -25,3 +22,18 @@
      (ancient-one/awaken ancient-one)
      (is (thrown? AssertionError (ancient-one/awaken ancient-one)))
      true)))
+
+(deftest doom-track
+  (checking "Primary Course" [ancient-one gen/ancient-one]
+    (dosync
+     (is (= (ancient-one/doom-track ancient-one) 0))
+     (ancient-one/advance-doom-track ancient-one)
+     (is (= (ancient-one/doom-track ancient-one) 1))
+     (ancient-one/retract-doom-track ancient-one)
+     (is (= (ancient-one/doom-track ancient-one) 0))
+     (ancient-one/awaken ancient-one)
+     (is (= (ancient-one/maximum-doom-track ancient-one) (ancient-one/doom-track ancient-one)))))
+  (checking "Exceptional Course: Retract At 0" [ancient-one gen/ancient-one]
+    (dosync
+     (ancient-one/retract-doom-track ancient-one)
+     (is (= (ancient-one/doom-track ancient-one) 0)))))
