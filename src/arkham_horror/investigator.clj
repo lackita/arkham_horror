@@ -108,8 +108,9 @@
   (- 6 (lore investigator)))
 
 (defn focus [investigator deltas]
-  (alter investigator update-in [:speed] #(min (maximum-speed investigator)
-                                               (+ % (or (deltas :speed-sneak) 0))))
+  (alter investigator update-in [:speed] #(-> (+ % (or (deltas :speed-sneak) 0))
+                                              (min (maximum-speed investigator))
+                                              (max (minimum-speed investigator))))
   (alter investigator update-in [:fight] #(+ % (or (deltas :fight-will)  0)))
   (alter investigator update-in [:lore]  #(+ % (or (deltas :lore-luck)   0))))
 

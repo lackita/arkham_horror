@@ -14,14 +14,17 @@
      (investigator/move-sanity investigator -2)
      (is (= (investigator/sanity investigator)
             (- (investigator/maximum-sanity investigator) 2)))))
+
   (checking "Exceptional Course: Too High" [investigator gen/investigator]
     (dosync
      (investigator/move-sanity investigator 1)
      (is (= (investigator/sanity investigator) (investigator/maximum-sanity investigator)))))
+
   (checking "Exceptional Course: Too Low" [investigator gen/investigator]
     (dosync
      (investigator/move-sanity investigator (- (inc (investigator/sanity investigator))))
      (is (= (investigator/sanity investigator) 0))))
+
   (checking "Exceptional Course: Maximum Too Low" [investigator gen/investigator]
     (dosync
      (dotimes [n (inc (investigator/maximum-sanity investigator))]
@@ -38,14 +41,17 @@
      (investigator/move-stamina investigator -2)
      (is (= (investigator/stamina investigator)
             (- (investigator/maximum-stamina investigator) 2)))))
+
   (checking "Exceptional Course: Too High" [investigator gen/investigator]
     (dosync
      (investigator/move-stamina investigator 1)
      (is (= (investigator/stamina investigator) (investigator/maximum-stamina investigator)))))
+
   (checking "Exceptional Course: Too Low" [investigator gen/investigator]
     (dosync
      (investigator/move-stamina investigator (- (inc (investigator/stamina investigator))))
      (is (= (investigator/stamina investigator) 0))))
+
   (checking "Exceptional Course: Maximum Too Low" [investigator gen/investigator]
     (dosync
      (dotimes [n (inc (investigator/maximum-stamina investigator))]
@@ -60,14 +66,19 @@
        (investigator/focus investigator {:speed-sneak 1})
        (is (= (investigator/speed investigator) (inc current-speed)))
        (investigator/focus investigator {:speed-sneak -1})
-       (is (= (investigator/speed investigator) current-speed))
-       (is true))))
+       (is (= (investigator/speed investigator) current-speed)))))
 
   (checking "Exceptional Course: Maximum Speed Exceeded"
     [investigator (gen/make-investigator {:minimum-speed 3})]
     (dosync
      (investigator/focus investigator {:speed-sneak 1})
      (is (= (investigator/speed investigator) (investigator/maximum-speed investigator)))))
+
+  (checking "Exceptional Course: Minimum Speed Exceeded"
+    [investigator (gen/make-investigator {:maximum-speed -3})]
+    (dosync
+     (investigator/focus investigator {:speed-sneak -1})
+     (is (= (investigator/speed investigator) (investigator/minimum-speed investigator)))))
 
   (checking "Primary Course: Fight"
     [investigator (gen/make-investigator {:maximum-fight -1})]
@@ -76,8 +87,7 @@
        (investigator/focus investigator {:fight-will 1})
        (is (= (investigator/fight investigator) (inc current-fight)))
        (investigator/focus investigator {:fight-will -1})
-       (is (= (investigator/fight investigator) current-fight))
-       (is true))))
+       (is (= (investigator/fight investigator) current-fight)))))
 
   (checking "Primary Course: Lore"
     [investigator (gen/make-investigator {:maximum-lore -1})]
