@@ -14,8 +14,12 @@
                (investigator/decrement-maximum-stamina investigator))))))
 
 (defn investigator-attack [investigator ancient-one successes]
-  (dotimes [n (/ (max 0 successes) (ancient-one/difficulty ancient-one))]
-    (ancient-one/retract-doom-track ancient-one)))
+  {:pre [(>= successes 0)]}
+  (dotimes [n (/ (+ successes (or (@ancient-one :remainder) 0))
+                 (ancient-one/difficulty ancient-one))]
+    (ancient-one/retract-doom-track ancient-one))
+  (alter ancient-one assoc :remainder (rem (max 0 successes)
+                                           (ancient-one/difficulty ancient-one))))
 
 (defn refresh [ancient-one]
   (ancient-one/advance-doom-track ancient-one))
