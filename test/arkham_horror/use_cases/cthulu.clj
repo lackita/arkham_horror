@@ -94,7 +94,7 @@
     (is (= (ancient-one/maximum-doom-track (ancient-one/make "Cthulu" [])) 13))))
 
 (deftest defeated
-  (checking "Primary Course" [investigator gen/investigator]
+  (checking "Primary Course: Single Investigator" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (is (not (game/won? board)))
@@ -106,6 +106,15 @@
        (is (= (ancient-one/doom-track (board :ancient-one)) 10))
        (final-battle/investigator-attack investigator (board :ancient-one) 10)
        (is (game/won? board)))))
+
+  (checking "Primary Course: Multiple Investigator"
+    [investigator-1 gen/investigator investigator-2 gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu"
+                              :investigators [investigator-1 investigator-2]})]
+       (ancient-one/awaken (board :ancient-one))
+       (final-battle/investigator-attack investigator-1 (board :ancient-one) 2)
+       (is (= (ancient-one/doom-track (board :ancient-one)) 12)))))
 
   (checking "Exceptional Course: Negative Successes" [investigator gen/investigator]
     (dosync

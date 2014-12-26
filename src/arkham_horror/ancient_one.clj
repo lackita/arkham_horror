@@ -11,7 +11,8 @@
 (defn make [name investigators]
   (use-power name investigators)
   (ref {:name name
-        :doom-track 0}))
+        :doom-track 0
+        :difficulty (count investigators)}))
 
 (defn name [ancient-one]
   (@ancient-one :name))
@@ -31,6 +32,9 @@
 (defn retract-doom-track [ancient-one]
   (when (> (doom-track ancient-one) 0)
     (alter ancient-one update-in [:doom-track] dec)))
+
+(defn difficulty [ancient-one]
+  (@ancient-one :difficulty))
 
 (defn awakened? [ancient-one]
   (@ancient-one :awakened))
