@@ -16,3 +16,6 @@
 (defn investigator-attack [investigator ancient-one successes]
   (dotimes [n (max 0 (- successes 6))]
     (ancient-one/retract-doom-track ancient-one)))
+
+(defn refresh [ancient-one]
+  (ancient-one/advance-doom-track ancient-one))

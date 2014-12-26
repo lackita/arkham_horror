@@ -109,7 +109,17 @@
 
   (checking "Exceptional Course: Lower Than Difficulty" [investigator gen/investigator]
     (dosync
-     (let [board (board/make {:ancient-one "Cthulu" :investigators  [investigator]})]
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (final-battle/investigator-attack investigator (board :ancient-one) 5)
        (is (= (ancient-one/doom-track (board :ancient-one)) 13))))))
+
+(deftest refresh
+  (checking "Primary Course" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
+       (ancient-one/awaken (board :ancient-one))
+       (ancient-one/retract-doom-track (board :ancient-one))
+       (final-battle/refresh (board :ancient-one))
+       (is (= (ancient-one/doom-track (board :ancient-one)) 13))
+       (is true)))))
