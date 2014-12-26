@@ -33,7 +33,14 @@
      (is (= (ancient-one/doom-track ancient-one) 0))
      (ancient-one/awaken ancient-one)
      (is (= (ancient-one/maximum-doom-track ancient-one) (ancient-one/doom-track ancient-one)))))
+
   (checking "Exceptional Course: Retract At 0" [ancient-one gen/ancient-one]
     (dosync
      (ancient-one/retract-doom-track ancient-one)
-     (is (= (ancient-one/doom-track ancient-one) 0)))))
+     (is (= (ancient-one/doom-track ancient-one) 0))))
+
+  (checking "Exceptional Course: Retract At 0" [ancient-one gen/ancient-one]
+    (dosync
+     (ancient-one/awaken ancient-one)
+     (ancient-one/advance-doom-track ancient-one)
+     (is (= (ancient-one/maximum-doom-track ancient-one) (ancient-one/doom-track ancient-one))))))

@@ -25,7 +25,8 @@
   (@ancient-one :doom-track))
 
 (defn advance-doom-track [ancient-one]
-  (alter ancient-one update-in [:doom-track] inc))
+  (when (< (doom-track ancient-one) (maximum-doom-track ancient-one))
+    (alter ancient-one update-in [:doom-track] inc)))
 
 (defn retract-doom-track [ancient-one]
   (when (> (doom-track ancient-one) 0)
