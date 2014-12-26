@@ -5,7 +5,8 @@
             [arkham-horror.game :as game]
             [arkham-horror.board :as board]
             [arkham-horror.ancient-one :as ancient-one]
-            [arkham-horror.investigator :as investigator]))
+            [arkham-horror.investigator :as investigator]
+            [arkham-horror.final-battle :as final-battle]))
 
 (deftest investigators-max-sanity-and-stamina-reduced
   (checking "Primary Course" [investigator gen/investigator]
@@ -24,7 +25,7 @@
 
 (defn defeat-investigator [ancient-one investigator]
   (dotimes [n (investigator/maximum-stamina investigator)]
-    (ancient-one/attack ancient-one [investigator])
+    (final-battle/ancient-one-attack ancient-one [investigator])
     (investigator/make-decision investigator :stamina)))
 
 (deftest destroys-world
@@ -33,21 +34,21 @@
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (is (not (investigator/pending-decision investigator)))
-       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
        (is (investigator/pending-decision investigator))
        (let [old-maximum-sanity (investigator/maximum-sanity investigator)
              old-maximum-stamina (investigator/maximum-stamina investigator)]
          (investigator/make-decision investigator :sanity)
          (is (= (investigator/maximum-sanity investigator) (dec old-maximum-sanity)))
          (is (= (investigator/maximum-stamina investigator) old-maximum-stamina)))
-       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
        (let [old-maximum-sanity (investigator/maximum-sanity investigator)
              old-maximum-stamina (investigator/maximum-stamina investigator)]
          (investigator/make-decision investigator :stamina)
          (is (= (investigator/maximum-sanity investigator) old-maximum-sanity))
          (is (= (investigator/maximum-stamina investigator) (dec old-maximum-stamina))))
        (dotimes [n (investigator/maximum-sanity investigator)]
-         (ancient-one/attack (board :ancient-one) (board :investigators))
+         (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
          (investigator/make-decision investigator :sanity))
        (is (game/lost? board)))))
 
@@ -56,7 +57,7 @@
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (dotimes [n (investigator/maximum-stamina investigator)]
-         (ancient-one/attack (board :ancient-one) (board :investigators))
+         (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
          (investigator/make-decision investigator :stamina))
        (is (game/lost? board)))))
 
@@ -64,8 +65,8 @@
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
-       (ancient-one/attack (board :ancient-one) (board :investigators))
-       (is (thrown? AssertionError (ancient-one/attack (board :ancient-one)
+       (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
+       (is (thrown? AssertionError (final-battle/ancient-one-attack (board :ancient-one)
                                                        (board :investigators))))
        (is true))))
 
@@ -74,7 +75,8 @@
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (defeat-investigator (board :ancient-one) investigator)
-       (is (thrown? AssertionError (ancient-one/attack (board :ancient-one) [investigator])))
+       (is (thrown? AssertionError (final-battle/ancient-one-attack (board :ancient-one)
+                                                                    [investigator])))
        (is true))))
 
   (checking "Exceptional Course: Only Undefeated Investigators Attacked"
@@ -84,11 +86,30 @@
                               :investigators [investigator-1 investigator-2]})]
        (ancient-one/awaken (board :ancient-one))
        (defeat-investigator (board :ancient-one) investigator-1)
-       (ancient-one/attack (board :ancient-one) (board :investigators))
+       (final-battle/ancient-one-attack (board :ancient-one) (board :investigators))
        (is (not (investigator/pending-decision investigator-1)))))))
+
+(deftest doom-track
+  (testing "Primary Course"
+    (is (= (ancient-one/maximum-doom-track (ancient-one/make "Cthulu" [])) 13))))
 
 (deftest defeated
   (checking "Primary Course" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
-       (is (= (ancient-one/maximum-doom-track (board :ancient-one)) 13))))))
+       (is (not (game/won? board)))
+       (ancient-one/awaken (board :ancient-one))
+       (is (not (game/won? board)))
+       (final-battle/investigator-attack investigator (board :ancient-one) 7)
+       (is (= (ancient-one/doom-track (board :ancient-one)) 12))
+       (final-battle/investigator-attack investigator (board :ancient-one) 8)
+       (is (= (ancient-one/doom-track (board :ancient-one)) 10))
+       (final-battle/investigator-attack investigator (board :ancient-one) 16)
+       (is (game/won? board)))))
+
+  (checking "Exceptional Course: Lower Than Difficulty" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators  [investigator]})]
+       (ancient-one/awaken (board :ancient-one))
+       (final-battle/investigator-attack investigator (board :ancient-one) 5)
+       (is (= (ancient-one/doom-track (board :ancient-one)) 13))))))

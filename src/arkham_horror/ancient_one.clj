@@ -47,14 +47,3 @@
 
 (defn defeat [ancient-one]
   (alter ancient-one assoc :defeated true))
-
-(defn attack [ancient-one investigators]
-  {:pre [(not-any? investigator/pending-decision investigators)
-         (not-every? investigator/defeated? investigators)]}
-  (doseq [investigator (filter (complement investigator/defeated?) investigators)]
-    (alter investigator assoc :decision
-           (fn [investigator decision]
-             (when (= decision :sanity)
-               (investigator/decrement-maximum-sanity investigator))
-             (when (= decision :stamina)
-               (investigator/decrement-maximum-stamina investigator))))))
