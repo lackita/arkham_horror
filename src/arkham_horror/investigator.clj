@@ -107,12 +107,20 @@
 (defn luck [investigator]
   (- 6 (lore investigator)))
 
+(defn focus-distance [investigator]
+  2)
+
 (defn focus [investigator deltas]
+  {:pre [(<= (apply + (vals deltas)) (focus-distance investigator))]}
   (alter investigator update-in [:speed] #(-> (+ % (or (deltas :speed-sneak) 0))
                                               (min (maximum-speed investigator))
                                               (max (minimum-speed investigator))))
-  (alter investigator update-in [:fight] #(+ % (or (deltas :fight-will)  0)))
-  (alter investigator update-in [:lore]  #(+ % (or (deltas :lore-luck)   0))))
+  (alter investigator update-in [:fight] #(-> (+ % (or (deltas :fight-will) 0))
+                                              (min (maximum-fight investigator))
+                                              (max (minimum-fight investigator))))
+  (alter investigator update-in [:lore]  #(-> (+ % (or (deltas :lore-luck) 0))
+                                              (min (maximum-lore investigator))
+                                              (max (minimum-lore investigator)))))
 
 (defn money [investigator]
   7)

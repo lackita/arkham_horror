@@ -89,6 +89,18 @@
        (investigator/focus investigator {:fight-will -1})
        (is (= (investigator/fight investigator) current-fight)))))
 
+  (checking "Exceptional Course: Maximum Fight Exceeded"
+    [investigator (gen/make-investigator {:minimum-fight 3})]
+    (dosync
+     (investigator/focus investigator {:fight-will 1})
+     (is (= (investigator/fight investigator) (investigator/maximum-fight investigator)))))
+
+  (checking "Exceptional Course: Minimum Fight Exceeded"
+    [investigator (gen/make-investigator {:maximum-fight -3})]
+    (dosync
+     (investigator/focus investigator {:fight-will -1})
+     (is (= (investigator/fight investigator) (investigator/minimum-fight investigator)))))
+
   (checking "Primary Course: Lore"
     [investigator (gen/make-investigator {:maximum-lore -1})]
     (dosync
@@ -97,4 +109,25 @@
        (is (= (investigator/lore investigator) (inc current-lore)))
        (investigator/focus investigator {:lore-luck -1})
        (is (= (investigator/lore investigator) current-lore))
-       (is true)))))
+       (is true))))
+
+  (checking "Exceptional Course: Maximum Lore Exceeded"
+    [investigator (gen/make-investigator {:minimum-lore 3})]
+    (dosync
+     (investigator/focus investigator {:lore-luck 1})
+     (is (= (investigator/lore investigator) (investigator/maximum-lore investigator)))))
+
+  (checking "Exceptional Course: Minimum Lore Exceeded"
+    [investigator (gen/make-investigator {:maximum-lore -3})]
+    (dosync
+     (investigator/focus investigator {:lore-luck -1})
+     (is (= (investigator/lore investigator) (investigator/minimum-lore investigator)))))
+
+  (checking "Exceptional Course: Distance Exceeded"
+    [investigator (gen/make-investigator {:maximum-speed -3})]
+    (dosync
+     (is (thrown? AssertionError
+                  (investigator/focus
+                   investigator
+                   {:speed-sneak (inc (investigator/focus-distance investigator))})))
+     (is true))))
