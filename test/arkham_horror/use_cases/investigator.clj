@@ -65,6 +65,7 @@
        (investigator/focus investigator {:speed-sneak -1})
        (is (= (investigator/speed investigator) current-speed))
        (is true))))
+
   (checking "Primary Course: Fight"
     [investigator (gen/such-that #(not (= (investigator/maximum-fight %)
                                           (investigator/fight %)))
@@ -75,4 +76,16 @@
        (is (= (investigator/fight investigator) (inc current-fight)))
        (investigator/focus investigator {:fight-will -1})
        (is (= (investigator/fight investigator) current-fight))
+       (is true))))
+
+  (checking "Primary Course: Lore"
+    [investigator (gen/such-that #(not (= (investigator/maximum-lore %)
+                                          (investigator/lore %)))
+                                 gen'/investigator)]
+    (dosync
+     (let [current-lore (investigator/lore investigator)]
+       (investigator/focus investigator {:lore-luck 1})
+       (is (= (investigator/lore investigator) (inc current-lore)))
+       (investigator/focus investigator {:lore-luck -1})
+       (is (= (investigator/lore investigator) current-lore))
        (is true)))))

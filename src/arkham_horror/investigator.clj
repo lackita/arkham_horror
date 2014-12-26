@@ -109,7 +109,8 @@
 
 (defn focus [investigator deltas]
   (alter investigator update-in [:speed] #(+ % (or (deltas :speed-sneak) 0)))
-  (alter investigator update-in [:fight] #(+ % (or (deltas :fight-will) 0))))
+  (alter investigator update-in [:fight] #(+ % (or (deltas :fight-will) 0)))
+  (alter investigator update-in [:lore] #(+ % (or (deltas :lore-luck) 0))))
 
 (defn money [investigator]
   7)
