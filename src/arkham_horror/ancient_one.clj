@@ -15,6 +15,14 @@
 (defn name [ancient-one]
   (@ancient-one :name))
 
+(defn maximum-doom-track [ancient-one]
+  (case (name ancient-one)
+    "Cthulu"   13
+    "Azathoth" 14))
+
+(defn doom-track [ancient-one]
+  0)
+
 (defn awakened? [ancient-one]
   (@ancient-one :awakened))
 

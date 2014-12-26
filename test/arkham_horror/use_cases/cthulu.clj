@@ -15,6 +15,7 @@
             (dec (investigator/initial-maximum-sanity (investigator/name investigator)))))
      (is (= (investigator/maximum-stamina investigator)
             (dec (investigator/initial-maximum-stamina (investigator/name investigator)))))))
+
   (checking "Exceptional Course: Ancient One Not Cthulu" [investigator gen/investigator]
     (dosync
      (board/make {:ancient-one "Azathoth" :investigators [investigator]})
@@ -49,6 +50,7 @@
          (ancient-one/attack (board :ancient-one) (board :investigators))
          (investigator/make-decision investigator :sanity))
        (is (game/lost? board)))))
+
   (checking "Primary Course: Stamina Reduced" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
@@ -57,6 +59,7 @@
          (ancient-one/attack (board :ancient-one) (board :investigators))
          (investigator/make-decision investigator :stamina))
        (is (game/lost? board)))))
+
   (checking "Exceptional Course: Attacking Without Decision" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
@@ -65,6 +68,7 @@
        (is (thrown? AssertionError (ancient-one/attack (board :ancient-one)
                                                        (board :investigators))))
        (is true))))
+
   (checking "Exceptional Course: Attacking After Defeat" [investigator gen/investigator]
     (dosync
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
@@ -72,6 +76,7 @@
        (defeat-investigator (board :ancient-one) investigator)
        (is (thrown? AssertionError (ancient-one/attack (board :ancient-one) [investigator])))
        (is true))))
+
   (checking "Exceptional Course: Only Undefeated Investigators Attacked"
     [investigator-1 gen/investigator investigator-2 gen/investigator]
     (dosync
@@ -81,3 +86,9 @@
        (defeat-investigator (board :ancient-one) investigator-1)
        (ancient-one/attack (board :ancient-one) (board :investigators))
        (is (not (investigator/pending-decision investigator-1)))))))
+
+(deftest defeated
+  (checking "Primary Course" [investigator gen/investigator]
+    (dosync
+     (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
+       (is (= (ancient-one/maximum-doom-track (board :ancient-one)) 13))))))

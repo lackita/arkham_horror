@@ -19,3 +19,7 @@
      (let [board (board/make {:ancient-one "Cthulu" :investigators [investigator]})]
        (ancient-one/awaken (board :ancient-one))
        (is (not (game/lost? board)))))))
+
+(deftest doom-track
+  (testing "Primary Course"
+    (is (= (ancient-one/maximum-doom-track (ancient-one/make "Azathoth" [])) 14))))
